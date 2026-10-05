@@ -5,8 +5,9 @@ Headquarters, January 2019 – August 2026.
 
 **Live site:** https://spaul571.github.io/bangladesh-crime-viz/
 
-One page: an interactive overview first (headline numbers, then the whole dataset filtered by year,
-police unit and crime head in eight charts), then the story with 24 interactive charts.
+One page. It opens on an overview that fits one screen on a laptop or desktop: filters for period,
+police units and crime heads, eight tiles (totals and what changed) and eight charts, all following the
+filters. Below it, the story with 24 interactive charts.
 
 CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
