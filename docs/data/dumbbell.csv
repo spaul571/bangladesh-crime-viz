@@ -1,0 +1,86 @@
+unit,pre,post,chg,crime
+RPMP,2.0417,3.0833,51.0204,Violent crime (murder + dacoity + robbery + kidnapping)
+BMP,2.25,4.8333,114.8148,Violent crime (murder + dacoity + robbery + kidnapping)
+SMP,2.75,5.2083,89.3939,Violent crime (murder + dacoity + robbery + kidnapping)
+Railway Range,3.375,5.3333,58.0247,Violent crime (murder + dacoity + robbery + kidnapping)
+KMP,2.875,6.8333,137.6812,Violent crime (murder + dacoity + robbery + kidnapping)
+RMP,5.4583,7.3333,34.3511,Violent crime (murder + dacoity + robbery + kidnapping)
+CMP,16.7917,16.8333,0.2481,Violent crime (murder + dacoity + robbery + kidnapping)
+GMP,14.75,17.7083,20.0565,Violent crime (murder + dacoity + robbery + kidnapping)
+Barishal Range,14.875,23.9583,61.0644,Violent crime (murder + dacoity + robbery + kidnapping)
+Sylhet Range,21.3333,26.7083,25.1953,Violent crime (murder + dacoity + robbery + kidnapping)
+Mymensingh Range,24.4583,27.25,11.414,Violent crime (murder + dacoity + robbery + kidnapping)
+Rangpur Range,28.75,32.875,14.3478,Violent crime (murder + dacoity + robbery + kidnapping)
+Khulna Range,30.25,46.0,52.0661,Violent crime (murder + dacoity + robbery + kidnapping)
+Rajshahi Range,41.4583,50.7917,22.5126,Violent crime (murder + dacoity + robbery + kidnapping)
+DMP,39.9583,83.2083,108.2377,Violent crime (murder + dacoity + robbery + kidnapping)
+Chittagong Range,80.1667,101.0833,26.0915,Violent crime (murder + dacoity + robbery + kidnapping)
+Dhaka Range,100.4167,132.7083,32.1577,Violent crime (murder + dacoity + robbery + kidnapping)
+RPMP,0.7917,0.6667,-15.7895,Murder
+Railway Range,1.3333,1.125,-15.625,Murder
+BMP,1.25,1.4167,13.3333,Murder
+RMP,1.25,2.0417,63.3333,Murder
+SMP,1.5417,2.0833,35.1351,Murder
+KMP,1.7083,2.875,68.2927,Murder
+CMP,5.4583,5.3333,-2.2901,Murder
+GMP,7.0,5.6667,-19.0476,Murder
+Barishal Range,10.25,13.2083,28.8618,Murder
+Sylhet Range,15.8333,16.6667,5.2632,Murder
+Mymensingh Range,18.625,18.7917,0.8949,Murder
+Rangpur Range,21.5833,19.5833,-9.2664,Murder
+Khulna Range,20.75,26.9583,29.9197,Murder
+DMP,15.5417,27.9583,79.8928,Murder
+Rajshahi Range,26.6667,29.2083,9.5312,Murder
+Chittagong Range,48.9167,52.7083,7.7513,Murder
+Dhaka Range,58.625,69.3333,18.2658,Murder
+Railway Range,0.0417,0.125,200.0,Dacoity
+RMP,0.125,0.2083,66.6667,Dacoity
+RPMP,0.0,0.2917,inf,Dacoity
+BMP,0.2917,0.3333,14.2857,Dacoity
+KMP,0.2083,0.375,80.0,Dacoity
+SMP,0.25,0.4583,83.3333,Dacoity
+CMP,0.375,0.7917,111.1111,Dacoity
+Mymensingh Range,0.2917,1.0,242.8571,Dacoity
+Rangpur Range,0.9583,1.625,69.5652,Dacoity
+GMP,1.375,1.75,27.2727,Dacoity
+Khulna Range,1.9167,2.7917,45.6522,Dacoity
+Sylhet Range,1.25,2.8333,126.6667,Dacoity
+DMP,2.4167,4.0,65.5172,Dacoity
+Barishal Range,1.5417,4.2083,172.973,Dacoity
+Rajshahi Range,1.5833,5.0,215.7895,Dacoity
+Chittagong Range,5.5417,11.6667,110.5263,Dacoity
+Dhaka Range,11.25,16.875,50.0,Dacoity
+BMP,0.5,0.7917,58.3333,Robbery
+RPMP,0.0833,1.0,1100.0,Robbery
+SMP,0.625,1.5,140.0,Robbery
+KMP,0.625,2.25,260.0,Robbery
+RMP,2.9167,3.0833,5.7143,Robbery
+Barishal Range,2.125,3.875,82.3529,Robbery
+Railway Range,1.9167,3.9583,106.5217,Robbery
+Mymensingh Range,2.4167,4.25,75.8621,Robbery
+GMP,3.625,5.0833,40.2299,Robbery
+Rangpur Range,3.3333,5.6667,70.0,Robbery
+Sylhet Range,3.0833,5.6667,83.7838,Robbery
+CMP,8.2083,6.9583,-15.2284,Robbery
+Khulna Range,5.5,11.2083,103.7879,Robbery
+Rajshahi Range,10.1667,11.9167,17.2131,Robbery
+Chittagong Range,18.1667,22.5833,24.3119,Robbery
+DMP,16.8333,31.3333,86.1386,Robbery
+Dhaka Range,24.0417,33.4167,38.9948,Robbery
+Railway Range,0.0833,0.125,50.0,Kidnapping
+RPMP,1.1667,1.125,-3.5714,Kidnapping
+SMP,0.3333,1.1667,250.0,Kidnapping
+KMP,0.3333,1.3333,300.0,Kidnapping
+Sylhet Range,1.1667,1.5417,32.1429,Kidnapping
+RMP,1.1667,2.0,71.4286,Kidnapping
+BMP,0.2083,2.2917,1000.0,Kidnapping
+Barishal Range,0.9583,2.6667,178.2609,Kidnapping
+Mymensingh Range,3.125,3.2083,2.6667,Kidnapping
+CMP,2.75,3.75,36.3636,Kidnapping
+Rajshahi Range,3.0417,4.6667,53.4247,Kidnapping
+Khulna Range,2.0833,5.0417,142.0,Kidnapping
+GMP,2.75,5.2083,89.3939,Kidnapping
+Rangpur Range,2.875,6.0,108.6957,Kidnapping
+Dhaka Range,6.5,13.0833,101.2821,Kidnapping
+Chittagong Range,7.5417,14.125,87.2928,Kidnapping
+DMP,5.1667,19.9167,285.4839,Kidnapping

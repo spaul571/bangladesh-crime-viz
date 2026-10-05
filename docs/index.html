@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fewer cases, more crime — Bangladesh 2019–2026</title>
+<meta name="description" content="An interactive data story on Bangladesh Police crime statistics, January 2019 – August 2026.">
+<meta property="og:title" content="Fewer cases, more crime — Bangladesh 2019–2026">
+<meta property="og:description" content="An interactive data story on Bangladesh Police crime statistics, January 2019 – August 2026.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  (function () {
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  })();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@3.1.1/plotly.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+<script defer src="assets/site.js"></script>
+</head><body>
+<header class="topbar">
+  <a class="brand" href="index.html">Bangladesh crime, 2019–2026</a>
+  <nav><a href="index.html#numbers" aria-current="page">Story</a><a href="index.html#rupture">The break</a><a href="index.html#geography">Geography</a><a href="index.html#future">Outlook</a><a href="explorer.html">Explorer</a><a href="index.html#data">Data</a></nav>
+  <button class="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch light / dark">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+  </button>
+</header>
+<main>
+<section class="hero">
+  <p class="kicker">Bangladesh Police crime statistics · January 2019 – August 2026</p>
+  <h1>Fewer cases, more crime</h1>
+  <p class="dek">Every monthly crime table Bangladesh Police Headquarters published from January 2019 to
+  August 2026, digitised and merged into one dataset: 1,497,474 cases in 92 months across 17 police
+  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. Every chart below is
+  interactive: hover for values, use the menus to switch series, drag to zoom, double-click to reset.</p>
+  <div class="tiles">
+    <div class="tile"><div class="big">1,497,474</div><div class="cap">cases recorded, January 2019 – August 2026</div></div>
+    <div class="tile"><div class="big">−41.0%</div><div class="cap">fall in recorded cases from July to August 2024</div></div>
+    <div class="tile"><div class="big">+111.5%</div><div class="cap">kidnapping, 24 months after vs 24 months before August 2024</div></div>
+    <div class="tile"><div class="big">+4.7%</div><div class="cap">murder once backlog filings are removed (not significant), against +15.0% raw</div></div>
+  </div>
+  <p class="cta"><a class="btn" href="explorer.html">Open the explorer</a>
+  <a class="btn ghost" href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Download the dataset (Excel)</a></p>
+</section>
+<section class="chapter" id="numbers">
+  <p class="kicker">Chapter 1 · What is counted, and how much?</p>
+  <h2>A country in numbers</h2>
+  <p class="lede">Most of what the police count is not crime that someone reported. It is crime the police went looking for.</p><p>The 1,497,474 cases fall into two families of almost equal size. <em>Reported crime</em>
+    (886,992 cases) is led by the catch-all “other cases” and by woman and child repression, which alone is
+    18.2% of reported crime. <em>Recovery cases</em> (610,482, 40.8% of the total) are
+    police-initiated seizures; narcotics alone are 38.3% of everything recorded. Murder, the crime that
+    dominates headlines, is 26,143 cases, 1.7% of the total. Click a ring to zoom into a family.</p>
+<figure class="viz" id="fig-sunburst">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 1</span>
+    <h3>What gets counted</h3>
+    <p class="sub">Inner ring: crime family; outer ring: crime head. Share of all cases, Jan 2019 – Aug 2026.</p>
+  </figcaption>
+  <div class="controls" data-for="sunburst"><span class="hint">Click a family to zoom in; click the centre to zoom out.</span></div>
+  <div class="scroll"><div class="chart" data-id="sunburst" data-minw="0" style="min-height:600px"
+       role="img" aria-label="What gets counted"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 2, drawn with Plotly.</span>
+    <a href="data/sunburst.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Because the two families move in opposite directions, the national total misleads on its own.
+    Reported crime (orange) has a yearly rhythm and a gentle upward drift; recovery cases (aqua) fell by about half.
+    Their sum (violet) peaked at 20,955 in May 2019 and inherits the decline of the second family. Two months
+    stand out: April 2020 (9,098 cases), when the COVID-19 shutdown emptied the streets, and August 2024 (8,833),
+    the lowest in the series.</p>
+<figure class="viz wide" id="fig-hero">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 2</span>
+    <h3>The national total hides two opposite currents</h3>
+    <p class="sub">Monthly cases. Thin lines: monthly values; thick lines: 3-month centred mean.</p>
+  </figcaption>
+  <div class="controls" data-for="hero"><span class="hint">Hover for the month's values · click a legend item to hide a series · buttons zoom to recent years.</span></div>
+  <div class="scroll"><div class="chart" data-id="hero" data-minw="0" style="min-height:480px"
+       role="img" aria-label="The national total hides two opposite currents"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 3 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/hero.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><aside class="keybox"><h4>Why it matters</h4><p>A headline saying “recorded crime fell” is technically true and practically misleading. Everything that follows separates reported crime from police-initiated recovery cases.</p></aside></section>
+<section class="chapter" id="rhythm">
+  <p class="kicker">Chapter 2 · Is there a normal year?</p>
+  <h2>The rhythm of an ordinary year</h2>
+  <p class="lede">Crime in Bangladesh has a calendar: it climbs from February to a peak in May and June and falls to its lowest point in December.</p><p>Reported crime peaks in May and bottoms out in December, a swing of about
+    28% between the strongest and weakest months; its STL seasonal strength is 0.55 on a 0–1 scale.
+    Switch the heatmap to recovery cases and the rhythm disappears, while the outlined August 2024 cell turns pale.</p>
+<figure class="viz" id="fig-calendar">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 3</span>
+    <h3>Calendar of crime: May peaks, December lulls, and the August 2024 hole</h3>
+    <p class="sub">Monthly national cases (thousands for large series). Outlined cell: August 2024. Blank: not yet published.</p>
+  </figcaption>
+  <div class="controls" data-for="calendar"><span class="hint">Pick a series; hover a cell for the exact count.</span></div>
+  <div class="scroll"><div class="chart" data-id="calendar" data-minw="560" style="min-height:400px"
+       role="img" aria-label="Calendar of crime: May peaks, December lulls, and the August 2024 hole"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 4 was drawn with seaborn; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/calendar.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Each crime has its own season. Woman and child repression rises from March and stays high until
+    October; murder peaks in July; burglary and theft peak in August and September, the lean season before the main rice
+    harvest. The averages use normal years only, so the shocks of 2020 and 2024 do not distort them; switch to all
+    years to see how much those shocks move the profile.</p>
+<figure class="viz" id="fig-seasonal">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 4</span>
+    <h3>Every crime has a season</h3>
+    <p class="sub">Average month-of-year index (each year's monthly mean = 100) with 95% confidence band.</p>
+  </figcaption>
+  <div class="controls" data-for="seasonal"><span class="hint">Choose which years to average below the chart; hover a point for its index.</span></div>
+  <div class="scroll"><div class="chart" data-id="seasonal" data-minw="0" style="min-height:420px"
+       role="img" aria-label="Every crime has a season"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 5, drawn with Vega-Altair.</span>
+    <a href="data/seasonal.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>The STL decomposition separates trend, season and shock. Pick any series to see its trend step
+    after August 2024 and the residual shocks of the lockdown months.</p>
+<figure class="viz wide" id="fig-stl">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 5</span>
+    <h3>Under the noise: trend, season and shock</h3>
+    <p class="sub">Robust STL decomposition (period 12) of log monthly cases; seasonal and residual shown as % effects. Red dots: shocks above 15%.</p>
+  </figcaption>
+  <div class="controls" data-for="stl"><span class="hint">Pick a series; hover any panel to read all four components for that month.</span></div>
+  <div class="scroll"><div class="chart" data-id="stl" data-minw="560" style="min-height:640px"
+       role="img" aria-label="Under the noise: trend, season and shock"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 6 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/stl.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Which crimes move together? Burglary, robbery, dacoity, kidnapping and theft rise and fall
+    together. Narcotics, smuggling and arms recoveries form a separate block that correlates <em>negatively</em> with
+    robbery and dacoity: months with more police searches tend to be months with less violent property crime. Compare
+    the periods before and after the break to see how the blocks changed.</p>
+<figure class="viz" id="fig-correlation">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 6</span>
+    <h3>Which crimes move together?</h3>
+    <p class="sub">Spearman rank correlation of monthly national counts, ordered by hierarchical clustering of the whole period.</p>
+  </figcaption>
+  <div class="controls" data-for="correlation"><span class="hint">Switch the period; hover a cell for the pair and its ρ.</span></div>
+  <div class="scroll"><div class="chart" data-id="correlation" data-minw="680" style="min-height:660px"
+       role="img" aria-label="Which crimes move together?"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 7 was drawn with seaborn; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/correlation.csv" download>Chart data (CSV)</a>
+  </div>
+</figure></section>
+<section class="chapter" id="pandemic">
+  <p class="kicker">Chapter 3 · 2020</p>
+  <h2>The pandemic pause</h2>
+  <p class="lede">The lockdown showed what happens when policing and public life stop at the same time: almost everything recorded falls.</p><p>During the general holiday that began on 26 March 2020, recorded cases fell to 9,098 in
+    April 2020. Recovery cases fell furthest, to 1,808, because police were redeployed to enforce the lockdown.
+    By July 2020 the series had recovered (Figure 2). 2020 is a useful control: a collapse in recorded crime followed by a
+    quick rebound is what a temporary pause looks like. August 2024 looks different.</p></section>
+<section class="chapter" id="rupture">
+  <p class="kicker">Chapter 4 · What changed, by how much, and for how long?</p>
+  <h2>Rupture: after the fifth of August</h2>
+  <p class="lede">In July 2024 the protests appeared in the data as riots and assaults on police. In August, the recording system itself broke. When it came back, the country's crime mix had changed.</p><p>July 2024 recorded 52 riot cases and 170 police-assault cases, both the highest
+    in the series. Then, after 5 August, recorded cases fell 41.0% in one month, to 8,833. Narcotics recovery
+    fell from 4,852 to 966 cases, yet murder cases jumped to 626, the highest monthly
+    figure on record. Each panel below shows one crime head with its 24-month mean before and after the break.</p>
+<figure class="viz wide" id="fig-small_multiples">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 7</span>
+    <h3>Sixteen crime heads, one break</h3>
+    <p class="sub">Monthly national cases. Bars: mean of the 24 months before (Aug 2022 – Jul 2024) and after (Sep 2024 – Aug 2026). % = change in means; stars = Mann–Whitney p (*** &lt; 0.001). Orange = rose, blue = fell.</p>
+  </figcaption>
+  <div class="controls" data-for="small_multiples"><span class="hint">Hover any line for the month; drag inside a panel to zoom.</span></div>
+  <div class="scroll"><div class="chart" data-id="small_multiples" data-minw="760" style="min-height:860px"
+       role="img" aria-label="Sixteen crime heads, one break"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 8 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/small_multiples.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>The before-and-after ledger adds uncertainty. Kidnapping more than doubled (+111.5%),
+    from 41 to 87 cases a month; its Cliff's δ of 1.00 means every one
+    of the 24 months after the break exceeded every one of the 24 months before. Dacoity rose +84.7% and
+    robbery +48.4%. Arms Act cases rose +29.4%; narcotics fell −25.3%.</p>
+<figure class="viz" id="fig-forest">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 8</span>
+    <h3>The before-and-after ledger</h3>
+    <p class="sub">Point: % change in mean monthly cases; bar: bootstrap 95% CI of the ratio. Grey: CI crosses zero. August 2024 itself excluded.</p>
+  </figcaption>
+  <div class="controls" data-for="forest"><span class="hint">Hover a point for both means, the CI, the p-value and Cliff's δ.</span></div>
+  <div class="scroll"><div class="chart" data-id="forest" data-minw="620" style="min-height:700px"
+       role="img" aria-label="The before-and-after ledger"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 9 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/forest.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Was it the break, or the trend? Segmented negative-binomial models control for the pre-existing
+    trend, the season and the COVID months. They still find large immediate level changes: ×2.17 for
+    kidnapping (95% CI 1.84–2.54), ×2.32 for dacoity (1.99–2.71) and ×1.36
+    for robbery (1.21–1.52). For narcotics the level dropped to ×0.58.</p>
+<figure class="viz" id="fig-its">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 9</span>
+    <h3>Counting the gap: what the model expected without the break</h3>
+    <p class="sub">log E[cases] = trend + post-break level + post-break slope + month effects + COVID and Aug-2024 dummies. Shaded: modelled excess (orange) or shortfall (blue) against the no-break counterfactual.</p>
+  </figcaption>
+  <div class="controls" data-for="its"><span class="hint">Pick any of the 19 series; hover to compare observed, fitted and counterfactual values.</span></div>
+  <div class="scroll"><div class="chart" data-id="its" data-minw="0" style="min-height:500px"
+       role="img" aria-label="Counting the gap: what the model expected without the break"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 10 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/its.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Two unsupervised methods agree on the timing without being told where to look. PELT places
+    change points for dacoity in September 2024, kidnapping in September 2024 and robbery in October 2024. Isolation Forest
+    flags Apr 2020, Aug 2024, May 2020, Sep 2024, May 2019, Feb 2019 as the most unusual months.</p>
+<figure class="viz wide" id="fig-anomalies">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 10</span>
+    <h3>Machines agree with history</h3>
+    <p class="sub">Top: Isolation Forest anomaly score of each month's 15-head crime mix (red = flagged, contamination 6%). Bottom: PELT change points (RBF cost) per series.</p>
+  </figcaption>
+  <div class="controls" data-for="anomalies"><span class="hint">Hover a bar to see which crime heads made that month unusual.</span></div>
+  <div class="scroll"><div class="chart" data-id="anomalies" data-minw="640" style="min-height:660px"
+       role="img" aria-label="Machines agree with history"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 11 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/anomalies.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Murder needs care. Footnotes on the scans say 158 of August 2024's 626
+    murder cases were for killings between 2009 and July 2024 that families had not been able to file; similar notes
+    appear every month from February to September 2025, 791 backlog cases in all. Remove them and the
+    picture changes: raw murder is up +15.0%, but murder excluding backlog filings is up only +4.7%
+    (Mann–Whitney p = 0.18), with a model level change of ×0.99 (95% CI 0.92–1.08).</p>
+<figure class="viz wide" id="fig-murder_backlog">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 11</span>
+    <h3>The murder spike is partly a paperwork spike</h3>
+    <p class="sub">Monthly murder cases split by the footnotes that count delayed filings for older killings.</p>
+  </figcaption>
+  <div class="controls" data-for="murder_backlog"><span class="hint">Hover a backlog bar to read the translated footnote · drag the strip below to change the period.</span></div>
+  <div class="scroll"><div class="chart" data-id="murder_backlog" data-minw="0" style="min-height:520px"
+       role="img" aria-label="The murder spike is partly a paperwork spike"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 12 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/murder_backlog.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Violent property crime moved to a new normal. From 2019 to 2023 the median month saw between
+    146 and 172 dacoity, robbery and kidnapping cases; in 2025 the median was 314.</p>
+<figure class="viz" id="fig-ridgeline">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 12</span>
+    <h3>Violent property crime shifted right, and stayed there</h3>
+    <p class="sub">Distribution of monthly national cases by year (density; ticks = individual months). 2026 = Jan–Aug.</p>
+  </figcaption>
+  <div class="controls" data-for="ridgeline"><span class="hint">Pick a series; hover a tick for its month.</span></div>
+  <div class="scroll"><div class="chart" data-id="ridgeline" data-minw="0" style="min-height:560px"
+       role="img" aria-label="Violent property crime shifted right, and stayed there"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 13 was drawn with seaborn; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/ridgeline.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz" id="fig-family_share">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 13</span>
+    <h3>The mix shifts: violent property crime claims a larger slice</h3>
+    <p class="sub">Share of the ten named reactive crime heads (excludes “other cases” and recovery cases), 3-month rolling mean.</p>
+  </figcaption>
+  <div class="controls" data-for="family_share"><span class="hint">Hover for every family's share that month; click a legend item to highlight it.</span></div>
+  <div class="scroll"><div class="chart" data-id="family_share" data-minw="0" style="min-height:420px"
+       role="img" aria-label="The mix shifts: violent property crime claims a larger slice"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 14, drawn with Vega-Altair.</span>
+    <a href="data/family_share.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz" id="fig-yoy">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 14</span>
+    <h3>Year against year</h3>
+    <p class="sub">Change in national annual cases by crime head. Default: 2025, the first full year after the break, against 2023, the last full year before it.</p>
+  </figcaption>
+  <div class="controls" data-for="yoy"><span class="hint">Choose the comparison below the chart; hover a bar for both totals.</span></div>
+  <div class="scroll"><div class="chart" data-id="yoy" data-minw="0" style="min-height:500px"
+       role="img" aria-label="Year against year"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 15, drawn with Vega-Altair.</span>
+    <a href="data/yoy.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><aside class="keybox"><h4>Chapter 4 in one sentence</h4><p>After 5 August 2024 Bangladesh recorded fewer cases overall because police searched and seized less, while victims reported far more dacoity, robbery and kidnapping; the apparent murder surge is mostly delayed filings.</p></aside></section>
+<section class="chapter" id="geography">
+  <p class="kicker">Chapter 5 · Where did it happen?</p>
+  <h2>The geography of the break</h2>
+  <p class="lede">The rise in violent crime reached every part of the country, but not equally.</p><p>Police units are grouped into the eight census divisions (each metro unit with its range) and
+    divided by population. In 2025 reported crime per person was highest in Barishal (109 per 100,000)
+    and lowest in Mymensingh (58) and Chattogram (64). The change in violent crime is a
+    different map: +68% in Barishal, +59% in Khulna, +51% in Dhaka, against +11% in Mymensingh, +17% in Rangpur.</p><div class="pair">
+<figure class="viz" id="fig-map_rates">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 15</span>
+    <h3>Where crime is reported</h3>
+    <p class="sub">Reported crime per 100,000 people per year, by division.</p>
+  </figcaption>
+  <div class="controls" data-for="map_rates"><span class="hint">Pick a year; hover a division.</span></div>
+  <div class="scroll"><div class="chart" data-id="map_rates" data-minw="420" style="min-height:560px"
+       role="img" aria-label="Where crime is reported"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: PHQ monthly crime statistics; population: BBS Census 2022 (adjusted).</span>
+    <span class="lib">Report Figure 16, drawn with Plotly.</span>
+    <a href="data/map_rates.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz" id="fig-map_change">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 16</span>
+    <h3>Where violence grew</h3>
+    <p class="sub">Change in mean monthly cases, 24 months after vs 24 months before August 2024.</p>
+  </figcaption>
+  <div class="controls" data-for="map_change"><span class="hint">Pick a crime; hover a division.</span></div>
+  <div class="scroll"><div class="chart" data-id="map_change" data-minw="420" style="min-height:560px"
+       role="img" aria-label="Where violence grew"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 16, drawn with Plotly.</span>
+    <a href="data/map_change.csv" download>Chart data (CSV)</a>
+  </div>
+</figure></div><p>16 of the 17 police units recorded more violent crime after the break; the
+    exception is CMP (+0%, essentially flat). In relative terms the biggest rises were
+    KMP (+138%), BMP (+115%), DMP (+108%).</p>
+<figure class="viz" id="fig-dumbbell">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 17</span>
+    <h3>Nearly every unit saw more violent crime after the break</h3>
+    <p class="sub">Mean monthly cases, 24 months before vs 24 months after August 2024 (log scale).</p>
+  </figcaption>
+  <div class="controls" data-for="dumbbell"><span class="hint">Pick a crime; hover a dot for the monthly mean.</span></div>
+  <div class="scroll"><div class="chart" data-id="dumbbell" data-minw="560" style="min-height:640px"
+       role="img" aria-label="Nearly every unit saw more violent crime after the break"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 17, drawn with Plotly.</span>
+    <a href="data/dumbbell.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz wide" id="fig-unit_heatmap">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 18</span>
+    <h3>Where the break hit: change by police unit and crime head</h3>
+    <p class="sub">Mean monthly cases Sep 2024 – Aug 2026 against Aug 2022 – Jul 2024. Red = rise, blue = fall (colour capped at +200%). Lines separate metro, range and railway police.</p>
+  </figcaption>
+  <div class="controls" data-for="unit_heatmap"><span class="hint">Hover a cell for the before and after means.</span></div>
+  <div class="scroll"><div class="chart" data-id="unit_heatmap" data-minw="720" style="min-height:640px"
+       role="img" aria-label="Where the break hit: change by police unit and crime head"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 18 was drawn with seaborn; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/unit_heatmap.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Ranked by reported crime, the large district ranges lead. Chittagong Range and Dhaka Range hold the top two places in every year. Hover a line to follow one unit;
+    the animated race below replays the same ranking year by year.</p>
+<figure class="viz" id="fig-bump">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 19</span>
+    <h3>Who reports the most crime?</h3>
+    <p class="sub">Rank of the 16 territorial units by annual reported crime (total minus recovery cases). Highlighted: DMP and the three biggest movers. *2026 annualised from Jan–Aug.</p>
+  </figcaption>
+  <div class="controls" data-for="bump"><span class="hint">Hover a line or dot to follow one unit.</span></div>
+  <div class="scroll"><div class="chart" data-id="bump" data-minw="620" style="min-height:520px"
+       role="img" aria-label="Who reports the most crime?"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 19, drawn with Vega-Altair.</span>
+    <a href="data/bump.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz" id="fig-race">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 20</span>
+    <h3>Reported crime by police unit, year by year</h3>
+    <p class="sub">Annual reported crime per unit; 2026 annualised from January–August. Blue: metropolitan police; orange: range police.</p>
+  </figcaption>
+  <div class="controls" data-for="race"><span class="hint">Press Play, or drag the year slider.</span></div>
+  <div class="scroll"><div class="chart" data-id="race" data-minw="520" style="min-height:640px"
+       role="img" aria-label="Reported crime by police unit, year by year"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Web-only chart, drawn with Plotly.</span>
+    <a href="data/race.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>Clustering the units by the <em>mix</em> of their caseload, not its size, gives three groups. The
+    <strong>metro and port belt</strong> (CMP, Chittagong Range, DMP, KMP, Khulna Range, RMP, SMP) over-indexes on narcotics, arms, robbery and burglary. The
+    <strong>northern agrarian ranges</strong> (Mymensingh Range, Rajshahi Range, Rangpur Range, Sylhet Range) over-index on smuggling, consistent with their long land border.
+    The <strong>Dhaka–Barishal ring</strong> (BMP, Barishal Range, Dhaka Range, GMP, RPMP) over-indexes on dacoity and kidnapping. The two PCA axes explain
+    71% of the variation; a silhouette of 0.26 says these are tendencies rather than sharp borders.</p>
+<figure class="viz" id="fig-clusters">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 21</span>
+    <h3>Three crime signatures</h3>
+    <p class="sub">PCA of each unit's 2019–2026 crime mix (centred log-ratio of 15 head shares), coloured by k-means cluster (k = 3). Arrows: the eight heads that load most.</p>
+  </figcaption>
+  <div class="controls" data-for="clusters"><span class="hint">Hover a unit; click a legend item to hide a cluster.</span></div>
+  <div class="scroll"><div class="chart" data-id="clusters" data-minw="600" style="min-height:620px"
+       role="img" aria-label="Three crime signatures"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 20 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/clusters.csv" download>Chart data (CSV)</a>
+  </div>
+</figure>
+<figure class="viz" id="fig-radar">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 22</span>
+    <h3>Three signatures, side by side</h3>
+    <p class="sub">Share of each crime head in the cluster's caseload, indexed to the average unit (= 100).</p>
+  </figcaption>
+  <div class="controls" data-for="radar"><span class="hint">Hover a vertex; click a legend item to hide a cluster.</span></div>
+  <div class="scroll"><div class="chart" data-id="radar" data-minw="560" style="min-height:620px"
+       role="img" aria-label="Three signatures, side by side"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 21, drawn with Plotly.</span>
+    <a href="data/radar.csv" download>Chart data (CSV)</a>
+  </div>
+</figure></section>
+<section class="chapter" id="future">
+  <p class="kicker">Chapter 6 · Where is it heading?</p>
+  <h2>A slow return?</h2>
+  <p class="lede">Searches and seizures are rising again and violent crime is easing, but not yet back to where it was.</p><p>Comparing January–August 2026 with the same months of 2025, recovery cases are up 32.3%,
+    driven by narcotics (+33.9%): the strongest sign yet that proactive policing is returning, in the year of the
+    12 February 2026 general election. At the same time dacoity is down 26.4%, murder down 9.6% and
+    robbery down 7.1%.</p>
+<div class="table-wrap"><table class="ytd">
+  <caption>January–August 2026 against January–August 2025, national cases</caption>
+  <thead><tr><th>Series</th><th>Jan–Aug 2025</th><th>Jan–Aug 2026</th><th>Change</th></tr></thead>
+  <tbody><tr><td>Total cases</td><td>122,439</td><td>132,946</td><td class="up">+8.6%</td></tr><tr><td>Reported crime (excl. recovery)</td><td>85,124</td><td>83,595</td><td class="down">−1.8%</td></tr><tr><td>Recovery cases</td><td>37,315</td><td>49,351</td><td class="up">+32.3%</td></tr><tr><td><span class="indent">of which narcotics</span></td><td>34,544</td><td>46,271</td><td class="up">+33.9%</td></tr><tr><td>Murder</td><td>2,614</td><td>2,362</td><td class="down">−9.6%</td></tr><tr><td>Dacoity</td><td>488</td><td>359</td><td class="down">−26.4%</td></tr><tr><td>Robbery</td><td>1,314</td><td>1,221</td><td class="down">−7.1%</td></tr><tr><td>Kidnapping</td><td>715</td><td>691</td><td class="down">−3.4%</td></tr></tbody></table></div>
+<figure class="viz" id="fig-brush">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 23</span>
+    <h3>Overview and detail</h3>
+    <p class="sub">Monthly national cases. Drag across the lower strip to choose the period shown above.</p>
+  </figcaption>
+  <div class="controls" data-for="brush"><span class="hint">Drag or resize the grey window in the strip; hover the top chart for values; click a legend item to highlight.</span></div>
+  <div class="scroll"><div class="chart" data-id="brush" data-minw="0" style="min-height:470px"
+       role="img" aria-label="Overview and detail"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 22, drawn with Vega-Altair.</span>
+    <a href="data/brush.csv" download>Chart data (CSV)</a>
+  </div>
+</figure><p>SARIMAX models on log counts, with a regime dummy for the break and Fourier terms for the
+    season, forecast 189,012 cases from September 2026 to August 2027 (last 12 months: 192,244).
+    Walk-forward backtests over the last 12 observed months beat a seasonal-naive forecast for every series: total cases
+    8.3% mean absolute percentage error against 10.6%, reported crime 5.5% against
+    8.5%.</p>
+<figure class="viz wide" id="fig-forecast">
+  <figcaption class="viz-head">
+    <span class="fig-no">Figure 24</span>
+    <h3>What the next twelve months may hold</h3>
+    <p class="sub">SARIMAX forecast with 80% and 95% intervals; orange: walk-forward one-step forecasts for the last 12 observed months.</p>
+  </figcaption>
+  <div class="controls" data-for="forecast"><span class="hint">Pick a series; zoom out to see the full history.</span></div>
+  <div class="scroll"><div class="chart" data-id="forecast" data-minw="0" style="min-height:520px"
+       role="img" aria-label="What the next twelve months may hold"><div class="loading">Loading chart…</div></div></div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 23 was drawn with matplotlib; redrawn here with Plotly so it is interactive.</span>
+    <a href="data/forecast.csv" download>Chart data (CSV)</a>
+  </div>
+</figure></section>
+<section class="chapter" id="explore">
+  <p class="kicker">Your turn</p>
+  <h2>Explore the data yourself</h2>
+  <p class="lede">Choose a period, police units and crime heads, and every chart and number in the explorer follows
+  your selection. It is the web version of the Dash dashboard in the report (Figure 24).</p>
+  <p class="cta"><a class="btn" href="explorer.html">Open the explorer</a></p>
+</section>
+<section class="chapter" id="data">
+  <p class="kicker">Data and methods</p>
+  <h2>How this was made</h2>
+  <p>Bangladesh Police Headquarters publishes its monthly crime statistics as scanned PDF tables. All 27 files
+  covering January 2019 – August 2026 were downloaded, read with OCR and checked cell by cell against the printed row,
+  column and recovery totals; the monthly tables for 2019–2023 add up exactly to the printed annual summaries. The
+  result is one Excel file with 1,564 rows (92 months × 17 police units), each tagged with the last day of
+  its month (for example 30 Jun 2025). National figures on this site are the sum of the 17 units.</p>
+  <p class="cta"><a class="btn" href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Download the dataset (Excel)</a></p>
+  <ul class="methods">
+    <li><strong>Before and after:</strong> 24 months before (Aug 2022 – Jul 2024) against 24 months after (Sep 2024 – Aug 2026);
+    August 2024 excluded. Mann–Whitney U, Cliff's δ, bootstrap 95% CI of the ratio of means.</li>
+    <li><strong>Interrupted time series:</strong> negative-binomial GLM with trend, post-break level and slope, month effects and COVID / August-2024 dummies.</li>
+    <li><strong>Seasonality:</strong> robust STL (period 12) on log counts.</li>
+    <li><strong>Forecasting:</strong> SARIMAX on log counts, AIC-selected orders for d = 0 and d = 1, kept by walk-forward backtest.</li>
+    <li><strong>Change points and anomalies:</strong> PELT (RBF cost, penalty 4); Isolation Forest (500 trees, contamination 6%).</li>
+    <li><strong>Clustering:</strong> k-means (k = 3) on the centred log-ratio of each unit's crime mix; Railway Range left out as a one-unit outlier.</li>
+    <li><strong>Caveat:</strong> these are cases recorded by police, not all crimes committed. Recording depends on victims coming forward and on police capacity.</li>
+  </ul>
+  <p>Charts are drawn with <strong>Plotly</strong> and <strong>Vega-Altair</strong>; the explorer is the web version of the
+  <strong>Dash</strong> dashboard. Charts that the printed report drew with <strong>matplotlib</strong> and
+  <strong>seaborn</strong> are redrawn here with Plotly, because static images cannot be interactive. Every chart has its
+  data as a CSV link below it.</p>
+  
+<details class="sources"><summary>Source PDF for each of the 92 months</summary>
+<div class="table-wrap"><table>
+<thead><tr><th>Month tag</th><th>PDF title on police.gov.bd</th><th>Page</th><th>Uploaded</th><th>Link</th></tr></thead>
+<tbody><tr><td>31 Jan 2019</td><td>Crime Statistics (2019)</td><td>1</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2019</td><td>Crime Statistics (2019)</td><td>2</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2019</td><td>Crime Statistics (2019)</td><td>3</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2019</td><td>Crime Statistics (2019)</td><td>4</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2019</td><td>Crime Statistics (2019)</td><td>5</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2019</td><td>Crime Statistics (2019)</td><td>6</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2019</td><td>Crime Statistics (2019)</td><td>7</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2019</td><td>Crime Statistics (2019)</td><td>8</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2019</td><td>Crime Statistics (2019)</td><td>9</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2019</td><td>Crime Statistics (2019)</td><td>10</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2019</td><td>Crime Statistics (2019)</td><td>11</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2019</td><td>Crime Statistics (2019)</td><td>12</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/7ZW6RmAkSenm6LzntThQai8yyrkTtA0JlA8ZQrCk.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2020</td><td>Crime Statistics (2020)</td><td>1</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>29 Feb 2020</td><td>Crime Statistics (2020)</td><td>2</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2020</td><td>Crime Statistics (2020)</td><td>3</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2020</td><td>Crime Statistics (2020)</td><td>4</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2020</td><td>Crime Statistics (2020)</td><td>5</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2020</td><td>Crime Statistics (2020)</td><td>6</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2020</td><td>Crime Statistics (2020)</td><td>7</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2020</td><td>Crime Statistics (2020)</td><td>8</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2020</td><td>Crime Statistics (2020)</td><td>9</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2020</td><td>Crime Statistics (2020)</td><td>10</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2020</td><td>Crime Statistics (2020)</td><td>11</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2020</td><td>Crime Statistics (2020)</td><td>12</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/TFTqXw5qBIPqTfr3SAT68fW2xfMdPwdxV3b4isis.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2021</td><td>Crime Statistics (2021)</td><td>1</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2021</td><td>Crime Statistics (2021)</td><td>2</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2021</td><td>Crime Statistics (2021)</td><td>3</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2021</td><td>Crime Statistics (2021)</td><td>4</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2021</td><td>Crime Statistics (2021)</td><td>5</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2021</td><td>Crime Statistics (2021)</td><td>6</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2021</td><td>Crime Statistics (2021)</td><td>7</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2021</td><td>Crime Statistics (2021)</td><td>8</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2021</td><td>Crime Statistics (2021)</td><td>9</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2021</td><td>Crime Statistics (2021)</td><td>10</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2021</td><td>Crime Statistics (2021)</td><td>11</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2021</td><td>Crime Statistics (2021)</td><td>12</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5CYRensirdBE4KUTv4wB808SLoOhgL4nir6YA50H.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2022</td><td>Crime Statistics (2022)</td><td>1</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2022</td><td>Crime Statistics (2022)</td><td>2</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2022</td><td>Crime Statistics (2022)</td><td>3</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2022</td><td>Crime Statistics (2022)</td><td>4</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2022</td><td>Crime Statistics (2022)</td><td>5</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2022</td><td>Crime Statistics (2022)</td><td>6</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2022</td><td>Crime Statistics (2022)</td><td>7</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2022</td><td>Crime Statistics (2022)</td><td>8</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2022</td><td>Crime Statistics (2022)</td><td>9</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2022</td><td>Crime Statistics (2022)</td><td>10</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2022</td><td>Crime Statistics (2022)</td><td>11</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2022</td><td>Crime Statistics (2022)</td><td>12</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/SeJuMLLIdmBiDyYrgaywx5IbCk3AgV5cDdAldr8t.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2023</td><td>Crime Statistics (2023)</td><td>1</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2023</td><td>Crime Statistics (2023)</td><td>2</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2023</td><td>Crime Statistics (2023)</td><td>3</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2023</td><td>Crime Statistics (2023)</td><td>4</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2023</td><td>Crime Statistics (2023)</td><td>5</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2023</td><td>Crime Statistics (2023)</td><td>6</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2023</td><td>Crime Statistics (2023)</td><td>7</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2023</td><td>Crime Statistics (2023)</td><td>8</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2023</td><td>Crime Statistics (2023)</td><td>9</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2023</td><td>Crime Statistics (2023)</td><td>10</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2023</td><td>Crime Statistics (2023)</td><td>11</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2023</td><td>Crime Statistics (2023)</td><td>12</td><td>05-12-2024</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/1qxJlutuNTSGyuPclML1yXQYdYS7MxIomf2Mrovy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2024</td><td>Crime Statistics (2024)</td><td>1</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>29 Feb 2024</td><td>Crime Statistics (2024)</td><td>2</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2024</td><td>Crime Statistics (2024)</td><td>3</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2024</td><td>Crime Statistics (2024)</td><td>4</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2024</td><td>Crime Statistics (2024)</td><td>5</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2024</td><td>Crime Statistics (2024)</td><td>6</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2024</td><td>Crime Statistics (2024)</td><td>7</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2024</td><td>Crime Statistics (2024)</td><td>8</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2024</td><td>Crime Statistics (2024)</td><td>9</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2024</td><td>Crime Statistics (2024)</td><td>10</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2024</td><td>Crime Statistics (2024)</td><td>11</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2024</td><td>Crime Statistics (2024)</td><td>12</td><td>09-01-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/4NkL2AKgPINFo9dkuRc6zBHlCZuHbmfcj4bgN5vW.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2025</td><td>Crime Statistics, January-2025</td><td>1</td><td>10-02-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/PFoNveHztpmPRsiX7vyRGy4VvqDI1Diu6uHoHQOD.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2025</td><td>Crime Statistics, February-2025</td><td>1</td><td>12-03-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/nQRu2PeLsj9hTRuYIxiat1PMu3QVaQ3CxTUe92ca.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2025</td><td>Crime Statistics, March-2025</td><td>1</td><td>08-04-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/RMu8IotxNR8yQFA1eC5lo41DuUKZD2k6QirsrxpY.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2025</td><td>Crime Statistics, April-2025</td><td>1</td><td>08-05-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/WzhxXpqsDDIJ3DbdrDWMbXws5UOBGDafG0OfiBZG.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2025</td><td>Crime Statistics, May-2025</td><td>1</td><td>04-06-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/uoBGl7S41YNHb2HsKSUfnqG4oMupOS621gkUqtV7.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2025</td><td>Crime Statistics, Jun-2025</td><td>1</td><td>09-07-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/5b4XIBpLoTwEUrOPT17dYtgQTiLAMtJFljtdf080.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2025</td><td>Crime Statistics, July-2025</td><td>1</td><td>13-08-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/mFSBsHmqoICmrnTvH5favz5YALx1BtBf7hShql5n.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2025</td><td>Crime Statistics, August-2025</td><td>1</td><td>08-09-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/qgKr3jiYyzby7Qv5o3qYvpgytU934N7gW3v1ImwE.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Sep 2025</td><td>Crime Statistics, September-2025</td><td>2</td><td>08-10-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/BcjjoJdlvVGNzoZiL7URpLdNcFwAO3NbGwKLwUD8.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Oct 2025</td><td>Crime Statistics, October-2025</td><td>1</td><td>06-11-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/KzmYR3e2ZCwl3cxMu6Jog9x4xLfobwI6ze01ZhQF.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Nov 2025</td><td>Crime Statistics, November-2025</td><td>1</td><td>07-12-2025</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/VSWSIQ3EVWy8Ebk9J1UcPT7iSyM26ovNYSXh8Kjr.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Dec 2025</td><td>Crime Statistics, December-2025</td><td>1</td><td>07-01-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/Z2g0uWtrGJe1BItVze1z6Mr5SobkYN9m1CVSa8U1.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jan 2026</td><td>Crime Statistics, January-2026</td><td>1</td><td>09-02-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/2HoVSZlf6bAHrPCUuT834PANUTz1c7EyzSO1q0oM.pdf" rel="noopener">PDF</a></td></tr><tr><td>28 Feb 2026</td><td>Crime Statistics, February-2026</td><td>1</td><td>08-03-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/DaSlbieBmVhb1QCmbmVGxzAteFHNeTdotm80JBSy.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Mar 2026</td><td>Crime Statistics, March-2026</td><td>1</td><td>08-04-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/usbxvNArzBFI7Nc9Zjlx3B9zFEDXF3hlHgBGGnkL.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Apr 2026</td><td>Crime Statistics, April-2026</td><td>1</td><td>06-05-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/aKyAeWtnLKZdmiJTtJ0msqfZhpp3AbgFzWOFZnWX.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 May 2026</td><td>Crime Statistics, May-2026</td><td>1</td><td>09-06-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/VHA2o3npCCZOjkvtDtQU5AvivWVNsxuZVka9hsuR.pdf" rel="noopener">PDF</a></td></tr><tr><td>30 Jun 2026</td><td>Crime Statistics, June-2026</td><td>1</td><td>07-07-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/KHKuiODQ6r8YbVXPy3cYUsMIfX4JaYK1L2AOX9tH.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Jul 2026</td><td>Crime Statistics, July-2026</td><td>1</td><td>10-08-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/otTlSSAKdq6qWbJUjdw9hUN2B3jd5HB84zvjzdNS.pdf" rel="noopener">PDF</a></td></tr><tr><td>31 Aug 2026</td><td>Crime Statistics, August-2026</td><td>1</td><td>13-09-2026</td><td><a href="https://www.police.gov.bd/storage/upload/announcement/E2BQmXNilj5qUWDbcZPPB8TROaMpWVlsf8V2njrL.pdf" rel="noopener">PDF</a></td></tr></tbody></table></div></details>
+</section>
+</main>
+<footer class="site-foot">
+  <p>Data: Bangladesh Police Headquarters monthly crime statistics (police.gov.bd), digitised from the scanned
+  PDFs and merged into one Excel file. Population: BBS Population and Housing Census 2022 (adjusted).
+  Built 05 October 2026 from <code>Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx</code>.</p>
+  <p>CSE628 Data Visualization, Fall 2026 · Class Test 1 (group task) ·
+  <a href="https://github.com/spaul571/bangladesh-crime-viz">Source code on GitHub</a></p>
+</footer></body></html>

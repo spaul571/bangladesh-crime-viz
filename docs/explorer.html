@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crime explorer — Bangladesh 2019–2026</title>
+<meta name="description" content="Filter Bangladesh Police monthly crime statistics by period, police unit and crime head.">
+<meta property="og:title" content="Crime explorer — Bangladesh 2019–2026">
+<meta property="og:description" content="Filter Bangladesh Police monthly crime statistics by period, police unit and crime head.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  (function () {
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  })();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@3.1.1/plotly.min.js"></script>
+<script defer src="assets/site.js"></script>
+<script defer src="assets/explorer.js"></script>
+</head><body>
+<header class="topbar">
+  <a class="brand" href="index.html">Bangladesh crime, 2019–2026</a>
+  <nav><a href="index.html#numbers">Story</a><a href="index.html#rupture">The break</a><a href="index.html#geography">Geography</a><a href="index.html#future">Outlook</a><a href="explorer.html" aria-current="page">Explorer</a><a href="index.html#data">Data</a></nav>
+  <button class="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch light / dark">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+  </button>
+</header>
+<main class="explorer">
+  <section class="ex-head">
+    <h1>Crime explorer</h1>
+    <p class="dek">Monthly cases recorded by Bangladesh Police Headquarters, 17 police units, January 2019 – August 2026.
+    The filters scope everything below them.</p>
+  </section>
+  <section class="filters" aria-label="Filters">
+    <div class="f-group f-period">
+      <span class="f-label">Period</span>
+      <div class="presets" role="group" aria-label="Period presets">
+        <button type="button" data-preset="all" class="on">All months</button>
+        <button type="button" data-preset="pre">24 months before the break</button>
+        <button type="button" data-preset="post">24 months after</button>
+        <button type="button" data-preset="last12">Last 12 months</button>
+      </div>
+      <div class="range"><label>From <select id="from"></select></label><label>to <select id="to"></select></label></div>
+    </div>
+    <details class="f-group multi" id="units-box"><summary><span class="f-label">Police units</span><span class="val" id="units-val">All units (national)</span></summary>
+      <div class="opts" id="units"></div></details>
+    <details class="f-group multi" id="heads-box"><summary><span class="f-label">Crime heads</span><span class="val" id="heads-val"></span></summary>
+      <div class="opts" id="heads"></div></details>
+  </section>
+  <section class="kpis" aria-label="Totals for the selection">
+    <div class="tile"><div class="cap">Total cases</div><div class="big" id="k-total"></div></div>
+    <div class="tile"><div class="cap">Reported crime (excl. recovery)</div><div class="big" id="k-reported"></div></div>
+    <div class="tile"><div class="cap">Selected crime heads</div><div class="big" id="k-heads"></div></div>
+    <div class="tile"><div class="cap">Recovery cases</div><div class="big" id="k-recovery"></div></div>
+  </section>
+  <section class="grid2">
+    <figure class="card"><figcaption>Monthly cases by crime head</figcaption><div id="trend" class="ex-chart"></div></figure>
+    <figure class="card"><figcaption>Selected heads by police unit</figcaption><div id="units-bar" class="ex-chart"></div></figure>
+  </section>
+  <section class="grid2 even">
+    <figure class="card"><figcaption>Calendar heatmap (selected heads)</figcaption><div id="heat" class="ex-chart"></div></figure>
+    <figure class="card"><figcaption>Crime mix in the selection (log scale)</figcaption><div id="mix" class="ex-chart"></div></figure>
+  </section>
+  <section class="card table-card">
+    <div class="table-top"><h3>Table view</h3><button type="button" class="btn small" id="csv">Download selection (CSV)</button></div>
+    <div class="table-wrap"><table id="table"></table></div>
+  </section>
+</main>
+<footer class="site-foot">
+  <p>Data: Bangladesh Police Headquarters monthly crime statistics (police.gov.bd), digitised from the scanned
+  PDFs and merged into one Excel file. Population: BBS Population and Housing Census 2022 (adjusted).
+  Built 05 October 2026 from <code>Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx</code>.</p>
+  <p>CSE628 Data Visualization, Fall 2026 · Class Test 1 (group task) ·
+  <a href="https://github.com/spaul571/bangladesh-crime-viz">Source code on GitHub</a></p>
+</footer></body></html>

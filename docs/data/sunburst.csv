@@ -1,0 +1,16 @@
+crime_head,family,cases
+Dacoity,Violent property,3236
+Robbery,Violent property,9760
+Murder,Violence against person,26143
+Speedy Trial,Public order,7483
+Riot,Public order,291
+Woman & Child Repression,Violence against person,161236
+Kidnapping,Violence against person,4886
+Police Assault,Public order,4464
+Burglary,Property,20797
+Theft,Property,66446
+Other Cases,Other cases,582250
+Arms Act,Recovery (police-initiated),13609
+Explosive Act,Recovery (police-initiated),3042
+Narcotics,Recovery (police-initiated),574077
+Smuggling,Recovery (police-initiated),19754

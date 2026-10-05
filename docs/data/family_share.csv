@@ -1,0 +1,369 @@
+date,family,share
+2019-01-31,Property crime,0.2758
+2019-02-28,Property crime,0.2779
+2019-03-31,Property crime,0.2744
+2019-04-30,Property crime,0.2493
+2019-05-31,Property crime,0.2336
+2019-06-30,Property crime,0.2183
+2019-07-31,Property crime,0.2288
+2019-08-31,Property crime,0.2316
+2019-09-30,Property crime,0.2455
+2019-10-31,Property crime,0.2502
+2019-11-30,Property crime,0.2537
+2019-12-31,Property crime,0.259
+2020-01-31,Property crime,0.2734
+2020-02-29,Property crime,0.2781
+2020-03-31,Property crime,0.268
+2020-04-30,Property crime,0.246
+2020-05-31,Property crime,0.2371
+2020-06-30,Property crime,0.2312
+2020-07-31,Property crime,0.2527
+2020-08-31,Property crime,0.2456
+2020-09-30,Property crime,0.2543
+2020-10-31,Property crime,0.2322
+2020-11-30,Property crime,0.2397
+2020-12-31,Property crime,0.2438
+2021-01-31,Property crime,0.2729
+2021-02-28,Property crime,0.2906
+2021-03-31,Property crime,0.285
+2021-04-30,Property crime,0.2692
+2021-05-31,Property crime,0.2579
+2021-06-30,Property crime,0.2528
+2021-07-31,Property crime,0.2637
+2021-08-31,Property crime,0.2754
+2021-09-30,Property crime,0.2881
+2021-10-31,Property crime,0.2871
+2021-11-30,Property crime,0.2822
+2021-12-31,Property crime,0.2908
+2022-01-31,Property crime,0.3051
+2022-02-28,Property crime,0.3186
+2022-03-31,Property crime,0.314
+2022-04-30,Property crime,0.311
+2022-05-31,Property crime,0.293
+2022-06-30,Property crime,0.2883
+2022-07-31,Property crime,0.2784
+2022-08-31,Property crime,0.2906
+2022-09-30,Property crime,0.295
+2022-10-31,Property crime,0.2966
+2022-11-30,Property crime,0.3025
+2022-12-31,Property crime,0.3151
+2023-01-31,Property crime,0.3409
+2023-02-28,Property crime,0.3454
+2023-03-31,Property crime,0.3286
+2023-04-30,Property crime,0.3163
+2023-05-31,Property crime,0.3033
+2023-06-30,Property crime,0.3009
+2023-07-31,Property crime,0.2966
+2023-08-31,Property crime,0.3083
+2023-09-30,Property crime,0.3154
+2023-10-31,Property crime,0.325
+2023-11-30,Property crime,0.3194
+2023-12-31,Property crime,0.3275
+2024-01-31,Property crime,0.3426
+2024-02-29,Property crime,0.3568
+2024-03-31,Property crime,0.353
+2024-04-30,Property crime,0.3309
+2024-05-31,Property crime,0.3107
+2024-06-30,Property crime,0.3004
+2024-07-31,Property crime,0.2919
+2024-08-31,Property crime,0.271
+2024-09-30,Property crime,0.2584
+2024-10-31,Property crime,0.2632
+2024-11-30,Property crime,0.2951
+2024-12-31,Property crime,0.3181
+2025-01-31,Property crime,0.3263
+2025-02-28,Property crime,0.3166
+2025-03-31,Property crime,0.2919
+2025-04-30,Property crime,0.2666
+2025-05-31,Property crime,0.2577
+2025-06-30,Property crime,0.2556
+2025-07-31,Property crime,0.2673
+2025-08-31,Property crime,0.2898
+2025-09-30,Property crime,0.3026
+2025-10-31,Property crime,0.3106
+2025-11-30,Property crime,0.3078
+2025-12-31,Property crime,0.3132
+2026-01-31,Property crime,0.3293
+2026-02-28,Property crime,0.3322
+2026-03-31,Property crime,0.3363
+2026-04-30,Property crime,0.3104
+2026-05-31,Property crime,0.2991
+2026-06-30,Property crime,0.2814
+2026-07-31,Property crime,0.2805
+2026-08-31,Property crime,0.2843
+2019-01-31,Public order,0.0487
+2019-02-28,Public order,0.0457
+2019-03-31,Public order,0.046
+2019-04-30,Public order,0.039
+2019-05-31,Public order,0.0308
+2019-06-30,Public order,0.023
+2019-07-31,Public order,0.018
+2019-08-31,Public order,0.0215
+2019-09-30,Public order,0.0236
+2019-10-31,Public order,0.0285
+2019-11-30,Public order,0.0274
+2019-12-31,Public order,0.0284
+2020-01-31,Public order,0.0277
+2020-02-29,Public order,0.0289
+2020-03-31,Public order,0.032
+2020-04-30,Public order,0.037
+2020-05-31,Public order,0.0415
+2020-06-30,Public order,0.0424
+2020-07-31,Public order,0.038
+2020-08-31,Public order,0.0346
+2020-09-30,Public order,0.0307
+2020-10-31,Public order,0.0306
+2020-11-30,Public order,0.032
+2020-12-31,Public order,0.0347
+2021-01-31,Public order,0.0384
+2021-02-28,Public order,0.0423
+2021-03-31,Public order,0.0483
+2021-04-30,Public order,0.0473
+2021-05-31,Public order,0.0478
+2021-06-30,Public order,0.0435
+2021-07-31,Public order,0.0434
+2021-08-31,Public order,0.0385
+2021-09-30,Public order,0.0349
+2021-10-31,Public order,0.0336
+2021-11-30,Public order,0.0436
+2021-12-31,Public order,0.0496
+2022-01-31,Public order,0.0547
+2022-02-28,Public order,0.0465
+2022-03-31,Public order,0.0448
+2022-04-30,Public order,0.0438
+2022-05-31,Public order,0.0428
+2022-06-30,Public order,0.0429
+2022-07-31,Public order,0.0397
+2022-08-31,Public order,0.038
+2022-09-30,Public order,0.0373
+2022-10-31,Public order,0.0403
+2022-11-30,Public order,0.0436
+2022-12-31,Public order,0.0464
+2023-01-31,Public order,0.0457
+2023-02-28,Public order,0.0492
+2023-03-31,Public order,0.0482
+2023-04-30,Public order,0.0497
+2023-05-31,Public order,0.0465
+2023-06-30,Public order,0.0454
+2023-07-31,Public order,0.0432
+2023-08-31,Public order,0.0406
+2023-09-30,Public order,0.0413
+2023-10-31,Public order,0.0429
+2023-11-30,Public order,0.0505
+2023-12-31,Public order,0.0507
+2024-01-31,Public order,0.053
+2024-02-29,Public order,0.0485
+2024-03-31,Public order,0.0504
+2024-04-30,Public order,0.0533
+2024-05-31,Public order,0.051
+2024-06-30,Public order,0.0481
+2024-07-31,Public order,0.0593
+2024-08-31,Public order,0.066
+2024-09-30,Public order,0.0713
+2024-10-31,Public order,0.0519
+2024-11-30,Public order,0.0486
+2024-12-31,Public order,0.047
+2025-01-31,Public order,0.0473
+2025-02-28,Public order,0.0449
+2025-03-31,Public order,0.0457
+2025-04-30,Public order,0.0441
+2025-05-31,Public order,0.0425
+2025-06-30,Public order,0.0361
+2025-07-31,Public order,0.0343
+2025-08-31,Public order,0.0315
+2025-09-30,Public order,0.0328
+2025-10-31,Public order,0.0363
+2025-11-30,Public order,0.0379
+2025-12-31,Public order,0.0373
+2026-01-31,Public order,0.0336
+2026-02-28,Public order,0.0336
+2026-03-31,Public order,0.0384
+2026-04-30,Public order,0.04
+2026-05-31,Public order,0.0401
+2026-06-30,Public order,0.0333
+2026-07-31,Public order,0.0287
+2026-08-31,Public order,0.0244
+2019-01-31,Violence against person,0.6342
+2019-02-28,Violence against person,0.6414
+2019-03-31,Violence against person,0.6488
+2019-04-30,Violence against person,0.6841
+2019-05-31,Violence against person,0.7066
+2019-06-30,Violence against person,0.7266
+2019-07-31,Violence against person,0.7185
+2019-08-31,Violence against person,0.7122
+2019-09-30,Violence against person,0.6976
+2019-10-31,Violence against person,0.689
+2019-11-30,Violence against person,0.6851
+2019-12-31,Violence against person,0.677
+2020-01-31,Violence against person,0.6619
+2020-02-29,Violence against person,0.6557
+2020-03-31,Violence against person,0.6632
+2020-04-30,Violence against person,0.684
+2020-05-31,Violence against person,0.6908
+2020-06-30,Violence against person,0.695
+2020-07-31,Violence against person,0.6762
+2020-08-31,Violence against person,0.6875
+2020-09-30,Violence against person,0.6831
+2020-10-31,Violence against person,0.705
+2020-11-30,Violence against person,0.6963
+2020-12-31,Violence against person,0.6899
+2021-01-31,Violence against person,0.6554
+2021-02-28,Violence against person,0.6332
+2021-03-31,Violence against person,0.6338
+2021-04-30,Violence against person,0.6533
+2021-05-31,Violence against person,0.6638
+2021-06-30,Violence against person,0.6724
+2021-07-31,Violence against person,0.6627
+2021-08-31,Violence against person,0.6564
+2021-09-30,Violence against person,0.6484
+2021-10-31,Violence against person,0.6476
+2021-11-30,Violence against person,0.6404
+2021-12-31,Violence against person,0.6239
+2022-01-31,Violence against person,0.6025
+2022-02-28,Violence against person,0.5958
+2022-03-31,Violence against person,0.602
+2022-04-30,Violence against person,0.6073
+2022-05-31,Violence against person,0.6296
+2022-06-30,Violence against person,0.6347
+2022-07-31,Violence against person,0.6476
+2022-08-31,Violence against person,0.6354
+2022-09-30,Violence against person,0.6296
+2022-10-31,Violence against person,0.6247
+2022-11-30,Violence against person,0.6148
+2022-12-31,Violence against person,0.6001
+2023-01-31,Violence against person,0.5717
+2023-02-28,Violence against person,0.5618
+2023-03-31,Violence against person,0.5778
+2023-04-30,Violence against person,0.5897
+2023-05-31,Violence against person,0.6081
+2023-06-30,Violence against person,0.6134
+2023-07-31,Violence against person,0.622
+2023-08-31,Violence against person,0.6137
+2023-09-30,Violence against person,0.6059
+2023-10-31,Violence against person,0.5947
+2023-11-30,Violence against person,0.5921
+2023-12-31,Violence against person,0.5798
+2024-01-31,Violence against person,0.5568
+2024-02-29,Violence against person,0.5419
+2024-03-31,Violence against person,0.5442
+2024-04-30,Violence against person,0.5694
+2024-05-31,Violence against person,0.5941
+2024-06-30,Violence against person,0.61
+2024-07-31,Violence against person,0.6078
+2024-08-31,Violence against person,0.6235
+2024-09-30,Violence against person,0.6276
+2024-10-31,Violence against person,0.6299
+2024-11-30,Violence against person,0.5956
+2024-12-31,Violence against person,0.5648
+2025-01-31,Violence against person,0.5547
+2025-02-28,Violence against person,0.5619
+2025-03-31,Violence against person,0.5942
+2025-04-30,Violence against person,0.6287
+2025-05-31,Violence against person,0.6422
+2025-06-30,Violence against person,0.6518
+2025-07-31,Violence against person,0.6408
+2025-08-31,Violence against person,0.6218
+2025-09-30,Violence against person,0.6071
+2025-10-31,Violence against person,0.5947
+2025-11-30,Violence against person,0.5984
+2025-12-31,Violence against person,0.5904
+2026-01-31,Violence against person,0.5737
+2026-02-28,Violence against person,0.5646
+2026-03-31,Violence against person,0.5617
+2026-04-30,Violence against person,0.5924
+2026-05-31,Violence against person,0.6067
+2026-06-30,Violence against person,0.6338
+2026-07-31,Violence against person,0.64
+2026-08-31,Violence against person,0.6425
+2019-01-31,Violent property crime,0.0413
+2019-02-28,Violent property crime,0.035
+2019-03-31,Violent property crime,0.0308
+2019-04-30,Violent property crime,0.0276
+2019-05-31,Violent property crime,0.0289
+2019-06-30,Violent property crime,0.0322
+2019-07-31,Violent property crime,0.0347
+2019-08-31,Violent property crime,0.0347
+2019-09-30,Violent property crime,0.0332
+2019-10-31,Violent property crime,0.0323
+2019-11-30,Violent property crime,0.0337
+2019-12-31,Violent property crime,0.0356
+2020-01-31,Violent property crime,0.037
+2020-02-29,Violent property crime,0.0373
+2020-03-31,Violent property crime,0.0369
+2020-04-30,Violent property crime,0.033
+2020-05-31,Violent property crime,0.0306
+2020-06-30,Violent property crime,0.0313
+2020-07-31,Violent property crime,0.033
+2020-08-31,Violent property crime,0.0323
+2020-09-30,Violent property crime,0.032
+2020-10-31,Violent property crime,0.0322
+2020-11-30,Violent property crime,0.0321
+2020-12-31,Violent property crime,0.0316
+2021-01-31,Violent property crime,0.0332
+2021-02-28,Violent property crime,0.0339
+2021-03-31,Violent property crime,0.033
+2021-04-30,Violent property crime,0.0301
+2021-05-31,Violent property crime,0.0305
+2021-06-30,Violent property crime,0.0314
+2021-07-31,Violent property crime,0.0301
+2021-08-31,Violent property crime,0.0297
+2021-09-30,Violent property crime,0.0286
+2021-10-31,Violent property crime,0.0317
+2021-11-30,Violent property crime,0.0339
+2021-12-31,Violent property crime,0.0357
+2022-01-31,Violent property crime,0.0376
+2022-02-28,Violent property crime,0.0391
+2022-03-31,Violent property crime,0.0392
+2022-04-30,Violent property crime,0.0379
+2022-05-31,Violent property crime,0.0346
+2022-06-30,Violent property crime,0.0341
+2022-07-31,Violent property crime,0.0343
+2022-08-31,Violent property crime,0.036
+2022-09-30,Violent property crime,0.0381
+2022-10-31,Violent property crime,0.0384
+2022-11-30,Violent property crime,0.0391
+2022-12-31,Violent property crime,0.0384
+2023-01-31,Violent property crime,0.0417
+2023-02-28,Violent property crime,0.0437
+2023-03-31,Violent property crime,0.0453
+2023-04-30,Violent property crime,0.0443
+2023-05-31,Violent property crime,0.0421
+2023-06-30,Violent property crime,0.0403
+2023-07-31,Violent property crime,0.0382
+2023-08-31,Violent property crime,0.0374
+2023-09-30,Violent property crime,0.0374
+2023-10-31,Violent property crime,0.0374
+2023-11-30,Violent property crime,0.038
+2023-12-31,Violent property crime,0.042
+2024-01-31,Violent property crime,0.0476
+2024-02-29,Violent property crime,0.0528
+2024-03-31,Violent property crime,0.0524
+2024-04-30,Violent property crime,0.0465
+2024-05-31,Violent property crime,0.0442
+2024-06-30,Violent property crime,0.0415
+2024-07-31,Violent property crime,0.0409
+2024-08-31,Violent property crime,0.0395
+2024-09-30,Violent property crime,0.0426
+2024-10-31,Violent property crime,0.055
+2024-11-30,Violent property crime,0.0606
+2024-12-31,Violent property crime,0.0701
+2025-01-31,Violent property crime,0.0716
+2025-02-28,Violent property crime,0.0766
+2025-03-31,Violent property crime,0.0682
+2025-04-30,Violent property crime,0.0606
+2025-05-31,Violent property crime,0.0576
+2025-06-30,Violent property crime,0.0564
+2025-07-31,Violent property crime,0.0577
+2025-08-31,Violent property crime,0.0569
+2025-09-30,Violent property crime,0.0575
+2025-10-31,Violent property crime,0.0585
+2025-11-30,Violent property crime,0.0558
+2025-12-31,Violent property crime,0.0592
+2026-01-31,Violent property crime,0.0634
+2026-02-28,Violent property crime,0.0696
+2026-03-31,Violent property crime,0.0636
+2026-04-30,Violent property crime,0.0573
+2026-05-31,Violent property crime,0.0541
+2026-06-30,Violent property crime,0.0516
+2026-07-31,Violent property crime,0.0508
+2026-08-31,Violent property crime,0.0487

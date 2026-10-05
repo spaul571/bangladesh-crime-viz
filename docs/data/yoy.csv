@@ -1,0 +1,121 @@
+pair,crime,base,new,chg,dir,label
+2025 vs 2023,Dacoity,319,702,120.1,Rose,+120%
+2025 vs 2023,Robbery,1227,1935,57.7,Rose,+58%
+2025 vs 2023,Murder,3023,3786,25.2,Rose,+25%
+2025 vs 2023,Speedy Trial,1104,988,-10.5,Fell,−10%
+2025 vs 2023,Riot,28,66,135.7,Rose,+136%
+2025 vs 2023,Woman & child repression,18941,21939,15.8,Rose,+16%
+2025 vs 2023,Kidnapping,463,1101,137.8,Rose,+138%
+2025 vs 2023,Police Assault,607,601,-1.0,Fell,−1%
+2025 vs 2023,Burglary,2483,3068,23.6,Rose,+24%
+2025 vs 2023,Theft,9475,9672,2.1,Rose,+2%
+2025 vs 2023,Other Cases,76623,81747,6.7,Rose,+7%
+2025 vs 2023,Arms Act,1461,1815,24.2,Rose,+24%
+2025 vs 2023,Explosive Act,778,423,-45.6,Fell,−46%
+2025 vs 2023,Narcotics,76403,51805,-32.2,Fell,−32%
+2025 vs 2023,Smuggling,2501,2089,-16.5,Fell,−16%
+2025 vs 2024,Dacoity,490,702,43.3,Rose,+43%
+2025 vs 2024,Robbery,1404,1935,37.8,Rose,+38%
+2025 vs 2024,Murder,3440,3786,10.1,Rose,+10%
+2025 vs 2024,Speedy Trial,1226,988,-19.4,Fell,−19%
+2025 vs 2024,Riot,125,66,-47.2,Fell,−47%
+2025 vs 2024,Woman & child repression,17571,21939,24.9,Rose,+25%
+2025 vs 2024,Kidnapping,642,1101,71.5,Rose,+72%
+2025 vs 2024,Police Assault,643,601,-6.5,Fell,−6%
+2025 vs 2024,Burglary,2655,3068,15.6,Rose,+16%
+2025 vs 2024,Theft,8655,9672,11.8,Rose,+12%
+2025 vs 2024,Other Cases,78354,81747,4.3,Rose,+4%
+2025 vs 2024,Arms Act,1388,1815,30.8,Rose,+31%
+2025 vs 2024,Explosive Act,611,423,-30.8,Fell,−31%
+2025 vs 2024,Narcotics,52717,51805,-1.7,Fell,−2%
+2025 vs 2024,Smuggling,2084,2089,0.2,Rose,+0%
+2024 vs 2023,Dacoity,319,490,53.6,Rose,+54%
+2024 vs 2023,Robbery,1227,1404,14.4,Rose,+14%
+2024 vs 2023,Murder,3023,3440,13.8,Rose,+14%
+2024 vs 2023,Speedy Trial,1104,1226,11.1,Rose,+11%
+2024 vs 2023,Riot,28,125,346.4,Rose,+346%
+2024 vs 2023,Woman & child repression,18941,17571,-7.2,Fell,−7%
+2024 vs 2023,Kidnapping,463,642,38.7,Rose,+39%
+2024 vs 2023,Police Assault,607,643,5.9,Rose,+6%
+2024 vs 2023,Burglary,2483,2655,6.9,Rose,+7%
+2024 vs 2023,Theft,9475,8655,-8.7,Fell,−9%
+2024 vs 2023,Other Cases,76623,78354,2.3,Rose,+2%
+2024 vs 2023,Arms Act,1461,1388,-5.0,Fell,−5%
+2024 vs 2023,Explosive Act,778,611,-21.5,Fell,−22%
+2024 vs 2023,Narcotics,76403,52717,-31.0,Fell,−31%
+2024 vs 2023,Smuggling,2501,2084,-16.7,Fell,−17%
+2023 vs 2022,Dacoity,406,319,-21.4,Fell,−21%
+2023 vs 2022,Robbery,1128,1227,8.8,Rose,+9%
+2023 vs 2022,Murder,3126,3023,-3.3,Fell,−3%
+2023 vs 2022,Speedy Trial,1132,1104,-2.5,Fell,−2%
+2023 vs 2022,Riot,13,28,115.4,Rose,+115%
+2023 vs 2022,Woman & child repression,21766,18941,-13.0,Fell,−13%
+2023 vs 2022,Kidnapping,460,463,0.7,Rose,+1%
+2023 vs 2022,Police Assault,601,607,1.0,Rose,+1%
+2023 vs 2022,Burglary,2810,2483,-11.6,Fell,−12%
+2023 vs 2022,Theft,9591,9475,-1.2,Fell,−1%
+2023 vs 2022,Other Cases,76234,76623,0.5,Rose,+0%
+2023 vs 2022,Arms Act,1540,1461,-5.1,Fell,−5%
+2023 vs 2022,Explosive Act,462,778,68.4,Rose,+68%
+2023 vs 2022,Narcotics,82675,76403,-7.6,Fell,−8%
+2023 vs 2022,Smuggling,2286,2501,9.4,Rose,+9%
+2022 vs 2021,Dacoity,308,406,31.8,Rose,+32%
+2022 vs 2021,Robbery,971,1128,16.2,Rose,+16%
+2022 vs 2021,Murder,3214,3126,-2.7,Fell,−3%
+2022 vs 2021,Speedy Trial,1117,1132,1.3,Rose,+1%
+2022 vs 2021,Riot,23,13,-43.5,Fell,−44%
+2022 vs 2021,Woman & child repression,22136,21766,-1.7,Fell,−2%
+2022 vs 2021,Kidnapping,445,460,3.4,Rose,+3%
+2022 vs 2021,Police Assault,608,601,-1.2,Fell,−1%
+2022 vs 2021,Burglary,2645,2810,6.2,Rose,+6%
+2022 vs 2021,Theft,8498,9591,12.9,Rose,+13%
+2022 vs 2021,Other Cases,73468,76234,3.8,Rose,+4%
+2022 vs 2021,Arms Act,1861,1540,-17.2,Fell,−17%
+2022 vs 2021,Explosive Act,268,462,72.4,Rose,+72%
+2022 vs 2021,Narcotics,79675,82675,3.8,Rose,+4%
+2022 vs 2021,Smuggling,2273,2286,0.6,Rose,+1%
+2021 vs 2020,Dacoity,302,308,2.0,Rose,+2%
+2021 vs 2020,Robbery,978,971,-0.7,Fell,−1%
+2021 vs 2020,Murder,3539,3214,-9.2,Fell,−9%
+2021 vs 2020,Speedy Trial,871,1117,28.2,Rose,+28%
+2021 vs 2020,Riot,13,23,76.9,Rose,+77%
+2021 vs 2020,Woman & child repression,22517,22136,-1.7,Fell,−2%
+2021 vs 2020,Kidnapping,486,445,-8.4,Fell,−8%
+2021 vs 2020,Police Assault,449,608,35.4,Rose,+35%
+2021 vs 2020,Burglary,2533,2645,4.4,Rose,+4%
+2021 vs 2020,Theft,7200,8498,18.0,Rose,+18%
+2021 vs 2020,Other Cases,71096,73468,3.3,Rose,+3%
+2021 vs 2020,Arms Act,1690,1861,10.1,Rose,+10%
+2021 vs 2020,Explosive Act,146,268,83.6,Rose,+84%
+2021 vs 2020,Narcotics,73339,79675,8.6,Rose,+9%
+2021 vs 2020,Smuggling,2767,2273,-17.9,Fell,−18%
+2020 vs 2019,Dacoity,350,302,-13.7,Fell,−14%
+2020 vs 2019,Robbery,896,978,9.2,Rose,+9%
+2020 vs 2019,Murder,3653,3539,-3.1,Fell,−3%
+2020 vs 2019,Speedy Trial,531,871,64.0,Rose,+64%
+2020 vs 2019,Riot,8,13,62.5,Rose,+62%
+2020 vs 2019,Woman & child repression,21764,22517,3.5,Rose,+4%
+2020 vs 2019,Kidnapping,598,486,-18.7,Fell,−19%
+2020 vs 2019,Police Assault,555,449,-19.1,Fell,−19%
+2020 vs 2019,Burglary,2439,2533,3.9,Rose,+4%
+2020 vs 2019,Theft,6880,7200,4.7,Rose,+5%
+2020 vs 2019,Other Cases,69936,71096,1.7,Rose,+2%
+2020 vs 2019,Arms Act,2572,1690,-34.3,Fell,−34%
+2020 vs 2019,Explosive Act,196,146,-25.5,Fell,−26%
+2020 vs 2019,Narcotics,111192,73339,-34.0,Fell,−34%
+2020 vs 2019,Smuggling,4114,2767,-32.7,Fell,−33%
+Jan–Aug 2026 vs Jan–Aug 2025,Dacoity,488,359,-26.4,Fell,−26%
+Jan–Aug 2026 vs Jan–Aug 2025,Robbery,1314,1221,-7.1,Fell,−7%
+Jan–Aug 2026 vs Jan–Aug 2025,Murder,2614,2362,-9.6,Fell,−10%
+Jan–Aug 2026 vs Jan–Aug 2025,Speedy Trial,651,514,-21.0,Fell,−21%
+Jan–Aug 2026 vs Jan–Aug 2025,Riot,59,15,-74.6,Fell,−75%
+Jan–Aug 2026 vs Jan–Aug 2025,Woman & child repression,15034,14602,-2.9,Fell,−3%
+Jan–Aug 2026 vs Jan–Aug 2025,Kidnapping,715,691,-3.4,Fell,−3%
+Jan–Aug 2026 vs Jan–Aug 2025,Police Assault,419,400,-4.5,Fell,−4%
+Jan–Aug 2026 vs Jan–Aug 2025,Burglary,1956,2164,10.6,Rose,+11%
+Jan–Aug 2026 vs Jan–Aug 2025,Theft,6343,6475,2.1,Rose,+2%
+Jan–Aug 2026 vs Jan–Aug 2025,Other Cases,55531,54792,-1.3,Fell,−1%
+Jan–Aug 2026 vs Jan–Aug 2025,Arms Act,1205,1282,6.4,Rose,+6%
+Jan–Aug 2026 vs Jan–Aug 2025,Explosive Act,264,158,-40.2,Fell,−40%
+Jan–Aug 2026 vs Jan–Aug 2025,Narcotics,34544,46271,33.9,Rose,+34%
+Jan–Aug 2026 vs Jan–Aug 2025,Smuggling,1302,1640,26.0,Rose,+26%

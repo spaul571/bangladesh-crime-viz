@@ -1,0 +1,193 @@
+basis,crime,month,idx,lo,hi
+Normal years only,Woman & child repression,Jan,77.9,69.7,86.2
+Normal years only,Woman & child repression,Feb,78.8,72.5,85.2
+Normal years only,Woman & child repression,Mar,101.9,88.7,115.2
+Normal years only,Woman & child repression,Apr,103.7,96.3,111.2
+Normal years only,Woman & child repression,May,111.1,105.2,117.0
+Normal years only,Woman & child repression,Jun,114.6,109.1,120.0
+Normal years only,Woman & child repression,Jul,110.0,103.9,116.1
+Normal years only,Woman & child repression,Aug,112.6,106.1,119.1
+Normal years only,Woman & child repression,Sep,113.8,106.9,120.7
+Normal years only,Woman & child repression,Oct,108.2,103.9,112.4
+Normal years only,Woman & child repression,Nov,92.1,84.0,100.2
+Normal years only,Woman & child repression,Dec,75.2,67.4,83.0
+Normal years only,Murder,Jan,98.1,88.3,108.0
+Normal years only,Murder,Feb,90.4,87.2,93.6
+Normal years only,Murder,Mar,101.4,95.4,107.3
+Normal years only,Murder,Apr,109.0,103.7,114.2
+Normal years only,Murder,May,105.4,101.2,109.5
+Normal years only,Murder,Jun,106.8,98.0,115.7
+Normal years only,Murder,Jul,112.6,107.5,117.7
+Normal years only,Murder,Aug,104.2,99.8,108.6
+Normal years only,Murder,Sep,97.0,90.2,103.8
+Normal years only,Murder,Oct,99.0,93.5,104.5
+Normal years only,Murder,Nov,91.0,86.6,95.4
+Normal years only,Murder,Dec,85.1,79.9,90.3
+Normal years only,Theft,Jan,94.7,89.6,99.8
+Normal years only,Theft,Feb,89.6,85.1,94.1
+Normal years only,Theft,Mar,102.2,95.0,109.4
+Normal years only,Theft,Apr,95.1,86.4,103.7
+Normal years only,Theft,May,95.6,89.9,101.2
+Normal years only,Theft,Jun,100.0,93.7,106.2
+Normal years only,Theft,Jul,100.5,95.4,105.7
+Normal years only,Theft,Aug,111.6,105.3,117.9
+Normal years only,Theft,Sep,114.5,108.2,120.9
+Normal years only,Theft,Oct,109.6,102.1,117.1
+Normal years only,Theft,Nov,95.7,87.8,103.7
+Normal years only,Theft,Dec,91.0,85.3,96.6
+Normal years only,Burglary,Jan,95.3,88.1,102.6
+Normal years only,Burglary,Feb,84.9,77.2,92.6
+Normal years only,Burglary,Mar,90.5,83.1,97.9
+Normal years only,Burglary,Apr,87.1,81.4,92.8
+Normal years only,Burglary,May,92.5,89.8,95.2
+Normal years only,Burglary,Jun,95.7,93.9,97.5
+Normal years only,Burglary,Jul,113.5,110.0,116.9
+Normal years only,Burglary,Aug,124.5,116.8,132.3
+Normal years only,Burglary,Sep,114.0,107.0,120.9
+Normal years only,Burglary,Oct,111.1,105.3,117.0
+Normal years only,Burglary,Nov,97.0,90.0,104.1
+Normal years only,Burglary,Dec,93.9,84.8,103.0
+Normal years only,Robbery,Jan,101.2,95.1,107.4
+Normal years only,Robbery,Feb,84.1,70.4,97.8
+Normal years only,Robbery,Mar,94.4,73.5,115.2
+Normal years only,Robbery,Apr,103.1,93.7,112.5
+Normal years only,Robbery,May,101.1,93.1,109.1
+Normal years only,Robbery,Jun,103.3,92.0,114.6
+Normal years only,Robbery,Jul,100.4,83.4,117.4
+Normal years only,Robbery,Aug,106.9,102.7,111.0
+Normal years only,Robbery,Sep,106.2,101.1,111.4
+Normal years only,Robbery,Oct,112.1,106.4,117.8
+Normal years only,Robbery,Nov,98.1,81.6,114.6
+Normal years only,Robbery,Dec,89.1,80.7,97.5
+Normal years only,Dacoity,Jan,110.0,96.1,123.8
+Normal years only,Dacoity,Feb,99.7,82.5,116.9
+Normal years only,Dacoity,Mar,95.4,80.4,110.4
+Normal years only,Dacoity,Apr,77.0,65.3,88.7
+Normal years only,Dacoity,May,97.8,76.1,119.5
+Normal years only,Dacoity,Jun,107.5,84.1,130.8
+Normal years only,Dacoity,Jul,114.6,93.4,135.7
+Normal years only,Dacoity,Aug,104.0,90.9,117.0
+Normal years only,Dacoity,Sep,104.7,80.3,129.0
+Normal years only,Dacoity,Oct,106.8,90.9,122.7
+Normal years only,Dacoity,Nov,87.9,75.4,100.4
+Normal years only,Dacoity,Dec,94.7,74.1,115.3
+Normal years only,Kidnapping,Jan,102.0,87.6,116.5
+Normal years only,Kidnapping,Feb,84.2,67.1,101.4
+Normal years only,Kidnapping,Mar,98.2,85.9,110.6
+Normal years only,Kidnapping,Apr,99.6,92.6,106.5
+Normal years only,Kidnapping,May,98.3,82.4,114.2
+Normal years only,Kidnapping,Jun,110.0,94.6,125.4
+Normal years only,Kidnapping,Jul,91.8,74.3,109.3
+Normal years only,Kidnapping,Aug,112.4,88.7,136.1
+Normal years only,Kidnapping,Sep,118.6,98.2,139.0
+Normal years only,Kidnapping,Oct,118.8,95.8,141.9
+Normal years only,Kidnapping,Nov,84.7,73.0,96.4
+Normal years only,Kidnapping,Dec,81.4,72.6,90.3
+Normal years only,Narcotics,Jan,102.2,98.4,106.1
+Normal years only,Narcotics,Feb,99.0,90.7,107.3
+Normal years only,Narcotics,Mar,105.1,97.8,112.5
+Normal years only,Narcotics,Apr,96.5,87.6,105.3
+Normal years only,Narcotics,May,100.6,95.3,106.0
+Normal years only,Narcotics,Jun,96.2,90.0,102.4
+Normal years only,Narcotics,Jul,100.0,89.3,110.8
+Normal years only,Narcotics,Aug,110.0,102.7,117.3
+Normal years only,Narcotics,Sep,106.9,102.6,111.2
+Normal years only,Narcotics,Oct,98.3,93.6,103.0
+Normal years only,Narcotics,Nov,92.6,82.4,102.9
+Normal years only,Narcotics,Dec,92.4,90.4,94.4
+All full years,Woman & child repression,Jan,78.2,71.6,84.8
+All full years,Woman & child repression,Feb,82.9,76.1,89.7
+All full years,Woman & child repression,Mar,101.3,92.0,110.6
+All full years,Woman & child repression,Apr,97.0,80.5,113.5
+All full years,Woman & child repression,May,105.5,90.6,120.4
+All full years,Woman & child repression,Jun,111.5,104.3,118.8
+All full years,Woman & child repression,Jul,109.7,104.5,114.9
+All full years,Woman & child repression,Aug,108.5,95.8,121.2
+All full years,Woman & child repression,Sep,114.5,108.4,120.5
+All full years,Woman & child repression,Oct,115.2,100.6,129.8
+All full years,Woman & child repression,Nov,96.7,87.8,105.7
+All full years,Woman & child repression,Dec,79.0,71.4,86.6
+All full years,Murder,Jan,94.8,86.4,103.2
+All full years,Murder,Feb,89.0,86.1,91.9
+All full years,Murder,Mar,97.8,91.3,104.3
+All full years,Murder,Apr,105.8,99.9,111.7
+All full years,Murder,May,105.7,98.2,113.1
+All full years,Murder,Jun,104.3,97.2,111.5
+All full years,Murder,Jul,114.4,110.1,118.7
+All full years,Murder,Aug,121.2,89.3,153.1
+All full years,Murder,Sep,96.9,92.2,101.6
+All full years,Murder,Oct,97.9,92.5,103.2
+All full years,Murder,Nov,88.6,82.8,94.4
+All full years,Murder,Dec,83.5,78.0,88.9
+All full years,Theft,Jan,98.7,92.2,105.2
+All full years,Theft,Feb,93.8,86.5,101.2
+All full years,Theft,Mar,103.5,95.7,111.2
+All full years,Theft,Apr,91.0,75.2,106.7
+All full years,Theft,May,92.1,82.7,101.5
+All full years,Theft,Jun,98.2,91.9,104.5
+All full years,Theft,Jul,105.9,97.0,114.8
+All full years,Theft,Aug,101.2,84.3,118.0
+All full years,Theft,Sep,111.7,101.2,122.2
+All full years,Theft,Oct,110.3,102.9,117.7
+All full years,Theft,Nov,98.6,91.5,105.8
+All full years,Theft,Dec,95.1,88.3,101.8
+All full years,Burglary,Jan,98.9,91.9,106.0
+All full years,Burglary,Feb,89.6,81.5,97.6
+All full years,Burglary,Mar,91.8,86.3,97.4
+All full years,Burglary,Apr,82.7,69.0,96.4
+All full years,Burglary,May,89.4,80.8,98.0
+All full years,Burglary,Jun,97.0,91.0,103.0
+All full years,Burglary,Jul,109.8,104.5,115.1
+All full years,Burglary,Aug,114.9,96.1,133.8
+All full years,Burglary,Sep,114.3,107.9,120.7
+All full years,Burglary,Oct,113.1,107.7,118.5
+All full years,Burglary,Nov,100.4,93.6,107.1
+All full years,Burglary,Dec,98.0,89.9,106.1
+All full years,Robbery,Jan,100.8,96.4,105.2
+All full years,Robbery,Feb,90.1,78.0,102.2
+All full years,Robbery,Mar,97.9,82.1,113.7
+All full years,Robbery,Apr,91.1,72.1,110.1
+All full years,Robbery,May,96.6,86.9,106.3
+All full years,Robbery,Jun,100.2,91.3,109.1
+All full years,Robbery,Jul,100.0,87.1,112.9
+All full years,Robbery,Aug,98.6,83.4,113.8
+All full years,Robbery,Sep,107.0,97.7,116.3
+All full years,Robbery,Oct,120.3,108.9,131.7
+All full years,Robbery,Nov,100.2,87.9,112.4
+All full years,Robbery,Dec,97.3,83.1,111.4
+All full years,Dacoity,Jan,110.8,90.5,131.2
+All full years,Dacoity,Feb,97.5,84.4,110.6
+All full years,Dacoity,Mar,91.7,77.1,106.2
+All full years,Dacoity,Apr,70.8,57.8,83.9
+All full years,Dacoity,May,87.0,65.5,108.4
+All full years,Dacoity,Jun,104.7,87.7,121.7
+All full years,Dacoity,Jul,104.3,84.1,124.6
+All full years,Dacoity,Aug,103.1,93.0,113.2
+All full years,Dacoity,Sep,110.6,91.2,130.0
+All full years,Dacoity,Oct,118.3,98.2,138.3
+All full years,Dacoity,Nov,95.7,82.6,108.8
+All full years,Dacoity,Dec,105.5,79.1,132.0
+All full years,Kidnapping,Jan,100.3,90.0,110.5
+All full years,Kidnapping,Feb,86.1,73.3,99.0
+All full years,Kidnapping,Mar,97.5,89.0,106.1
+All full years,Kidnapping,Apr,89.3,67.6,111.0
+All full years,Kidnapping,May,90.2,72.3,108.2
+All full years,Kidnapping,Jun,100.3,82.3,118.3
+All full years,Kidnapping,Jul,87.5,72.4,102.6
+All full years,Kidnapping,Aug,104.8,80.5,129.0
+All full years,Kidnapping,Sep,121.1,106.5,135.7
+All full years,Kidnapping,Oct,129.9,106.8,153.1
+All full years,Kidnapping,Nov,95.0,79.5,110.4
+All full years,Kidnapping,Dec,98.0,76.1,119.9
+All full years,Narcotics,Jan,112.6,98.4,126.8
+All full years,Narcotics,Feb,110.4,94.9,126.0
+All full years,Narcotics,Mar,113.4,101.1,125.6
+All full years,Narcotics,Apr,89.8,67.4,112.3
+All full years,Narcotics,May,95.4,75.9,114.8
+All full years,Narcotics,Jun,94.7,83.8,105.7
+All full years,Narcotics,Jul,106.1,94.5,117.8
+All full years,Narcotics,Aug,94.7,69.9,119.6
+All full years,Narcotics,Sep,97.1,78.7,115.6
+All full years,Narcotics,Oct,96.0,88.0,104.1
+All full years,Narcotics,Nov,95.0,86.2,103.8
+All full years,Narcotics,Dec,94.7,90.5,98.8
