@@ -90,7 +90,8 @@ def write_explorer_data(R):
            "unit_type": [m[m.unit == u].unit_type.iloc[0] for u in A.UNITS],
            "division": [A.DIVISION.get(u) for u in A.UNITS],
            "cols": cols, "heads": A.HEADS, "family": {h: C.FAMILY[h] for h in A.HEADS},
-           "pop": A.POP, "iso": C.ISO, "anchor": C.ANCHOR, "geo": _round(C.GEO), "values": vals}
+           "pop": A.POP, "iso": C.ISO, "anchor": C.ANCHOR, "geo": _round(C.GEO),
+           "backlog": [int(R["nat"].loc[d, "backlog_murder_cases"]) for d in months], "values": vals}
     (DOCS / "data" / "explorer.json").write_text(json.dumps(out, separators=(",", ":")),
                                                  encoding="utf-8")
 
@@ -610,10 +611,13 @@ def overview_html(N):
         return (f'<figure class="card"><figcaption title="{escape(title)}">{title}{note}</figcaption>'
                 f'<div id="{cid}" class="ex-chart"></div></figure>')
 
-    def tile(big, cap, kid=None):
-        if kid:
-            return f'<div class="tile sel"><div class="cap">{cap}</div><div class="big" id="{kid}"></div></div>'
-        return f'<div class="tile"><div class="big">{big}</div><div class="cap">{cap}</div></div>'
+    def total(kid, cap):
+        return (f'<div class="tile sel"><div class="cap" id="{kid}-cap">{cap}</div>'
+                f'<div class="big" id="{kid}"></div></div>')
+
+    def change(kid):
+        return (f'<div class="tile"><div class="big" id="{kid}"></div>'
+                f'<div class="cap" id="{kid}-cap"></div></div>')
     return f"""
 <section class="dash" id="overview" aria-label="Overview of the dataset">
   <div class="dash-top">
@@ -633,19 +637,19 @@ def overview_html(N):
     <a class="story-link" href="#story">Read the story ↓</a>
   </div>
   <div class="dash-tiles">
-    <div class="tgroup" aria-label="Headline findings">
-      <span class="tg-label">Headline findings</span>
-      {tile(N['grand'], f"cases recorded, {N['first']} – {N['last']}")}
-      {tile('−' + N['aug_drop'], "fall in recorded cases from July to August 2024")}
-      {tile(N['chg_Kidnapping'], "kidnapping, 24 months after vs 24 months before August 2024")}
-      {tile(N['chg_MurderAdj'], f"murder once backlog filings are removed (not significant), against {N['chg_Murder']} raw")}
-    </div>
     <div class="tgroup" aria-label="Totals for your selection">
-      <span class="tg-label">Your selection</span>
-      {tile('', "Total cases", "k-total")}
-      {tile('', "Reported crime (excl. recovery)", "k-reported")}
-      {tile('', "Selected crime heads", "k-heads")}
-      {tile('', "Recovery cases", "k-recovery")}
+      <span class="tg-label">Totals for your selection</span>
+      {total("k-total", "Total cases")}
+      {total("k-reported", "Reported crime (excl. recovery)")}
+      {total("k-recovery", "Recovery cases (police-initiated)")}
+      {total("k-heads", "Selected crime heads")}
+    </div>
+    <div class="tgroup" aria-label="What changed in your selection">
+      <span class="tg-label">What changed in your selection</span>
+      {change("k-drop")}
+      {change("k-fewer")}
+      {change("k-riser")}
+      {change("k-murder")}
     </div>
   </div>
   <div class="dash-grid">

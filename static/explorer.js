@@ -38,6 +38,8 @@
     "Narcotics", "Theft", "Arms Act"];
   const DASHES = ["dot", "dash", "longdash", "dashdot", "longdashdot", "5px,2px", "2px,6px"];
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+    "October", "November", "December"];
   const BREAK = "2024-08-05";
 
   let D = null;
@@ -54,6 +56,63 @@
     const L = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
     return 1.05 / (L + 0.05) > (L + 0.05) / 0.05 ? "#ffffff" : "#0b0b0b";
   }
+  const flabel = (iso) => FULL[+iso.slice(5, 7) - 1] + " " + iso.slice(0, 4);
+  const pct = (v) => (v === null || !isFinite(v) ? "–" : (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + "%");
+  const mean = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+
+  // Two equal windows to compare: either side of August 2024 (at most 24 months each,
+  // August 2024 itself left out) when the period crosses it, else the first and last
+  // months of the period.
+  function windows() {
+    const brk = D.months.indexOf("2024-08-31");
+    const before = [], after = [];
+    for (let i = S.from; i <= S.to; i++) { if (i < brk) before.push(i); else if (i > brk) after.push(i); }
+    const n = Math.min(24, before.length, after.length);
+    if (n >= 3) {
+      return { a: before.slice(before.length - n), b: after.slice(0, n),
+        label: n + " months after vs " + n + " months before August 2024" };
+    }
+    const k = Math.min(12, Math.floor((S.to - S.from + 1) / 2));
+    if (k < 1) return null;
+    const a = [], b = [];
+    for (let i = 0; i < k; i++) { a.push(S.from + i); b.push(S.to - k + 1 + i); }
+    return { a, b, label: "last " + k + " vs first " + k + " months of the period" };
+  }
+
+  // two-sided Mann-Whitney U test (normal approximation with tie and continuity correction)
+  function mannWhitneyP(a, b) {
+    const all = a.map((v) => [v, 0]).concat(b.map((v) => [v, 1])).sort((x, y) => x[0] - y[0]);
+    const n = all.length, ranks = new Array(n);
+    let ties = 0;
+    for (let i = 0; i < n;) {
+      let j = i;
+      while (j + 1 < n && all[j + 1][0] === all[i][0]) j++;
+      for (let k = i; k <= j; k++) ranks[k] = (i + j) / 2 + 1;
+      const t = j - i + 1;
+      ties += t * t * t - t;
+      i = j + 1;
+    }
+    const n1 = a.length, n2 = b.length;
+    const r1 = all.reduce((s, x, k) => s + (x[1] === 0 ? ranks[k] : 0), 0);
+    const u = r1 - n1 * (n1 + 1) / 2;
+    const sd = Math.sqrt(n1 * n2 / 12 * ((n + 1) - ties / (n * (n - 1))));
+    if (!sd) return 1;
+    const z = Math.max(0, Math.abs(u - n1 * n2 / 2) - 0.5) / sd;
+    return 2 * (1 - normCdf(z));
+  }
+  function normCdf(z) {   // Abramowitz-Stegun 7.1.26
+    const t = 1 / (1 + 0.3275911 * z / Math.SQRT2);
+    const e = 1 - t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))))
+      * Math.exp(-z * z / 2);
+    return 0.5 * (1 + e);
+  }
+
+  function setTile(id, big, cap, title) {
+    $(id).textContent = big;
+    if (cap !== undefined) $(id + "-cap").textContent = cap;
+    $(id).parentNode.title = title || "";
+  }
+
   const mlabel = (iso) => { const [y, m] = iso.split("-"); return MONTHS[+m - 1] + " " + y; };
 
   function headStyle(h) {
@@ -243,10 +302,67 @@
     // totals
     const tot = (c) => months.reduce((s, mi) => s + monthSum(mi, units, col(c)), 0);
     const headsIn = (mi, uis) => heads.reduce((s, h) => s + monthSum(mi, uis, col(h)), 0);
-    $("k-total").textContent = fmt(tot("Total Cases"));
-    $("k-reported").textContent = fmt(tot("Reported Crime (excl. Recovery)"));
-    $("k-heads").textContent = fmt(heads.reduce((s, h) => s + tot(h), 0));
-    $("k-recovery").textContent = fmt(tot("Recovery Total"));
+    const where = S.units.size ? " in the selected units" : "";
+    setTile("k-total", fmt(tot("Total Cases")), "Total cases, " + mlabel(D.months[S.from]) +
+      (S.to > S.from ? " – " + mlabel(D.months[S.to]) : ""));
+    setTile("k-reported", fmt(tot("Reported Crime (excl. Recovery)")));
+    setTile("k-recovery", fmt(tot("Recovery Total")));
+    setTile("k-heads", fmt(heads.reduce((s, h) => s + tot(h), 0)),
+      heads.length === 1 ? heads[0] : heads.length + " selected crime heads", heads.join(", "));
+
+    // what changed
+    const series = (c) => (mi) => monthSum(mi, units, col(c));
+    const total = series("Total Cases");
+    const jul = D.months.indexOf("2024-07-31"), aug = jul + 1;
+    if (S.from <= jul && S.to >= aug) {
+      const v = (total(aug) / total(jul) - 1) * 100;
+      setTile("k-drop", pct(v), (v < 0 ? "fall" : "change") + " in recorded cases from July to August 2024" + where);
+    } else if (S.to > S.from) {
+      let best = null;
+      for (let i = S.from + 1; i <= S.to; i++) {
+        const v = (total(i) / total(i - 1) - 1) * 100;
+        if (isFinite(v) && (best === null || v < best[0])) best = [v, i];
+      }
+      setTile("k-drop", pct(best ? best[0] : null), best ? "sharpest one-month change in recorded cases, " +
+        flabel(D.months[best[1] - 1]) + " to " + flabel(D.months[best[1]]) + where : "");
+    } else {
+      setTile("k-drop", "–", "choose at least two months to see a monthly change");
+    }
+    const w = windows();
+    const chg = (f) => (w ? (mean(w.b.map(f)) / mean(w.a.map(f)) - 1) * 100 : null);
+    if (w) {
+      setTile("k-fewer", pct(chg(total)), "recorded cases" + where + ", " + w.label + "; reported crime " +
+        pct(chg(series("Reported Crime (excl. Recovery)"))),
+        "Mean monthly cases in the two windows. Recorded cases include police-initiated recovery cases; reported crime excludes them.");
+      const rank = heads.map((h) => [h, chg(series(h))]).filter((x) => isFinite(x[1]))
+        .sort((x, y) => Math.abs(y[1]) - Math.abs(x[1]));
+      if (rank.length) {
+        setTile("k-riser", pct(rank[0][1]), rank[0][0].toLowerCase() + where + ", " + w.label,
+          heads.length > 1 ? "The largest change among the " + heads.length + " selected crime heads." : "");
+      } else {
+        setTile("k-riser", "–", "no cases of the selected heads in one of the two windows");
+      }
+      const murder = series("Murder");
+      const backlogIn = w.a.concat(w.b).reduce((s, mi) => s + D.backlog[mi], 0);
+      if (!S.units.size && !backlogIn) {
+        const p = mannWhitneyP(w.a.map(murder), w.b.map(murder));
+        setTile("k-murder", pct(chg(murder)), "murder, " + w.label + " (" +
+          (p < 0.05 ? "significant" : "not significant") + "; no backlog filings in these months)",
+          "Mann-Whitney p = " + p.toFixed(2) + ".");
+      } else if (!S.units.size) {
+        const adj = (mi) => murder(mi) - D.backlog[mi];
+        const p = mannWhitneyP(w.a.map(adj), w.b.map(adj));
+        setTile("k-murder", pct(chg(adj)), "murder once backlog filings are removed (" +
+          (p < 0.05 ? "significant" : "not significant") + "), against " + pct(chg(murder)) + " raw",
+          "Same windows: " + w.label + ". Mann-Whitney p = " + p.toFixed(2) +
+          ". Backlog filings: delayed murder cases for older incidents, from the footnotes on the PHQ tables.");
+      } else {
+        setTile("k-murder", pct(chg(murder)), "murder in the selected units, " + w.label +
+          " (backlog filings are counted only nationally)");
+      }
+    } else {
+      ["k-fewer", "k-riser", "k-murder"].forEach((id) => setTile(id, "–", "choose at least two months to compare"));
+    }
     const x = months.map((mi) => D.months[mi]);
     const mark = breakMarker(P);
 
