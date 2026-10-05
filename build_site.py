@@ -336,7 +336,7 @@ def head(title, desc, extra=""):
 
 
 def nav():
-    links = [("#overview", "Overview"), ("#numbers", "Story"), ("#rupture", "The break"),
+    links = [("#overview", "Overview"), ("#story", "Story"), ("#rupture", "The break"),
              ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data")]
     items = "".join(f'<a href="{h}">{t}</a>' for h, t in links)
     return f"""
@@ -364,19 +364,17 @@ def footer():
 def index_html(R, N):
     nat = R["nat"]
     body = []
+    body.append("<main>")
+    body.append(overview_html(N))
     body.append(f"""
-<main>
-<section class="hero">
-  <p class="kicker">Bangladesh Police crime statistics · {N['first']} – {N['last']}</p>
-  <h1>Fewer cases, more crime</h1>
+<section class="hero" id="story">
+  <p class="kicker">The story · Bangladesh Police crime statistics, {N['first']} – {N['last']}</p>
   <p class="dek">Every monthly crime table Bangladesh Police Headquarters published from {N['first']} to
   {N['last']}, digitised and merged into one dataset: {N['grand']} cases in {N['months']} months across 17 police
-  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. Start with the overview
-  below: choose years, police units and crime heads, and every number and chart under the filters follows your
-  choice. Then read the story. Every chart is interactive: hover for values, use the menus to switch series,
-  drag to zoom, double-click to reset.</p>
+  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. The overview above lets you
+  filter the whole dataset by period, police unit and crime head; the chapters below explain what changed. Every
+  chart is interactive: hover for values, use the menus to switch series, drag to zoom, double-click to reset.</p>
 </section>""")
-    body.append(overview_html(N))
 
     body.append(chapter("numbers", "Chapter 1 · What is counted, and how much?", "A country in numbers",
                         "Most of what the police count is not crime that someone reported. It is crime the police went looking for."))
@@ -601,52 +599,64 @@ def index_html(R, N):
 
 
 def overview_html(N):
-    """Overview right under the intro: headline numbers, one filter row, totals and
-    eight charts, all driven by assets/explorer.js (the web version of the Dash app)."""
-    def card(cid, title, note="", cls=""):
-        note = f'<span class="note">{note}</span>' if note else ""
-        return (f'<figure class="card{cls}"><figcaption>{title}{note}</figcaption>'
+    """First screen: title, filters, eight tiles and eight charts in one viewport.
+
+    Driven by assets/explorer.js (the web version of the Dash app). On a laptop or
+    desktop the block is exactly one screen high; on phones it stacks and scrolls.
+    """
+    def card(cid, title, note="", key=False):
+        note = (f'<span class="note key" id="{cid}-key"></span>' if key else
+                f'<span class="note">{note}</span>' if note else "")
+        return (f'<figure class="card"><figcaption title="{escape(title)}">{title}{note}</figcaption>'
                 f'<div id="{cid}" class="ex-chart"></div></figure>')
+
+    def tile(big, cap, kid=None):
+        if kid:
+            return f'<div class="tile sel"><div class="cap">{cap}</div><div class="big" id="{kid}"></div></div>'
+        return f'<div class="tile"><div class="big">{big}</div><div class="cap">{cap}</div></div>'
     return f"""
 <section class="dash" id="overview" aria-label="Overview of the dataset">
-  <div class="tiles">
-    <div class="tile"><div class="big">{N['grand']}</div><div class="cap">cases recorded, {N['first']} – {N['last']}</div></div>
-    <div class="tile"><div class="big">−{N['aug_drop']}</div><div class="cap">fall in recorded cases from July to August 2024</div></div>
-    <div class="tile"><div class="big">{N['chg_Kidnapping']}</div><div class="cap">kidnapping, 24 months after vs 24 months before August 2024</div></div>
-    <div class="tile"><div class="big">{N['chg_MurderAdj']}</div><div class="cap">murder once backlog filings are removed (not significant), against {N['chg_Murder']} raw</div></div>
-  </div>
-  <div class="filters" aria-label="Filters for the overview">
-    <div class="f-group f-period">
-      <span class="f-label">Period</span>
-      <div class="presets" id="presets" role="group" aria-label="Choose a period"></div>
-      <div class="range"><label>From <select id="from"></select></label><label>to <select id="to"></select></label></div>
+  <div class="dash-top">
+    <div class="dash-title">
+      <h1>Fewer cases, more crime</h1>
+      <p>Bangladesh Police crime statistics · {N['first']} – {N['last']} · {N['months']} months · 17 police units</p>
     </div>
-    <details class="f-group multi" id="units-box"><summary><span class="f-label">Police units</span><span class="val" id="units-val">All units (national)</span></summary>
-      <div class="opts" id="units"></div></details>
-    <details class="f-group multi" id="heads-box"><summary><span class="f-label">Crime heads</span><span class="val" id="heads-val"></span></summary>
-      <div class="opts" id="heads"></div></details>
+    <div class="filters" aria-label="Filters for the overview">
+      <label class="f"><span class="f-label">Period</span><select id="preset"></select></label>
+      <label class="f"><span class="f-label">From</span><select id="from"></select></label>
+      <label class="f"><span class="f-label">To</span><select id="to"></select></label>
+      <details class="f multi" id="units-box"><summary><span class="f-label">Police units</span><span class="val" id="units-val">All units (national)</span></summary>
+        <div class="opts" id="units"></div></details>
+      <details class="f multi" id="heads-box"><summary><span class="f-label">Crime heads</span><span class="val" id="heads-val"></span></summary>
+        <div class="opts" id="heads"></div></details>
+    </div>
+    <a class="story-link" href="#story">Read the story ↓</a>
   </div>
-  <div class="kpis" aria-label="Totals for the selection">
-    <div class="tile"><div class="cap">Total cases</div><div class="big" id="k-total"></div></div>
-    <div class="tile"><div class="cap">Reported crime (excl. recovery)</div><div class="big" id="k-reported"></div></div>
-    <div class="tile"><div class="cap">Selected crime heads</div><div class="big" id="k-heads"></div></div>
-    <div class="tile"><div class="cap">Recovery cases</div><div class="big" id="k-recovery"></div></div>
+  <div class="dash-tiles">
+    <div class="tgroup" aria-label="Headline findings">
+      <span class="tg-label">Headline findings</span>
+      {tile(N['grand'], f"cases recorded, {N['first']} – {N['last']}")}
+      {tile('−' + N['aug_drop'], "fall in recorded cases from July to August 2024")}
+      {tile(N['chg_Kidnapping'], "kidnapping, 24 months after vs 24 months before August 2024")}
+      {tile(N['chg_MurderAdj'], f"murder once backlog filings are removed (not significant), against {N['chg_Murder']} raw")}
+    </div>
+    <div class="tgroup" aria-label="Totals for your selection">
+      <span class="tg-label">Your selection</span>
+      {tile('', "Total cases", "k-total")}
+      {tile('', "Reported crime (excl. recovery)", "k-reported")}
+      {tile('', "Selected crime heads", "k-heads")}
+      {tile('', "Recovery cases", "k-recovery")}
+    </div>
   </div>
-  <div class="grid2">
-    {card("trend", "Selected crime heads, month by month")}
-    {card("units-bar", "Selected crime heads by police unit", "Highlighted: the units you picked")}
-  </div>
-  <div class="grid2 even">
-    {card("rr", "All cases: reported crime vs recovery cases", "Recovery cases are police-initiated: narcotics, arms, explosives, smuggling")}
-    {card("map", "Selected crime heads per 100,000 people a year, by division", "Railway police not mapped; population: Census 2022")}
-  </div>
-  <div class="grid2 even">
-    {card("years", "Selected crime heads, year by year", "Lighter bars: years with fewer months in the selection")}
-    {card("heat", "Selected crime heads by calendar month")}
-  </div>
-  <div class="grid2 even">
-    {card("fam", "What the cases are: share by crime family")}
-    {card("mix", "Every crime head in the selection (log scale)", "Coloured: the heads you picked")}
+  <div class="dash-grid">
+    {card("trend", "Selected heads, month by month", key=True)}
+    {card("rr", "All cases: reported crime vs police-initiated recovery", key=True)}
+    {card("years", "Selected heads, year by year", "Lighter bar: year with fewer months selected")}
+    {card("units-bar", "Selected heads by police unit", "Highlighted: the units you picked")}
+    {card("map", "Selected heads per 100,000 people a year", "By division; railway police not mapped")}
+    {card("heat", "Selected heads by calendar month")}
+    {card("fam", "Share of all cases by crime family")}
+    {card("mix", "Every crime head (log scale)", "Coloured: the heads you picked")}
   </div>
 </section>"""
 

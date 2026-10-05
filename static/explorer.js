@@ -41,6 +41,8 @@
   const BREAK = "2024-08-05";
 
   let D = null;
+  const PRESETS = [];
+  const SHORT = { "Woman & Child Repression": "Woman & child rep." };
   const S = { from: 0, to: 0, units: new Set(), heads: new Set(["Murder", "Robbery", "Dacoity", "Kidnapping"]) };
   const $ = (id) => document.getElementById(id);
   const fmt = (v) => Math.round(v).toLocaleString("en-US");
@@ -66,10 +68,10 @@
     const P = T[theme()];
     const ax = { gridcolor: P.grid, linecolor: P.axis, zeroline: false, ticks: "", tickfont: { color: P.ink2 } };
     const base = {
-      font: { family: FONT, size: 12.5, color: P.ink2 }, paper_bgcolor: P.surface, plot_bgcolor: P.surface,
-      margin: { l: 52, r: 16, t: 12, b: 36 }, autosize: true,
+      font: { family: FONT, size: 11, color: P.ink2 }, paper_bgcolor: P.surface, plot_bgcolor: P.surface,
+      margin: { l: 40, r: 10, t: 8, b: 24 }, autosize: true,
       hoverlabel: { bgcolor: P.surface, bordercolor: P.axis, font: { family: FONT, color: P.ink } },
-      legend: { orientation: "h", x: 0, y: -0.14, font: { color: P.ink2 } },
+      legend: { orientation: "h", x: 0, y: 1, yanchor: "bottom", font: { color: P.ink2, size: 10.5 } },
       modebar: { bgcolor: "rgba(0,0,0,0)", color: P.muted, activecolor: P.ink },
       xaxis: Object.assign({}, ax, { showgrid: false }), yaxis: Object.assign({}, ax, { showgrid: true }),
     };
@@ -86,8 +88,8 @@
     if (!(BREAK > D.months[S.from].slice(0, 8) + "01" && BREAK <= D.months[S.to])) return { shapes: [], annotations: [] };
     return {
       shapes: [{ type: "line", x0: BREAK, x1: BREAK, yref: "paper", y0: 0, y1: 1, line: { color: P.ink2, width: 1 } }],
-      annotations: [{ x: BREAK, y: 1, yref: "paper", text: "5 Aug 2024<br>government falls", showarrow: false,
-        xanchor: "left", yanchor: "top", align: "left", xshift: 4, font: { size: 10.5, color: P.ink2 } }],
+      annotations: [{ x: BREAK, y: 1, yref: "paper", text: "5 Aug 2024", showarrow: false,
+        xanchor: "left", yanchor: "top", xshift: 3, font: { size: 9.5, color: P.ink2 } }],
     };
   }
 
@@ -115,28 +117,23 @@
     from.addEventListener("change", () => { S.from = +from.value; if (S.from > S.to) { S.to = S.from; to.value = S.to; } update(); });
     to.addEventListener("change", () => { S.to = +to.value; if (S.to < S.from) { S.from = S.to; from.value = S.from; } update(); });
 
-    // period buttons: all years, each year, the last 12 months
+    // period menu: all years, each year, the last 12 months (custom = From/To)
     const years = [...new Set(D.months.map((m) => m.slice(0, 4)))];
     const n = D.months.length;
-    const presets = [["All years", 0, n - 1]];
+    PRESETS.push(["All years", 0, n - 1]);
     years.forEach((y) => {
       const idx = D.months.map((m, i) => (m.startsWith(y) ? i : -1)).filter((i) => i >= 0);
-      presets.push([y, idx[0], idx[idx.length - 1]]);
+      PRESETS.push([idx.length < 12 ? y + " (" + MONTHS[+D.months[idx[0]].slice(5, 7) - 1] + "–" +
+        MONTHS[+D.months[idx[idx.length - 1]].slice(5, 7) - 1] + ")" : y, idx[0], idx[idx.length - 1]]);
     });
-    presets.push(["Last 12 months", n - 12, n - 1]);
-    const box = $("presets");
-    presets.forEach(([label, a, b], k) => {
-      if (k === 1 || k === presets.length - 1) {
-        const sep = document.createElement("span");
-        sep.className = "sep";
-        box.append(sep);
-      }
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      btn.dataset.a = a; btn.dataset.b = b;
-      btn.addEventListener("click", () => { S.from = a; S.to = b; from.value = a; to.value = b; update(); });
-      box.append(btn);
+    PRESETS.push(["Last 12 months", n - 12, n - 1]);
+    const pick = $("preset");
+    PRESETS.forEach(([label], k) => pick.add(new Option(label, k)));
+    pick.add(new Option("Custom (From / To)", "custom"));
+    pick.addEventListener("change", () => {
+      if (pick.value === "custom") return;
+      const [, a, b] = PRESETS[+pick.value];
+      S.from = a; S.to = b; from.value = a; to.value = b; update();
     });
 
     // police units, grouped by type
@@ -208,6 +205,28 @@
     });
   }
 
+  function setKey(id, items) {
+    const el = $(id);
+    if (!el) return;
+    el.textContent = "";
+    items.forEach(([label, color, dash]) => {
+      const s = document.createElement("span");
+      s.className = "k";
+      const i = document.createElement("i");
+      i.style.background = dash && dash !== "solid"
+        ? "repeating-linear-gradient(90deg," + color + " 0 3px,transparent 3px 5px)" : color;
+      s.append(i, document.createTextNode(label));
+      el.append(s);
+    });
+  }
+
+  // label size that fits n bars into a chart of the current height
+  function barFont(id, n) {
+    const h = ($(id).clientHeight || 300) - 26;
+    const row = h / n;
+    return { size: Math.max(7.5, Math.min(10.5, row * 0.8)), short: row < 13 };
+  }
+
   // ---------------------------------------------------------------- render
   function update() {
     const P = T[theme()];
@@ -215,8 +234,8 @@
     const heads = D.heads.filter((h) => S.heads.has(h));
     const months = [];
     for (let i = S.from; i <= S.to; i++) months.push(i);
-    document.querySelectorAll("#presets button").forEach((b) =>
-      b.classList.toggle("on", +b.dataset.a === S.from && +b.dataset.b === S.to));
+    const hit = PRESETS.findIndex(([, a, b]) => a === S.from && b === S.to);
+    $("preset").value = hit >= 0 ? String(hit) : "custom";
     $("units-val").textContent = S.units.size ? Array.from(S.units).join(", ") : "All units (national)";
     $("heads-val").textContent = heads.length === D.heads.length ? "All crime heads" : heads.join(", ");
     paintSwatches();
@@ -238,28 +257,32 @@
         line: { color: st.color, width: 2, dash: st.dash },
         hovertemplate: "<b>%{y:,}</b> " + h + "<extra></extra>" };
     });
+    setKey("trend-key", heads.map((h) => [h, headStyle(h).color, headStyle(h).dash]));
     Plotly.react("trend", trend, layout({ hovermode: "x unified", shapes: mark.shapes, annotations: mark.annotations,
-      xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" },
-      legend: { orientation: "h", x: 0, y: -0.12, font: { color: P.ink2 } } }), CFG);
+      margin: { l: 36, r: 8, t: 6, b: 22 }, showlegend: false,
+      xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" } }), CFG);
 
     // 2 police units ranking (all units; the picked ones highlighted)
     const all = D.units.map((u, ui) => ({ u, v: months.reduce((s, mi) => s + headsIn(mi, [ui]), 0) }))
       .sort((a, b) => a.v - b.v);
-    Plotly.react("units-bar", [{ type: "bar", orientation: "h", x: all.map((d) => d.v), y: all.map((d) => d.u),
+    const uf = barFont("units-bar", all.length);
+    Plotly.react("units-bar", [{ type: "bar", orientation: "h", x: all.map((d) => d.v),
+      y: all.map((d) => (uf.short ? d.u.replace(" Range", " R.") : d.u)), customdata: all.map((d) => d.u),
       marker: { color: all.map((d) => (!S.units.size || S.units.has(d.u)) ? P.cat[0] : P.context), cornerradius: 4 },
-      hovertemplate: "%{y}: <b>%{x:,}</b><extra></extra>" }],
-    layout({ bargap: 0.25, margin: { l: 120, r: 16, t: 8, b: 32 },
-      xaxis: { showgrid: true, tickformat: "~s" }, yaxis: { showgrid: false, dtick: 1, tickfont: { size: 11, color: P.ink2 } } }), CFG);
+      hovertemplate: "%{customdata}: <b>%{x:,}</b><extra></extra>" }],
+    layout({ bargap: 0.22, margin: { l: uf.short ? 78 : 96, r: 10, t: 4, b: 22 },
+      xaxis: { showgrid: true, tickformat: "~s" }, yaxis: { showgrid: false, dtick: 1, tickfont: { size: uf.size, color: P.ink2 } } }), CFG);
 
     // 3 reported crime vs recovery cases
     const rr = [["Total Cases", "All recorded cases", P.cat[6]],
       ["Reported Crime (excl. Recovery)", "Reported crime", P.cat[1]],
-      ["Recovery Total", "Recovery cases", P.cat[2]]].map(([c, name, color]) => ({
+      ["Recovery Total", "Recovery (narcotics, arms, explosives, smuggling)", P.cat[2]]].map(([c, name, color]) => ({
       type: "scatter", mode: "lines", name, x, y: months.map((mi) => monthSum(mi, units, col(c))),
       line: { color, width: 2.2 }, hovertemplate: "<b>%{y:,}</b> " + name.toLowerCase() + "<extra></extra>" }));
+    setKey("rr-key", rr.map((t) => [t.name, t.line.color]));
     Plotly.react("rr", rr, layout({ hovermode: "x unified", shapes: mark.shapes, annotations: mark.annotations,
-      xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" },
-      legend: { orientation: "h", x: 0, y: -0.12, font: { color: P.ink2 } } }), CFG);
+      margin: { l: 36, r: 8, t: 6, b: 22 }, showlegend: false,
+      xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" } }), CFG);
 
     // 4 map: selected heads per 100,000 people a year, by division
     const perDiv = {};
@@ -279,10 +302,11 @@
         colorscale: P.seq.map((c, i) => [i / (P.seq.length - 1), c]), zmin: 0, zmax,
         marker: { line: { color: P.surface, width: 1.5 } },
         hovertemplate: "%{customdata}: <b>%{z:.1f}</b> per 100,000 people a year<extra></extra>",
-        colorbar: { thickness: 10, outlinewidth: 0, len: 0.7, tickfont: { color: P.ink2 } } },
+        colorbar: { thickness: 8, outlinewidth: 0, len: 0.6, tickfont: { color: P.ink2, size: 10 } } },
       { type: "scattergeo", mode: "text", lon: divs.map((d) => D.anchor[d][0]), lat: divs.map((d) => D.anchor[d][1]),
-        text: divs.map((d, i) => "<b>" + d + "</b><br>" + rfmt(rate[i])), hoverinfo: "skip", showlegend: false,
-        textfont: { size: 11, family: FONT, shadow: "auto",
+        text: divs.map((d, i) => ($("map").clientHeight >= 300 ? "<b>" + d + "</b><br>" : "") + rfmt(rate[i])),
+        hoverinfo: "skip", showlegend: false,
+        textfont: { size: 10, family: FONT, shadow: "auto",
           color: rate.map((v) => (v === null ? P.ink : textOn(P.seq, v / zmax))) } },
     ], layout({ margin: { l: 0, r: 0, t: 0, b: 0 },
       geo: { fitbounds: "locations", visible: false, bgcolor: P.surface, projection: { type: "mercator" } } }), CFG);
@@ -300,9 +324,9 @@
       customdata: ys.map((y) => byYear[y].n),
       marker: { color: ys.map((y) => (byYear[y].n === 12 ? P.cat[0] : P.faint)), cornerradius: 4 },
       text: ys.map((y) => fmt(byYear[y].v)), textposition: "outside", cliponaxis: false,
-      textfont: { color: P.ink, size: 11 },
+      textfont: { color: P.ink, size: 10 },
       hovertemplate: "%{x}: <b>%{y:,}</b> (%{customdata} months)<extra></extra>" }],
-    layout({ bargap: 0.3, margin: { l: 52, r: 16, t: 24, b: 32 },
+    layout({ bargap: 0.25, margin: { l: 36, r: 8, t: 16, b: 22 },
       xaxis: { type: "category", showgrid: false }, yaxis: { tickformat: "~s", rangemode: "tozero" } }), CFG);
 
     // 6 calendar heatmap of the selected heads
@@ -315,8 +339,9 @@
     const cs = P.seq.map((c, i) => [i / (P.seq.length - 1), c]);
     Plotly.react("heat", [{ type: "heatmap", z, x: MONTHS, y: years.map(String), colorscale: cs, xgap: 2, ygap: 2,
       hoverongaps: false, hovertemplate: "%{x} %{y}: <b>%{z:,}</b><extra></extra>",
-      colorbar: { thickness: 10, outlinewidth: 0, tickfont: { color: P.ink2 }, tickformat: "~s" } }],
-    layout({ margin: { l: 48, r: 8, t: 8, b: 28 }, xaxis: { showgrid: false, type: "category" },
+      colorbar: { thickness: 8, outlinewidth: 0, tickfont: { color: P.ink2, size: 10 }, tickformat: "~s" } }],
+    layout({ margin: { l: 36, r: 4, t: 4, b: 22 }, xaxis: { showgrid: false, type: "category",
+      tickvals: MONTHS, ticktext: MONTHS.map((m) => m[0]) },
       yaxis: { autorange: "reversed", showgrid: false, type: "category" } }), CFG);
 
     // 7 share of all cases by crime family
@@ -328,22 +353,40 @@
       marker: { colors: FAMILIES.map((f) => P.fam[f]), line: { color: P.surface, width: 2 } },
       textinfo: "percent", textposition: "inside", insidetextorientation: "horizontal",
       hovertemplate: "%{label}<br><b>%{value:,}</b> cases (%{percent})<extra></extra>" }],
-    layout({ margin: { l: 8, r: 8, t: 8, b: 8 }, showlegend: true,
-      legend: { orientation: "v", x: 1, xanchor: "left", y: 0.5, font: { color: P.ink2, size: 12 } },
+    layout({ margin: { l: 4, r: 4, t: 4, b: 4 }, showlegend: true,
+      legend: { orientation: "v", x: 1, xanchor: "left", y: 0.5, yanchor: "middle", font: { color: P.ink2, size: 10 } },
       annotations: [{ text: "<b>" + fmt(famTotal) + "</b><br>cases", showarrow: false, x: 0.5, y: 0.5,
-        xref: "paper", yref: "paper", font: { size: 14, color: P.ink } }] }), CFG);
+        xref: "paper", yref: "paper", font: { size: 11.5, color: P.ink } }] }), CFG);
 
     // 8 every crime head, log scale
     const mix = D.heads.map((h) => ({ h, v: tot(h) })).sort((a, b) => a.v - b.v);
-    Plotly.react("mix", [{ type: "bar", orientation: "h", x: mix.map((d) => Math.max(d.v, 0.9)), y: mix.map((d) => d.h),
-      customdata: mix.map((d) => d.v),
+    const mf = barFont("mix", mix.length);
+    Plotly.react("mix", [{ type: "bar", orientation: "h", x: mix.map((d) => Math.max(d.v, 0.9)), y: mix.map((d) => SHORT[d.h] || d.h),
+      customdata: mix.map((d) => d.v), text: mix.map((d) => d.h),
       marker: { color: mix.map((d) => S.heads.has(d.h) ? headStyle(d.h).color : P.grid), cornerradius: 4,
         line: { color: mix.map((d) => S.heads.has(d.h) ? P.ink2 : P.axis), width: 0.5 } },
-      hovertemplate: "%{y}: <b>%{customdata:,}</b><extra></extra>" }],
-    layout({ bargap: 0.25, margin: { l: 170, r: 16, t: 8, b: 32 },
+      textposition: "none", hovertemplate: "%{text}: <b>%{customdata:,}</b><extra></extra>" }],
+    layout({ bargap: 0.22, margin: { l: mf.short ? 92 : 104, r: 10, t: 4, b: 22 },
       xaxis: { type: "log", showgrid: true, tickvals: [1, 10, 100, 1e3, 1e4, 1e5, 1e6],
         ticktext: ["1", "10", "100", "1k", "10k", "100k", "1M"] },
-      yaxis: { showgrid: false, dtick: 1, tickfont: { size: 11, color: P.ink2 } } }), CFG);
+      yaxis: { showgrid: false, dtick: 1, tickfont: { size: mf.size, color: P.ink2 } } }), CFG);
+  }
+
+  // redraw when a chart box changes size (window, phone toolbar, wrapping filters)
+  function watchSizes() {
+    const seen = new Map();
+    let t = null;
+    const ro = new ResizeObserver((entries) => {
+      let changed = false;
+      for (const e of entries) {
+        const h = Math.round(e.contentRect.height), w = Math.round(e.contentRect.width);
+        const old = seen.get(e.target);
+        if (!old || Math.abs(old[0] - w) > 3 || Math.abs(old[1] - h) > 3) changed = true;
+        seen.set(e.target, [w, h]);
+      }
+      if (changed) { clearTimeout(t); t = setTimeout(update, 120); }
+    });
+    document.querySelectorAll("#overview .ex-chart").forEach((el) => ro.observe(el));
   }
 
   function start() {
@@ -352,6 +395,7 @@
       D = d;
       buildControls();
       update();
+      watchSizes();
       document.addEventListener("themechange", update);
     }).catch((e) => {
       $("overview").insertAdjacentHTML("afterbegin",
