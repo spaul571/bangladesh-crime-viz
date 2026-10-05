@@ -1,7 +1,8 @@
-/* Crime explorer: the web version of the Dash dashboard (dashboard/app.py).
+/* Overview at the top of the page: the web version of the Dash dashboard
+ * (dashboard/app.py).
  *
- * One filter row (period, police units, crime heads) scopes the KPI tiles,
- * the four charts and the table. Everything is computed in the browser from
+ * One filter row (period, police units, crime heads) scopes the totals and the
+ * eight charts below it. Everything is computed in the browser from
  * data/explorer.json, which build_site.py writes from the Excel dataset.
  * A crime head keeps its colour whatever the selection.
  */
@@ -14,16 +15,24 @@
 
   const T = {
     light: { surface: "#fcfcfb", ink: "#0b0b0b", ink2: "#52514e", muted: "#898781", grid: "#e1e0d9",
-      axis: "#c3c2b7", context: "#a8a79f",
+      axis: "#c3c2b7", context: "#a8a79f", faint: "#9ec5f4",
       cat: ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"],
       seq: ["#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5", "#2a78d6",
-        "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"] },
+        "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"],
+      fam: { "Recovery (police-initiated)": "#1baf7a", "Other cases": "#c9c8c1",
+        "Violence against person": "#eb6834", "Property": "#2a78d6", "Violent property": "#e34948",
+        "Public order": "#4a3aa7" } },
     dark: { surface: "#1a1a19", ink: "#ffffff", ink2: "#c3c2b7", muted: "#898781", grid: "#2c2c2a",
-      axis: "#383835", context: "#6b6a65",
+      axis: "#383835", context: "#6b6a65", faint: "#1c5cab",
       cat: ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767"],
       seq: ["#0d366b", "#104281", "#184f95", "#1c5cab", "#256abf", "#2a78d6", "#3987e5", "#5598e7",
-        "#6da7ec", "#86b6ef", "#9ec5f4", "#b7d3f6", "#cde2fb"] },
+        "#6da7ec", "#86b6ef", "#9ec5f4", "#b7d3f6", "#cde2fb"],
+      fam: { "Recovery (police-initiated)": "#199e70", "Other cases": "#55544f",
+        "Violence against person": "#d95926", "Property": "#3987e5", "Violent property": "#e66767",
+        "Public order": "#9085e9" } },
   };
+  const FAMILIES = ["Recovery (police-initiated)", "Other cases", "Violence against person", "Property",
+    "Violent property", "Public order"];
   // Eight focus heads own the categorical slots; the rest are grey with distinct dashes.
   const FOCUS = ["Murder", "Robbery", "Dacoity", "Kidnapping", "Woman & Child Repression",
     "Narcotics", "Theft", "Arms Act"];
@@ -32,10 +41,17 @@
   const BREAK = "2024-08-05";
 
   let D = null;
-  const S = { from: 0, to: 0, units: new Set(), heads: new Set(["Murder", "Robbery", "Dacoity", "Kidnapping"]),
-    sort: { col: 0, dir: 1 } };
+  const S = { from: 0, to: 0, units: new Set(), heads: new Set(["Murder", "Robbery", "Dacoity", "Kidnapping"]) };
   const $ = (id) => document.getElementById(id);
   const fmt = (v) => Math.round(v).toLocaleString("en-US");
+  // ink that reads best on a cell of the sequential ramp at position t (0..1)
+  function textOn(seq, t) {
+    const h = seq[Math.round(Math.min(Math.max(t, 0), 1) * (seq.length - 1))].slice(1);
+    const lin = [0, 2, 4].map((k) => { const c = parseInt(h.slice(k, k + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); });
+    const L = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+    return 1.05 / (L + 0.05) > (L + 0.05) / 0.05 ? "#ffffff" : "#0b0b0b";
+  }
   const mlabel = (iso) => { const [y, m] = iso.split("-"); return MONTHS[+m - 1] + " " + y; };
 
   function headStyle(h) {
@@ -65,6 +81,16 @@
   const CFG = { responsive: true, displaylogo: false, displayModeBar: "hover",
     modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toggleSpikelines"] };
 
+  // the 5 August 2024 marker, shown when the period includes it
+  function breakMarker(P) {
+    if (!(BREAK > D.months[S.from].slice(0, 8) + "01" && BREAK <= D.months[S.to])) return { shapes: [], annotations: [] };
+    return {
+      shapes: [{ type: "line", x0: BREAK, x1: BREAK, yref: "paper", y0: 0, y1: 1, line: { color: P.ink2, width: 1 } }],
+      annotations: [{ x: BREAK, y: 1, yref: "paper", text: "5 Aug 2024<br>government falls", showarrow: false,
+        xanchor: "left", yanchor: "top", align: "left", xshift: 4, font: { size: 10.5, color: P.ink2 } }],
+    };
+  }
+
   // ---------------------------------------------------------------- data
   const col = (name) => D.cols.indexOf(name);
   function unitIdx() {
@@ -86,20 +112,32 @@
     });
     S.to = D.months.length - 1;
     from.value = 0; to.value = S.to;
-    from.addEventListener("change", () => { S.from = +from.value; if (S.from > S.to) { S.to = S.from; to.value = S.to; } preset(null); update(); });
-    to.addEventListener("change", () => { S.to = +to.value; if (S.to < S.from) { S.from = S.to; from.value = S.from; } preset(null); update(); });
-    const idx = (iso) => D.months.indexOf(iso);
-    const presets = {
-      all: [0, D.months.length - 1],
-      pre: [idx("2022-08-31"), idx("2024-07-31")],
-      post: [idx("2024-09-30"), D.months.length - 1],
-      last12: [D.months.length - 12, D.months.length - 1],
-    };
-    document.querySelectorAll(".presets button").forEach((b) => b.addEventListener("click", () => {
-      [S.from, S.to] = presets[b.dataset.preset];
-      from.value = S.from; to.value = S.to;
-      preset(b.dataset.preset); update();
-    }));
+    from.addEventListener("change", () => { S.from = +from.value; if (S.from > S.to) { S.to = S.from; to.value = S.to; } update(); });
+    to.addEventListener("change", () => { S.to = +to.value; if (S.to < S.from) { S.from = S.to; from.value = S.from; } update(); });
+
+    // period buttons: all years, each year, the last 12 months
+    const years = [...new Set(D.months.map((m) => m.slice(0, 4)))];
+    const n = D.months.length;
+    const presets = [["All years", 0, n - 1]];
+    years.forEach((y) => {
+      const idx = D.months.map((m, i) => (m.startsWith(y) ? i : -1)).filter((i) => i >= 0);
+      presets.push([y, idx[0], idx[idx.length - 1]]);
+    });
+    presets.push(["Last 12 months", n - 12, n - 1]);
+    const box = $("presets");
+    presets.forEach(([label, a, b], k) => {
+      if (k === 1 || k === presets.length - 1) {
+        const sep = document.createElement("span");
+        sep.className = "sep";
+        box.append(sep);
+      }
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.dataset.a = a; btn.dataset.b = b;
+      btn.addEventListener("click", () => { S.from = a; S.to = b; from.value = a; to.value = b; update(); });
+      box.append(btn);
+    });
 
     // police units, grouped by type
     const ub = $("units");
@@ -145,7 +183,6 @@
     document.addEventListener("click", (e) => {
       document.querySelectorAll("details.multi[open]").forEach((d) => { if (!d.contains(e.target)) d.open = false; });
     });
-    $("csv").addEventListener("click", downloadCsv);
   }
 
   function checkbox(value, checked, onChange, swatch) {
@@ -171,10 +208,6 @@
     });
   }
 
-  function preset(name) {
-    document.querySelectorAll(".presets button").forEach((b) => b.classList.toggle("on", b.dataset.preset === name));
-  }
-
   // ---------------------------------------------------------------- render
   function update() {
     const P = T[theme()];
@@ -182,50 +215,102 @@
     const heads = D.heads.filter((h) => S.heads.has(h));
     const months = [];
     for (let i = S.from; i <= S.to; i++) months.push(i);
+    document.querySelectorAll("#presets button").forEach((b) =>
+      b.classList.toggle("on", +b.dataset.a === S.from && +b.dataset.b === S.to));
     $("units-val").textContent = S.units.size ? Array.from(S.units).join(", ") : "All units (national)";
     $("heads-val").textContent = heads.length === D.heads.length ? "All crime heads" : heads.join(", ");
     paintSwatches();
 
-    // KPIs
+    // totals
     const tot = (c) => months.reduce((s, mi) => s + monthSum(mi, units, col(c)), 0);
+    const headsIn = (mi, uis) => heads.reduce((s, h) => s + monthSum(mi, uis, col(h)), 0);
     $("k-total").textContent = fmt(tot("Total Cases"));
     $("k-reported").textContent = fmt(tot("Reported Crime (excl. Recovery)"));
     $("k-heads").textContent = fmt(heads.reduce((s, h) => s + tot(h), 0));
     $("k-recovery").textContent = fmt(tot("Recovery Total"));
-
-    // trend
     const x = months.map((mi) => D.months[mi]);
+    const mark = breakMarker(P);
+
+    // 1 selected heads, month by month
     const trend = heads.map((h) => {
       const st = headStyle(h);
       return { type: "scatter", mode: "lines", name: h, x, y: months.map((mi) => monthSum(mi, units, col(h))),
         line: { color: st.color, width: 2, dash: st.dash },
         hovertemplate: "<b>%{y:,}</b> " + h + "<extra></extra>" };
     });
-    const shapes = [], annotations = [];
-    if (BREAK >= D.months[S.from].slice(0, 8) + "01" && BREAK <= D.months[S.to]) {
-      shapes.push({ type: "line", x0: BREAK, x1: BREAK, yref: "paper", y0: 0, y1: 1, line: { color: P.ink2, width: 1 } });
-      annotations.push({ x: BREAK, y: 1, yref: "paper", text: "5 Aug 2024", showarrow: false, xanchor: "left",
-        yanchor: "top", xshift: 4, font: { size: 11, color: P.ink2 } });
-    }
-    Plotly.react("trend", trend, layout({ hovermode: "x unified", shapes, annotations,
+    Plotly.react("trend", trend, layout({ hovermode: "x unified", shapes: mark.shapes, annotations: mark.annotations,
       xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" },
       legend: { orientation: "h", x: 0, y: -0.12, font: { color: P.ink2 } } }), CFG);
 
-    // units ranking (all units; selection highlighted)
-    const all = D.units.map((u, ui) => ({ u, v: months.reduce((s, mi) =>
-      s + heads.reduce((a, h) => a + D.values[mi][ui][col(h)], 0), 0) })).sort((a, b) => a.v - b.v);
+    // 2 police units ranking (all units; the picked ones highlighted)
+    const all = D.units.map((u, ui) => ({ u, v: months.reduce((s, mi) => s + headsIn(mi, [ui]), 0) }))
+      .sort((a, b) => a.v - b.v);
     Plotly.react("units-bar", [{ type: "bar", orientation: "h", x: all.map((d) => d.v), y: all.map((d) => d.u),
       marker: { color: all.map((d) => (!S.units.size || S.units.has(d.u)) ? P.cat[0] : P.context), cornerradius: 4 },
       hovertemplate: "%{y}: <b>%{x:,}</b><extra></extra>" }],
     layout({ bargap: 0.25, margin: { l: 120, r: 16, t: 8, b: 32 },
       xaxis: { showgrid: true, tickformat: "~s" }, yaxis: { showgrid: false, dtick: 1, tickfont: { size: 11, color: P.ink2 } } }), CFG);
 
-    // calendar heatmap of the selected heads
+    // 3 reported crime vs recovery cases
+    const rr = [["Total Cases", "All recorded cases", P.cat[6]],
+      ["Reported Crime (excl. Recovery)", "Reported crime", P.cat[1]],
+      ["Recovery Total", "Recovery cases", P.cat[2]]].map(([c, name, color]) => ({
+      type: "scatter", mode: "lines", name, x, y: months.map((mi) => monthSum(mi, units, col(c))),
+      line: { color, width: 2.2 }, hovertemplate: "<b>%{y:,}</b> " + name.toLowerCase() + "<extra></extra>" }));
+    Plotly.react("rr", rr, layout({ hovermode: "x unified", shapes: mark.shapes, annotations: mark.annotations,
+      xaxis: { hoverformat: "%B %Y" }, yaxis: { tickformat: "~s", rangemode: "tozero" },
+      legend: { orientation: "h", x: 0, y: -0.12, font: { color: P.ink2 } } }), CFG);
+
+    // 4 map: selected heads per 100,000 people a year, by division
+    const perDiv = {};
+    units.forEach((ui) => {
+      const dv = D.division[ui];
+      if (!dv) return;
+      perDiv[dv] = (perDiv[dv] || 0) + months.reduce((s, mi) => s + headsIn(mi, [ui]), 0);
+    });
+    const divs = Object.keys(D.iso);
+    const rate = divs.map((d) => (perDiv[d] === undefined ? null
+      : perDiv[d] / D.pop[d] * 1e5 * 12 / months.length));
+    const rfmt = (v) => (v === null ? "–" : v >= 100 ? v.toFixed(0) : v.toFixed(1));
+    const zmax = Math.max(...rate.filter((v) => v !== null), 1e-9);
+    Plotly.react("map", [
+      { type: "choropleth", geojson: D.geo, featureidkey: "properties.shapeISO",
+        locations: divs.map((d) => D.iso[d]), z: rate, customdata: divs,
+        colorscale: P.seq.map((c, i) => [i / (P.seq.length - 1), c]), zmin: 0, zmax,
+        marker: { line: { color: P.surface, width: 1.5 } },
+        hovertemplate: "%{customdata}: <b>%{z:.1f}</b> per 100,000 people a year<extra></extra>",
+        colorbar: { thickness: 10, outlinewidth: 0, len: 0.7, tickfont: { color: P.ink2 } } },
+      { type: "scattergeo", mode: "text", lon: divs.map((d) => D.anchor[d][0]), lat: divs.map((d) => D.anchor[d][1]),
+        text: divs.map((d, i) => "<b>" + d + "</b><br>" + rfmt(rate[i])), hoverinfo: "skip", showlegend: false,
+        textfont: { size: 11, family: FONT, shadow: "auto",
+          color: rate.map((v) => (v === null ? P.ink : textOn(P.seq, v / zmax))) } },
+    ], layout({ margin: { l: 0, r: 0, t: 0, b: 0 },
+      geo: { fitbounds: "locations", visible: false, bgcolor: P.surface, projection: { type: "mercator" } } }), CFG);
+
+    // 5 year by year
+    const byYear = {};
+    months.forEach((mi) => {
+      const y = D.months[mi].slice(0, 4);
+      byYear[y] = byYear[y] || { v: 0, n: 0 };
+      byYear[y].v += headsIn(mi, units);
+      byYear[y].n += 1;
+    });
+    const ys = Object.keys(byYear);
+    Plotly.react("years", [{ type: "bar", x: ys, y: ys.map((y) => byYear[y].v),
+      customdata: ys.map((y) => byYear[y].n),
+      marker: { color: ys.map((y) => (byYear[y].n === 12 ? P.cat[0] : P.faint)), cornerradius: 4 },
+      text: ys.map((y) => fmt(byYear[y].v)), textposition: "outside", cliponaxis: false,
+      textfont: { color: P.ink, size: 11 },
+      hovertemplate: "%{x}: <b>%{y:,}</b> (%{customdata} months)<extra></extra>" }],
+    layout({ bargap: 0.3, margin: { l: 52, r: 16, t: 24, b: 32 },
+      xaxis: { type: "category", showgrid: false }, yaxis: { tickformat: "~s", rangemode: "tozero" } }), CFG);
+
+    // 6 calendar heatmap of the selected heads
     const years = [...new Set(x.map((m) => +m.slice(0, 4)))];
     const z = years.map(() => new Array(12).fill(null));
     months.forEach((mi) => {
       const iso = D.months[mi], y = +iso.slice(0, 4), m = +iso.slice(5, 7) - 1;
-      z[years.indexOf(y)][m] = heads.reduce((s, h) => s + monthSum(mi, units, col(h)), 0);
+      z[years.indexOf(y)][m] = headsIn(mi, units);
     });
     const cs = P.seq.map((c, i) => [i / (P.seq.length - 1), c]);
     Plotly.react("heat", [{ type: "heatmap", z, x: MONTHS, y: years.map(String), colorscale: cs, xgap: 2, ygap: 2,
@@ -234,7 +319,21 @@
     layout({ margin: { l: 48, r: 8, t: 8, b: 28 }, xaxis: { showgrid: false, type: "category" },
       yaxis: { autorange: "reversed", showgrid: false, type: "category" } }), CFG);
 
-    // crime mix, every head, log scale
+    // 7 share of all cases by crime family
+    const fam = {};
+    D.heads.forEach((h) => { fam[D.family[h]] = (fam[D.family[h]] || 0) + tot(h); });
+    const famTotal = FAMILIES.reduce((s, f) => s + (fam[f] || 0), 0);
+    Plotly.react("fam", [{ type: "pie", hole: 0.58, sort: false, direction: "clockwise",
+      labels: FAMILIES, values: FAMILIES.map((f) => fam[f] || 0),
+      marker: { colors: FAMILIES.map((f) => P.fam[f]), line: { color: P.surface, width: 2 } },
+      textinfo: "percent", textposition: "inside", insidetextorientation: "horizontal",
+      hovertemplate: "%{label}<br><b>%{value:,}</b> cases (%{percent})<extra></extra>" }],
+    layout({ margin: { l: 8, r: 8, t: 8, b: 8 }, showlegend: true,
+      legend: { orientation: "v", x: 1, xanchor: "left", y: 0.5, font: { color: P.ink2, size: 12 } },
+      annotations: [{ text: "<b>" + fmt(famTotal) + "</b><br>cases", showarrow: false, x: 0.5, y: 0.5,
+        xref: "paper", yref: "paper", font: { size: 14, color: P.ink } }] }), CFG);
+
+    // 8 every crime head, log scale
     const mix = D.heads.map((h) => ({ h, v: tot(h) })).sort((a, b) => a.v - b.v);
     Plotly.react("mix", [{ type: "bar", orientation: "h", x: mix.map((d) => Math.max(d.v, 0.9)), y: mix.map((d) => d.h),
       customdata: mix.map((d) => d.v),
@@ -245,71 +344,17 @@
       xaxis: { type: "log", showgrid: true, tickvals: [1, 10, 100, 1e3, 1e4, 1e5, 1e6],
         ticktext: ["1", "10", "100", "1k", "10k", "100k", "1M"] },
       yaxis: { showgrid: false, dtick: 1, tickfont: { size: 11, color: P.ink2 } } }), CFG);
-
-    renderTable(months, units, heads);
-  }
-
-  let TABLE = { head: [], rows: [] };
-  function renderTable(months, units, heads) {
-    const cols = ["Month tag"].concat(heads, ["Total Cases"]);
-    const rows = months.map((mi) => {
-      const iso = D.months[mi];
-      const d = new Date(iso + "T00:00:00");
-      const tag = String(d.getDate()).padStart(2, "0") + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
-      return [{ s: iso, t: tag }].concat(heads.concat(["Total Cases"]).map((h) => monthSum(mi, units, col(h))));
-    });
-    TABLE = { head: cols, rows };
-    drawTable();
-  }
-
-  function drawTable() {
-    const { col: c, dir } = S.sort;
-    const rows = TABLE.rows.slice().sort((a, b) => {
-      const va = c === 0 ? a[0].s : a[c], vb = c === 0 ? b[0].s : b[c];
-      return (va < vb ? -1 : va > vb ? 1 : 0) * dir;
-    });
-    const tbl = $("table");
-    tbl.textContent = "";
-    const thead = tbl.createTHead().insertRow();
-    TABLE.head.forEach((h, i) => {
-      const th = document.createElement("th");
-      th.textContent = h;
-      th.tabIndex = 0;
-      if (i === c) th.setAttribute("aria-sort", dir > 0 ? "ascending" : "descending");
-      const sortBy = () => { S.sort = { col: i, dir: i === c ? -dir : (i === 0 ? 1 : -1) }; drawTable(); };
-      th.addEventListener("click", sortBy);
-      th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sortBy(); } });
-      thead.append(th);
-    });
-    const body = tbl.createTBody();
-    rows.forEach((r) => {
-      const tr = body.insertRow();
-      r.forEach((v, i) => { tr.insertCell().textContent = i === 0 ? v.t : fmt(v); });
-    });
-  }
-
-  function downloadCsv() {
-    const esc = (s) => /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-    const unitNote = S.units.size ? Array.from(S.units).join("; ") : "All units (national)";
-    const lines = ["# Police units: " + unitNote, TABLE.head.map(esc).join(",")];
-    TABLE.rows.forEach((r) => lines.push([r[0].s].concat(r.slice(1)).join(",")));
-    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "bd-crime-selection.csv";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
 
   function start() {
-    if (!document.getElementById("dashboard")) return;   // page without the dashboard
+    if (!document.getElementById("overview")) return;   // page without the overview
     fetch("data/explorer.json").then((r) => r.json()).then((d) => {
       D = d;
       buildControls();
       update();
       document.addEventListener("themechange", update);
     }).catch((e) => {
-      document.querySelector(".kpis").insertAdjacentHTML("beforebegin",
+      $("overview").insertAdjacentHTML("afterbegin",
         '<p class="dek">Could not load the data (' + e.message + ").</p>");
     });
   }

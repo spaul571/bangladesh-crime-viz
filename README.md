@@ -5,8 +5,8 @@ Headquarters, January 2019 – August 2026.
 
 **Live site:** https://spaul571.github.io/bangladesh-crime-viz/
 
-One page: a dashboard first (filter the whole dataset by period, police unit and crime head), then the
-story with 24 interactive charts.
+One page: an interactive overview first (headline numbers, then the whole dataset filtered by year,
+police unit and crime head in eight charts), then the story with 24 interactive charts.
 
 CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
@@ -21,7 +21,7 @@ CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 | `analysis.py` | Loads the Excel file and computes every statistic and model behind the charts. |
 | `charts.py` | The 24 interactive charts (Plotly and Vega-Altair), each in a light and a dark version. |
 | `theme.py` | Colours and fonts shared by all charts. |
-| `static/` | Page styles, the chart loader (`site.js`) and the dashboard (`explorer.js`). |
+| `static/` | Page styles, the chart loader (`site.js`) and the overview (`explorer.js`). |
 | `docs/` | The built website, served by GitHub Pages. |
 
 The site uses only the Excel file. National figures are the sum of the 17 police units.

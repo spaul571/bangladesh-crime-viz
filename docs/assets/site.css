@@ -106,7 +106,7 @@ main { max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding
 .lede { font-size: clamp(18px, 1rem + 0.5vw, 24px); color: var(--ink2); margin-bottom: 1.4em !important; line-height: 1.5; }
 
 /* ---------- hero ---------- */
-.hero { padding: 64px 0 8px; }
+.hero { padding: 56px 0 0; }
 .hero h1 { font-size: clamp(40px, 1.5rem + 5vw, 96px); font-weight: 750; letter-spacing: -0.02em; margin: 6px auto 18px; }
 .dek { font-size: clamp(17px, 0.95rem + 0.45vw, 23px); color: var(--ink2); line-height: 1.55; }
 .tiles {
@@ -206,11 +206,9 @@ td.down { color: var(--down); font-weight: 600; }
 .site-foot p { margin: 0 0 8px; }
 
 /* ---------- dashboard (Figure 1) ---------- */
-.dash { margin: 44px 0 0; }
-.dash-head { margin: 0 0 4px; }
-.dash-head h2 { font-size: clamp(28px, 1.2rem + 2.2vw, 48px); font-weight: 700; letter-spacing: -0.01em; margin: 4px 0 10px; }
-.dash-head .sub { color: var(--ink2); font-size: clamp(15px, 0.85rem + 0.3vw, 18px); line-height: 1.5; margin: 0; }
-.dash .viz-foot { border-top: 0; margin-top: 0; }
+.dash { margin: 28px 0 0; scroll-margin-top: 64px; }
+.dash .tiles { margin: 0 0 16px; }
+.card figcaption .note { display: block; font-weight: 400; font-size: 13px; color: var(--muted); margin-top: 2px; }
 .filters {
   position: sticky; top: 55px; z-index: 10;
   display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-start;
@@ -227,6 +225,7 @@ td.down { color: var(--down); font-weight: 600; }
 }
 .presets button:hover { background: var(--grid); }
 .presets button.on { background: var(--ink); color: var(--page); border-color: var(--ink); }
+.presets .sep { width: 1px; background: var(--axis); margin: 2px 2px; }
 .range { display: flex; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--ink2); }
 .range label { display: inline-flex; gap: 6px; align-items: center; }
 .multi { flex: 1 1 240px; position: relative; }
