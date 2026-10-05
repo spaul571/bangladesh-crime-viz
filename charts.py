@@ -295,7 +295,7 @@ def stl(T, R):
     names = ["Observed", "Trend", "Seasonal, %", "Residual, %"]
     for r in range(1, 5):
         fig.update_yaxes(axis(T, showgrid=True, title=dict(text=names[r - 1], font=dict(size=11)),
-                              tickformat="~s" if r < 3 else "+.0f"), row=r, col=1)
+                              tickformat="~s" if r < 3 else ".0f"), row=r, col=1)
         fig.update_xaxes(axis(T, hoverformat="%B %Y"), row=r, col=1)
     ctl = control("Series", [lab(s) for s in A.SERIES], groups, len(fig.data),
                   default=A.SERIES.index(A.REPORTED),
