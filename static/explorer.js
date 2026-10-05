@@ -302,6 +302,7 @@
   }
 
   function start() {
+    if (!document.getElementById("dashboard")) return;   // page without the dashboard
     fetch("data/explorer.json").then((r) => r.json()).then((d) => {
       D = d;
       buildControls();
