@@ -205,11 +205,12 @@ td.down { color: var(--down); font-weight: 600; }
 }
 .site-foot p { max-width: 760px; margin: 0 0 8px; }
 
-/* ---------- explorer ---------- */
-.explorer { max-width: 1320px; }
-.ex-head { padding: 36px 0 12px; }
-.ex-head h1 { font-size: clamp(30px, 4vw, 42px); font-weight: 750; }
-.ex-head .dek { margin: 8px 0 0; font-size: 16px; }
+/* ---------- dashboard (Figure 1) ---------- */
+.dash { max-width: 1180px; margin: 44px auto 0; }
+.dash-head { max-width: 760px; margin: 0 auto 4px; }
+.dash-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.01em; margin: 4px 0 10px; }
+.dash-head .sub { color: var(--ink2); font-size: 16px; line-height: 1.5; margin: 0; }
+.dash .viz-foot { border-top: 0; margin-top: 0; }
 .filters {
   position: sticky; top: 55px; z-index: 10;
   display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-start;
@@ -262,7 +263,7 @@ td.down { color: var(--down); font-weight: 600; }
 .card figcaption, .card h3 { font-weight: 650; font-size: 16px; margin-bottom: 6px; color: var(--ink); }
 .ex-chart { width: 100%; height: 380px; transition: opacity 0.15s; }
 .ex-chart.busy { opacity: 0.55; }
-#units-bar { height: 440px; }
+#units-bar, #trend { height: 440px; }
 .table-card .table-wrap { max-width: none; margin: 0; max-height: 460px; overflow: auto; }
 .table-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
 #table th { cursor: pointer; position: sticky; top: 0; background: var(--surface); white-space: nowrap; }

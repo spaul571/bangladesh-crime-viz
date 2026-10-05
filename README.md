@@ -4,7 +4,9 @@ An interactive data story on the monthly crime statistics published by Banglades
 Headquarters, January 2019 – August 2026.
 
 **Live site:** https://spaul571.github.io/bangladesh-crime-viz/
-**Explorer (filter by period, police unit and crime head):** https://spaul571.github.io/bangladesh-crime-viz/explorer.html
+
+One page: a dashboard first (filter the whole dataset by period, police unit and crime head), then the
+story with 24 interactive charts.
 
 CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
@@ -13,12 +15,13 @@ CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 | Path | Contents |
 |---|---|
 | `data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx` | The dataset: all 92 monthly PHQ tables merged into one sheet (1,564 rows = 92 months × 17 police units), each row tagged with the last day of its month (for example `30 Jun 2025`). Also lists the source PDF of every month and the translated table footnotes. |
+| `data/raw_pdf/` | The 27 PDFs published by Bangladesh Police Headquarters (police.gov.bd), as downloaded: yearly bundles for 2019–2024, single months January 2025 – August 2026 and the January–December 2025 summary. Scanned tables; kept for reference, the site reads only the Excel file. |
 | `data/bgd_adm1.geojson` | Boundaries of the eight divisions (geoBoundaries, CC0), for the maps. |
 | `build_site.py` | Builds the website into `docs/`. |
 | `analysis.py` | Loads the Excel file and computes every statistic and model behind the charts. |
 | `charts.py` | The 24 interactive charts (Plotly and Vega-Altair), each in a light and a dark version. |
 | `theme.py` | Colours and fonts shared by all charts. |
-| `static/` | Page styles, the chart loader (`site.js`) and the explorer (`explorer.js`). |
+| `static/` | Page styles, the chart loader (`site.js`) and the dashboard (`explorer.js`). |
 | `docs/` | The built website, served by GitHub Pages. |
 
 The site uses only the Excel file. National figures are the sum of the 17 police units.

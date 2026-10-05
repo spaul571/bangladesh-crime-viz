@@ -5,8 +5,8 @@
 Reads only data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx (plus the
 division boundaries in data/bgd_adm1.geojson), recomputes the analysis,
 writes every chart as a Plotly / Vega-Lite JSON spec in a light and a dark
-variant, and renders index.html (the story) and explorer.html (the
-dashboard). All numbers in the text are computed here, none typed by hand.
+variant, and renders index.html: a single page with the dashboard
+(Figure 1) followed by the story. All numbers in the text are computed here, none typed by hand.
 """
 from datetime import date
 from html import escape
@@ -24,6 +24,7 @@ from theme import THEMES, vega_config
 
 HERE = A.HERE
 DOCS = HERE / "docs"
+PDFS = HERE / "data" / "raw_pdf"
 REPO = "https://github.com/spaul571/bangladesh-crime-viz"
 
 
@@ -107,7 +108,7 @@ def num(v, nd=0):
 def numbers(R):
     nat, pp, its, m = R["nat"], R["pp"], R["its"], R["m"]
     tot = nat["Total Cases"]
-    N = dict(months=len(nat), first=f"{nat.index[0]:%B %Y}", last=f"{nat.index[-1]:%B %Y}",
+    N = dict(months=len(nat), n_pdf=len(list(PDFS.glob("*.pdf"))), first=f"{nat.index[0]:%B %Y}", last=f"{nat.index[-1]:%B %Y}",
              grand=num(tot.sum()), reported=num(nat[A.REPORTED].sum()),
              recovery=num(nat["Recovery Total"].sum()),
              rec_share=pct(100 * nat["Recovery Total"].sum() / tot.sum(), sign=False),
@@ -230,11 +231,12 @@ MINW = {"small_multiples": 760, "correlation": 680, "forest": 620, "unit_heatmap
         "map_change": 420}
 HEIGHT = {}
 FIGNO = {"n": 0}
+FIGS = {}
 
 
 def figure(cid, title, sub, hint, wide=False, source=None):
     FIGNO["n"] += 1
-    n = FIGNO["n"]
+    n = FIGS[cid] = FIGNO["n"]
     rep, lib = REPORT_FIG[cid]
     site_lib = "Vega-Altair" if cid in VEGA else "Plotly"
     if rep is None:
@@ -287,17 +289,26 @@ def ytd_table(N):
   <tbody>{rows}</tbody></table></div>"""
 
 
+def pdf_copy(title):
+    """File name of the downloaded PDF, e.g. 'Crime Statistics, Jun-2025' -> crime_stats_Jun-2025.pdf."""
+    name = "crime_stats_" + title.replace("Crime Statistics", "").strip(" ,()").replace(" ", "") + ".pdf"
+    return name if (PDFS / name).exists() else None
+
+
 def sources_table(src):
-    rows = "".join(
-        f"<tr><td>{r['Month Tag']:%d %b %Y}</td><td>{escape(str(r.iloc[1]))}</td>"
-        f"<td>{int(r.iloc[2]) if pd.notna(r.iloc[2]) else ''}</td><td>{escape(str(r.iloc[3]))}</td>"
-        f"<td><a href=\"{escape(str(r.iloc[4]))}\" rel=\"noopener\">PDF</a></td></tr>"
-        for _, r in src.iterrows())
+    rows = []
+    for _, r in src.iterrows():
+        copy = pdf_copy(str(r.iloc[1]))
+        rows.append(
+            f"<tr><td>{r['Month Tag']:%d %b %Y}</td><td>{escape(str(r.iloc[1]))}</td>"
+            f"<td>{int(r.iloc[2]) if pd.notna(r.iloc[2]) else ''}</td><td>{escape(str(r.iloc[3]))}</td>"
+            f"<td><a href=\"{escape(str(r.iloc[4]))}\" rel=\"noopener\">police.gov.bd</a></td>"
+            f"<td>{f'<a href=\"{REPO}/blob/main/data/raw_pdf/{copy}\" rel=\"noopener\">GitHub</a>' if copy else ''}</td></tr>")
     return f"""
 <details class="sources"><summary>Source PDF for each of the 92 months</summary>
 <div class="table-wrap"><table>
-<thead><tr><th>Month tag</th><th>PDF title on police.gov.bd</th><th>Page</th><th>Uploaded</th><th>Link</th></tr></thead>
-<tbody>{rows}</tbody></table></div></details>"""
+<thead><tr><th>Month tag</th><th>PDF title on police.gov.bd</th><th>Page</th><th>Uploaded</th><th>Original</th><th>Copy</th></tr></thead>
+<tbody>{"".join(rows)}</tbody></table></div></details>"""
 
 
 def head(title, desc, extra=""):
@@ -322,15 +333,13 @@ def head(title, desc, extra=""):
 </head>"""
 
 
-def nav(active):
-    links = [("index.html#numbers", "Story"), ("index.html#rupture", "The break"),
-             ("index.html#geography", "Geography"), ("index.html#future", "Outlook"),
-             ("explorer.html", "Explorer"), ("index.html#data", "Data")]
-    items = "".join(f'<a href="{h}"{" aria-current=\"page\"" if t == active else ""}>{t}</a>'
-                    for h, t in links)
+def nav():
+    links = [("#dashboard", "Dashboard"), ("#numbers", "Story"), ("#rupture", "The break"),
+             ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data")]
+    items = "".join(f'<a href="{h}">{t}</a>' for h, t in links)
     return f"""
 <header class="topbar">
-  <a class="brand" href="index.html">Bangladesh crime, 2019–2026</a>
+  <a class="brand" href="#top">Bangladesh crime, 2019–2026</a>
   <nav>{items}</nav>
   <button class="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch light / dark">
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
@@ -360,17 +369,20 @@ def index_html(R, N):
   <h1>Fewer cases, more crime</h1>
   <p class="dek">Every monthly crime table Bangladesh Police Headquarters published from {N['first']} to
   {N['last']}, digitised and merged into one dataset: {N['grand']} cases in {N['months']} months across 17 police
-  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. Every chart below is
-  interactive: hover for values, use the menus to switch series, drag to zoom, double-click to reset.</p>
+  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. Start with the dashboard
+  below for quick access to the data, then read the story. Every chart is interactive: hover for values, use the
+  menus to switch series, drag to zoom, double-click to reset.</p>
   <div class="tiles">
     <div class="tile"><div class="big">{N['grand']}</div><div class="cap">cases recorded, {N['first']} – {N['last']}</div></div>
     <div class="tile"><div class="big">−{N['aug_drop']}</div><div class="cap">fall in recorded cases from July to August 2024</div></div>
     <div class="tile"><div class="big">{N['chg_Kidnapping']}</div><div class="cap">kidnapping, 24 months after vs 24 months before August 2024</div></div>
     <div class="tile"><div class="big">{N['chg_MurderAdj']}</div><div class="cap">murder once backlog filings are removed (not significant), against {N['chg_Murder']} raw</div></div>
   </div>
-  <p class="cta"><a class="btn" href="explorer.html">Open the explorer</a>
-  <a class="btn ghost" href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Download the dataset (Excel)</a></p>
+  <p class="cta"><a class="btn" href="#dashboard">Go to the dashboard</a>
+  <a class="btn ghost" href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Download the dataset (Excel)</a>
+  <a class="btn ghost" href="{REPO}/tree/main/data/raw_pdf">Source PDFs ({N['n_pdf']} files)</a></p>
 </section>""")
+    body.append(dashboard_html())
 
     body.append(chapter("numbers", "Chapter 1 · What is counted, and how much?", "A country in numbers",
                         "Most of what the police count is not crime that someone reported. It is crime the police went looking for."))
@@ -426,7 +438,7 @@ def index_html(R, N):
                         "The lockdown showed what happens when policing and public life stop at the same time: almost everything recorded falls."))
     body.append(f"""<p>During the general holiday that began on 26 March 2020, recorded cases fell to {N['apr20']} in
     April 2020. Recovery cases fell furthest, to {N['rec_apr20']}, because police were redeployed to enforce the lockdown.
-    By July 2020 the series had recovered (Figure 2). 2020 is a useful control: a collapse in recorded crime followed by a
+    By July 2020 the series had recovered (Figure {FIGS['hero']}). 2020 is a useful control: a collapse in recorded crime followed by a
     quick rebound is what a temporary pause looks like. August 2024 looks different.</p>""")
     body.append("</section>")
 
@@ -553,14 +565,7 @@ def index_html(R, N):
                        "Pick a series; zoom out to see the full history.", wide=True))
     body.append("</section>")
 
-    body.append(f"""
-<section class="chapter" id="explore">
-  <p class="kicker">Your turn</p>
-  <h2>Explore the data yourself</h2>
-  <p class="lede">Choose a period, police units and crime heads, and every chart and number in the explorer follows
-  your selection. It is the web version of the Dash dashboard in the report (Figure 24).</p>
-  <p class="cta"><a class="btn" href="explorer.html">Open the explorer</a></p>
-</section>""")
+
 
     src = R["src"]
     body.append(f"""
@@ -583,7 +588,7 @@ def index_html(R, N):
     <li><strong>Clustering:</strong> k-means (k = 3) on the centred log-ratio of each unit's crime mix; Railway Range left out as a one-unit outlier.</li>
     <li><strong>Caveat:</strong> these are cases recorded by police, not all crimes committed. Recording depends on victims coming forward and on police capacity.</li>
   </ul>
-  <p>Charts are drawn with <strong>Plotly</strong> and <strong>Vega-Altair</strong>; the explorer is the web version of the
+  <p>Charts are drawn with <strong>Plotly</strong> and <strong>Vega-Altair</strong>; the dashboard at the top is the web version of the
   <strong>Dash</strong> dashboard. Charts that the printed report drew with <strong>matplotlib</strong> and
   <strong>seaborn</strong> are redrawn here with Plotly, because static images cannot be interactive. Every chart has its
   data as a CSV link below it.</p>
@@ -593,23 +598,26 @@ def index_html(R, N):
     extra = ('<script defer src="https://cdn.jsdelivr.net/npm/vega@6"></script>\n'
              '<script defer src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>\n'
              '<script defer src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>\n'
-             '<script defer src="assets/site.js"></script>')
+             '<script defer src="assets/site.js"></script>\n'
+             '<script defer src="assets/explorer.js"></script>')
     return (head("Fewer cases, more crime — Bangladesh 2019–2026",
                  "An interactive data story on Bangladesh Police crime statistics, January 2019 – August 2026.", extra)
-            + "<body>" + nav("Story") + "".join(body) + footer() + "</body></html>")
+            + '<body id="top">' + nav() + "".join(body) + footer() + "</body></html>")
 
 
-def explorer_html():
-    extra = ('<script defer src="assets/site.js"></script>\n'
-             '<script defer src="assets/explorer.js"></script>')
-    body = """
-<main class="explorer">
-  <section class="ex-head">
-    <h1>Crime explorer</h1>
-    <p class="dek">Monthly cases recorded by Bangladesh Police Headquarters, 17 police units, January 2019 – August 2026.
-    The filters scope everything below them.</p>
-  </section>
-  <section class="filters" aria-label="Filters">
+def dashboard_html():
+    """Figure 1: the web version of the Dash dashboard, driven by assets/explorer.js."""
+    FIGNO["n"] += 1
+    n = FIGS["dashboard"] = FIGNO["n"]
+    return f"""
+<section class="dash" id="dashboard" aria-labelledby="dash-title">
+  <div class="dash-head">
+    <span class="fig-no">Figure {n}</span>
+    <h2 id="dash-title">Dashboard</h2>
+    <p class="sub">Quick access to the whole dataset. Choose a period, police units and crime heads: the totals, the four
+    charts and the table all follow your selection. With no unit selected, figures are national totals.</p>
+  </div>
+  <div class="filters" aria-label="Dashboard filters">
     <div class="f-group f-period">
       <span class="f-label">Period</span>
       <div class="presets" role="group" aria-label="Period presets">
@@ -624,29 +632,39 @@ def explorer_html():
       <div class="opts" id="units"></div></details>
     <details class="f-group multi" id="heads-box"><summary><span class="f-label">Crime heads</span><span class="val" id="heads-val"></span></summary>
       <div class="opts" id="heads"></div></details>
-  </section>
-  <section class="kpis" aria-label="Totals for the selection">
+  </div>
+  <div class="kpis" aria-label="Totals for the selection">
     <div class="tile"><div class="cap">Total cases</div><div class="big" id="k-total"></div></div>
     <div class="tile"><div class="cap">Reported crime (excl. recovery)</div><div class="big" id="k-reported"></div></div>
     <div class="tile"><div class="cap">Selected crime heads</div><div class="big" id="k-heads"></div></div>
     <div class="tile"><div class="cap">Recovery cases</div><div class="big" id="k-recovery"></div></div>
-  </section>
-  <section class="grid2">
+  </div>
+  <div class="grid2">
     <figure class="card"><figcaption>Monthly cases by crime head</figcaption><div id="trend" class="ex-chart"></div></figure>
     <figure class="card"><figcaption>Selected heads by police unit</figcaption><div id="units-bar" class="ex-chart"></div></figure>
-  </section>
-  <section class="grid2 even">
+  </div>
+  <div class="grid2 even">
     <figure class="card"><figcaption>Calendar heatmap (selected heads)</figcaption><div id="heat" class="ex-chart"></div></figure>
     <figure class="card"><figcaption>Crime mix in the selection (log scale)</figcaption><div id="mix" class="ex-chart"></div></figure>
-  </section>
-  <section class="card table-card">
+  </div>
+  <div class="card table-card">
     <div class="table-top"><h3>Table view</h3><button type="button" class="btn small" id="csv">Download selection (CSV)</button></div>
     <div class="table-wrap"><table id="table"></table></div>
-  </section>
-</main>"""
-    return (head("Crime explorer — Bangladesh 2019–2026",
-                 "Filter Bangladesh Police monthly crime statistics by period, police unit and crime head.", extra)
-            + "<body>" + nav("Explorer") + body + footer() + "</body></html>")
+  </div>
+  <div class="viz-foot">
+    <span>Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026.</span>
+    <span class="lib">Report Figure 24 was built with Dash; rebuilt here with Plotly.js so it runs in the browser.</span>
+    <a href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Full dataset (Excel)</a>
+  </div>
+</section>"""
+
+
+def explorer_redirect():
+    """The site used to have a separate explorer page; keep its link working."""
+    return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Dashboard</title>'
+            '<meta http-equiv="refresh" content="0; url=index.html#dashboard">'
+            '<link rel="canonical" href="index.html#dashboard"></head><body>'
+            '<p><a href="index.html#dashboard">The dashboard is on the main page.</a></p></body></html>')
 
 
 def main():
@@ -656,7 +674,7 @@ def main():
     write_charts(R)
     write_explorer_data(R)
     (DOCS / "index.html").write_text(index_html(R, N), encoding="utf-8")
-    (DOCS / "explorer.html").write_text(explorer_html(), encoding="utf-8")
+    (DOCS / "explorer.html").write_text(explorer_redirect(), encoding="utf-8")
     (DOCS / "assets").mkdir(exist_ok=True)
     for f in (HERE / "static").iterdir():
         shutil.copy(f, DOCS / "assets" / f.name)
