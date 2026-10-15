@@ -91,6 +91,7 @@ date,family,share
 2026-06-30,Property crime,0.2814
 2026-07-31,Property crime,0.2805
 2026-08-31,Property crime,0.2843
+2026-09-30,Property crime,0.2878
 2019-01-31,Public order,0.0487
 2019-02-28,Public order,0.0457
 2019-03-31,Public order,0.046
@@ -183,6 +184,7 @@ date,family,share
 2026-06-30,Public order,0.0333
 2026-07-31,Public order,0.0287
 2026-08-31,Public order,0.0244
+2026-09-30,Public order,0.0264
 2019-01-31,Violence against person,0.6342
 2019-02-28,Violence against person,0.6414
 2019-03-31,Violence against person,0.6488
@@ -275,6 +277,7 @@ date,family,share
 2026-06-30,Violence against person,0.6338
 2026-07-31,Violence against person,0.64
 2026-08-31,Violence against person,0.6425
+2026-09-30,Violence against person,0.6372
 2019-01-31,Violent property crime,0.0413
 2019-02-28,Violent property crime,0.035
 2019-03-31,Violent property crime,0.0308
@@ -367,3 +370,4 @@ date,family,share
 2026-06-30,Violent property crime,0.0516
 2026-07-31,Violent property crime,0.0508
 2026-08-31,Violent property crime,0.0487
+2026-09-30,Violent property crime,0.0486

@@ -91,6 +91,7 @@ date,series,cases
 2026-06-30,All recorded cases,18820
 2026-07-31,All recorded cases,17911
 2026-08-31,All recorded cases,18896
+2026-09-30,All recorded cases,18650
 2019-01-31,Reported crime,7850
 2019-02-28,Reported crime,7113
 2019-03-31,Reported crime,7875
@@ -183,6 +184,7 @@ date,series,cases
 2026-06-30,Reported crime,11888
 2026-07-31,Reported crime,11150
 2026-08-31,Reported crime,11278
+2026-09-30,Reported crime,11116
 2019-01-31,Recovery cases,9634
 2019-02-28,Recovery cases,10549
 2019-03-31,Recovery cases,9682
@@ -275,3 +277,4 @@ date,series,cases
 2026-06-30,Recovery cases,6932
 2026-07-31,Recovery cases,6761
 2026-08-31,Recovery cases,7618
+2026-09-30,Recovery cases,7534

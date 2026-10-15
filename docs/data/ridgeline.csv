@@ -91,6 +91,7 @@ Dacoity + robbery + kidnapping,2026-05-31,299
 Dacoity + robbery + kidnapping,2026-06-30,277
 Dacoity + robbery + kidnapping,2026-07-31,285
 Dacoity + robbery + kidnapping,2026-08-31,288
+Dacoity + robbery + kidnapping,2026-09-30,259
 Dacoity,2019-01-31,32
 Dacoity,2019-02-28,24
 Dacoity,2019-03-31,20
@@ -183,6 +184,7 @@ Dacoity,2026-05-31,42
 Dacoity,2026-06-30,38
 Dacoity,2026-07-31,53
 Dacoity,2026-08-31,42
+Dacoity,2026-09-30,28
 Robbery,2019-01-31,68
 Robbery,2019-02-28,43
 Robbery,2019-03-31,39
@@ -275,6 +277,7 @@ Robbery,2026-05-31,167
 Robbery,2026-06-30,149
 Robbery,2026-07-31,160
 Robbery,2026-08-31,154
+Robbery,2026-09-30,153
 Kidnapping,2019-01-31,46
 Kidnapping,2019-02-28,45
 Kidnapping,2019-03-31,42
@@ -367,6 +370,7 @@ Kidnapping,2026-05-31,90
 Kidnapping,2026-06-30,90
 Kidnapping,2026-07-31,72
 Kidnapping,2026-08-31,92
+Kidnapping,2026-09-30,78
 "Murder, excl. backlog filings",2019-01-31,351
 "Murder, excl. backlog filings",2019-02-28,262
 "Murder, excl. backlog filings",2019-03-31,290
@@ -459,3 +463,4 @@ Kidnapping,2026-08-31,92
 "Murder, excl. backlog filings",2026-06-30,326
 "Murder, excl. backlog filings",2026-07-31,298
 "Murder, excl. backlog filings",2026-08-31,286
+"Murder, excl. backlog filings",2026-09-30,297

@@ -2,13 +2,12 @@
 
     python build_site.py
 
-Reads only data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx (plus the
+Reads only data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx (plus the
 division boundaries in data/bgd_adm1.geojson), recomputes the analysis,
 writes every chart as a Plotly / Vega-Lite JSON spec in a light and a dark
 variant, and renders index.html: a single page with the dashboard
 (Figure 1) followed by the story. All numbers in the text are computed here, none typed by hand.
 """
-from datetime import date
 from html import escape
 import json
 import math
@@ -26,6 +25,8 @@ HERE = A.HERE
 DOCS = HERE / "docs"
 PDFS = HERE / "data" / "raw_pdf"
 REPO = "https://github.com/spaul571/bangladesh-crime-viz"
+PHQ = "https://www.police.gov.bd/en/january_2020"   # "Crime Statistics" list on police.gov.bd
+POP_SRC = "https://www.tbsnews.net/bangladesh/countrys-total-population-stands-1698-crore-613834"
 
 
 # ---------------------------------------------------------------------------
@@ -112,6 +113,8 @@ def numbers(R):
     nat, pp, its, m = R["nat"], R["pp"], R["its"], R["m"]
     tot = nat["Total Cases"]
     N = dict(months=len(nat), n_pdf=len(list(PDFS.glob("*.pdf"))), first=f"{nat.index[0]:%B %Y}", last=f"{nat.index[-1]:%B %Y}",
+             first_s=f"{nat.index[0]:%b %Y}", last_s=f"{nat.index[-1]:%b %Y}",
+             ytd_year=nat.index[-1].year, ytd_short=f"Jan–{nat.index[-1]:%b}", ytd_span=f"January–{nat.index[-1]:%B}",
              grand=num(tot.sum()), reported=num(nat[A.REPORTED].sum()),
              recovery=num(nat["Recovery Total"].sum()),
              rec_share=pct(100 * nat["Recovery Total"].sum() / tot.sum(), sign=False),
@@ -149,6 +152,37 @@ def numbers(R):
              seas_peak=f"{pd.Timestamp(2000, int(st.peak_month), 1):%B}",
              seas_trough=f"{pd.Timestamp(2000, int(st.trough_month), 1):%B}",
              seas_amp=pct(st.amplitude_pct, 0, sign=False))
+    # the pandemic pause
+    cw, sh = R["covid"], R["shocks"]
+    tot, rep, rec = nat["Total Cases"], nat[A.REPORTED], nat["Recovery Total"]
+    a19, a20 = "2019-04-30", "2020-04-30"
+    N.update(mar20=num(tot.loc["2020-03-31"]),
+             apr_drop=pct(100 * (1 - tot.loc[a20] / tot.loc[a19]), 0, sign=False),
+             rec_apr_drop=pct(100 * (1 - rec.loc[a20] / rec.loc[a19]), 0, sign=False),
+             rep_apr_drop=pct(100 * (1 - rep.loc[a20] / rep.loc[a19]), 0, sign=False),
+             rec_h2=pct(100 * rec.loc["2020-07-31":"2020-12-31"].sum()
+                        / rec.loc["2019-07-31":"2019-12-31"].sum(), 0, sign=False),
+             lock_mur=pct(cw.loc["Murder", "lockdown_pct"], 0))
+    v = cw.loc[A.REPORTED, "reopen_pct"]
+    N["reop_rep"] = ("down " if v < 0 else "up ") + pct(abs(v), 0, sign=False)
+    for k, s in [("kid", "Kidnapping"), ("dac", "Dacoity"), ("rob", "Robbery"), ("thf", "Theft"),
+                 ("bur", "Burglary"), ("wcr", "Woman & Child Repression")]:
+        N[f"lock_{k}"] = pct(-cw.loc[s, "lockdown_pct"], 0, sign=False)   # size of the fall
+
+    def normal(shock, s):   # % of the same month in the last normal year, by month
+        return sh[(sh.shock == shock) & (sh.series == s)].set_index("date").pct_normal
+    back = normal("2020", A.REPORTED).loc["2020-05-31":]
+    N["rep_back"] = f"{back[back >= 100].index[0]:%B %Y}"
+    for k, s in [("rec", "Recovery Total"), ("rep", A.REPORTED)]:
+        N[f"{k}_a21"] = pct(normal("2020", s).loc["2021-04-30"], 0, sign=False)
+        N[f"{k}_j21"] = pct(normal("2020", s).loc["2021-07-31"], 0, sign=False)
+    N["rec_21"] = (f"{N['rec_a21']} of the 2019 level both times" if N["rec_a21"] == N["rec_j21"] else
+                   f"{N['rec_a21']} and {N['rec_j21']} of the 2019 level")
+    for y, d0 in [("2020", "2020-04-30"), ("2024", "2024-08-31")]:
+        N[f"tot0_{y}"] = pct(normal(y, "Total Cases").loc[d0], 0, sign=False)
+        N[f"rec0_{y}"] = pct(normal(y, "Recovery Total").loc[d0], 0, sign=False)
+        g = sh[(sh.shock == y) & (sh.series == A.VIOLENT3) & (sh.k > 0)]
+        N[f"vio_{y}"] = pct(100 * g.cases.sum() / g.base.sum(), 0, sign=False)
     # divisions
     div = R["div"]
     r25 = div[div.year == 2025].set_index("division")[f"rate::{A.REPORTED}"].sort_values()
@@ -167,8 +201,9 @@ def numbers(R):
                               for u, v in flat.items()) or "none"
     N["n_units_rose"] = int((uc >= 2).sum())
     N["n_flat"] = len(flat)
-    # 2026 so far
-    a, b = nat.loc["2025-01-31":"2025-08-31"], nat.loc["2026-01-31":"2026-08-31"]
+    # the latest year so far, against the same months a year earlier
+    cur, prev = A.ytd_months(nat)
+    a, b = nat.loc[prev], nat.loc[cur]
     ytd = {}
     for nm, c in [("Total cases", "Total Cases"), ("Reported crime (excl. recovery)", A.REPORTED),
                   ("Recovery cases", "Recovery Total"), ("of which narcotics", "Narcotics"),
@@ -217,38 +252,18 @@ def numbers(R):
 # ---------------------------------------------------------------------------
 # page pieces
 # ---------------------------------------------------------------------------
-REPORT_FIG = {  # id -> (report figure number, library used in the report)
-    "sunburst": (2, "Plotly"), "hero": (3, "matplotlib"), "calendar": (4, "seaborn"),
-    "seasonal": (5, "Vega-Altair"), "stl": (6, "matplotlib"), "correlation": (7, "seaborn"),
-    "small_multiples": (8, "matplotlib"), "forest": (9, "matplotlib"), "its": (10, "matplotlib"),
-    "anomalies": (11, "matplotlib"), "murder_backlog": (12, "matplotlib"), "ridgeline": (13, "seaborn"),
-    "family_share": (14, "Vega-Altair"), "yoy": (15, "Vega-Altair"), "map_rates": (16, "Plotly"),
-    "map_change": (16, "Plotly"), "dumbbell": (17, "Plotly"), "unit_heatmap": (18, "seaborn"),
-    "bump": (19, "Vega-Altair"), "clusters": (20, "matplotlib"), "radar": (21, "Plotly"),
-    "brush": (22, "Vega-Altair"), "forecast": (23, "matplotlib"), "race": (None, "Plotly"),
-}
-VEGA = {"seasonal", "family_share", "yoy", "bump", "brush"}
 MINW = {"small_multiples": 760, "correlation": 680, "forest": 620, "unit_heatmap": 720,
         "anomalies": 640, "stl": 560, "bump": 620, "seasonal": 0, "brush": 0, "radar": 560,
         "calendar": 560, "dumbbell": 560, "race": 520, "clusters": 600, "map_rates": 420,
-        "map_change": 420}
+        "map_change": 420, "covid_heads": 560, "shocks": 640}
 HEIGHT = {}
 FIGNO = {"n": 0}
 FIGS = {}
 
 
-def figure(cid, title, sub, hint, wide=False, source=None):
+def figure(cid, title, sub, hint, wide=False):
     FIGNO["n"] += 1
     n = FIGS[cid] = FIGNO["n"]
-    rep, lib = REPORT_FIG[cid]
-    site_lib = "Vega-Altair" if cid in VEGA else "Plotly"
-    if rep is None:
-        origin = f"Web-only chart, drawn with {site_lib}."
-    elif lib == site_lib:
-        origin = f"Report Figure {rep}, drawn with {lib}."
-    else:
-        origin = f"Report Figure {rep} was drawn with {lib}; redrawn here with {site_lib} so it is interactive."
-    src = source or "Source: Bangladesh Police Headquarters, monthly crime statistics, Jan 2019 – Aug 2026."
     return f"""
 <figure class="viz{' wide' if wide else ''}" id="fig-{cid}">
   <figcaption class="viz-head">
@@ -259,11 +274,7 @@ def figure(cid, title, sub, hint, wide=False, source=None):
   <div class="controls" data-for="{cid}"><span class="hint">{hint}</span></div>
   <div class="scroll"><div class="chart" data-id="{cid}" data-minw="{MINW.get(cid, 0)}" style="min-height:{HEIGHT.get(cid, 400)}px"
        role="img" aria-label="{escape(title)}"><div class="loading">Loading chart…</div></div></div>
-  <div class="viz-foot">
-    <span>{src}</span>
-    <span class="lib">{origin}</span>
-    <a href="data/{cid}.csv" download>Chart data (CSV)</a>
-  </div>
+  <div class="viz-foot"><a href="data/{cid}.csv" download>Chart data (CSV)</a></div>
 </figure>"""
 
 
@@ -275,43 +286,18 @@ def chapter(cid, kicker, title, lede):
   <p class="lede">{lede}</p>"""
 
 
-def keybox(title, body):
-    return f'<aside class="keybox"><h4>{title}</h4><p>{body}</p></aside>'
-
-
 def ytd_table(N):
     rows = "".join(
         f"<tr><td>{'<span class=\"indent\">' + k + '</span>' if k.startswith('of') else k}</td>"
         f"<td>{num(a)}</td><td>{num(b)}</td>"
         f"<td class=\"{'up' if c > 0 else 'down'}\">{pct(c)}</td></tr>"
         for k, (a, b, c) in N["ytd"].items())
+    y, span, short = N["ytd_year"], N["ytd_span"], N["ytd_short"]
     return f"""
 <div class="table-wrap"><table class="ytd">
-  <caption>January–August 2026 against January–August 2025, national cases</caption>
-  <thead><tr><th>Series</th><th>Jan–Aug 2025</th><th>Jan–Aug 2026</th><th>Change</th></tr></thead>
+  <caption>{span} {y} against {span} {y - 1}, national cases</caption>
+  <thead><tr><th>Series</th><th>{short} {y - 1}</th><th>{short} {y}</th><th>Change</th></tr></thead>
   <tbody>{rows}</tbody></table></div>"""
-
-
-def pdf_copy(title):
-    """File name of the downloaded PDF, e.g. 'Crime Statistics, Jun-2025' -> crime_stats_Jun-2025.pdf."""
-    name = "crime_stats_" + title.replace("Crime Statistics", "").strip(" ,()").replace(" ", "") + ".pdf"
-    return name if (PDFS / name).exists() else None
-
-
-def sources_table(src):
-    rows = []
-    for _, r in src.iterrows():
-        copy = pdf_copy(str(r.iloc[1]))
-        rows.append(
-            f"<tr><td>{r['Month Tag']:%d %b %Y}</td><td>{escape(str(r.iloc[1]))}</td>"
-            f"<td>{int(r.iloc[2]) if pd.notna(r.iloc[2]) else ''}</td><td>{escape(str(r.iloc[3]))}</td>"
-            f"<td><a href=\"{escape(str(r.iloc[4]))}\" rel=\"noopener\">police.gov.bd</a></td>"
-            f"<td>{f'<a href=\"{REPO}/blob/main/data/raw_pdf/{copy}\" rel=\"noopener\">GitHub</a>' if copy else ''}</td></tr>")
-    return f"""
-<details class="sources"><summary>Source PDF for each of the 92 months</summary>
-<div class="table-wrap"><table>
-<thead><tr><th>Month tag</th><th>PDF title on police.gov.bd</th><th>Page</th><th>Uploaded</th><th>Original</th><th>Copy</th></tr></thead>
-<tbody>{"".join(rows)}</tbody></table></div></details>"""
 
 
 def head(title, desc, extra=""):
@@ -337,8 +323,8 @@ def head(title, desc, extra=""):
 
 
 def nav():
-    links = [("#overview", "Overview"), ("#story", "Story"), ("#rupture", "The break"),
-             ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data")]
+    links = [("#overview", "Overview"), ("#story", "Story"), ("#pandemic", "Pandemic"),
+             ("#rupture", "The break"), ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data")]
     items = "".join(f'<a href="{h}">{t}</a>' for h, t in links)
     return f"""
 <header class="topbar">
@@ -353,9 +339,6 @@ def nav():
 def footer():
     return f"""
 <footer class="site-foot">
-  <p>Data: Bangladesh Police Headquarters monthly crime statistics (police.gov.bd), digitised from the scanned
-  PDFs and merged into one Excel file. Population: BBS Population and Housing Census 2022 (adjusted).
-  Built {date.today():%d %B %Y} from <code>Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx</code>.</p>
   <p>CSE628 Data Visualization, Fall 2026 · Class Test 1 (group task) ·
   <a href="{REPO}">Source code on GitHub</a></p>
 </footer>"""
@@ -384,7 +367,8 @@ def index_html(R, N):
     {N['wcr_share']} of reported crime. <em>Recovery cases</em> ({N['recovery']}, {N['rec_share']} of the total) are
     police-initiated seizures; narcotics alone are {N['narco_share']} of everything recorded. Murder, the crime that
     dominates headlines, is {N['murder_total']} cases, {N['murder_share']} of the total. Click a ring to zoom into a family.</p>""")
-    body.append(figure("sunburst", "What gets counted", "Inner ring: crime family; outer ring: crime head. Share of all cases, Jan 2019 – Aug 2026.",
+    body.append(figure("sunburst", "What gets counted", "Inner ring: crime family; outer ring: crime head. "
+                       f"Share of all cases, {N['first_s']} – {N['last_s']}.",
                        "Click a family to zoom in; click the centre to zoom out."))
     body.append(f"""<p>Because the two families move in opposite directions, the national total misleads on its own.
     Reported crime (orange) has a yearly rhythm and a gentle upward drift; recovery cases (aqua) fell by about half.
@@ -394,8 +378,6 @@ def index_html(R, N):
     body.append(figure("hero", "The national total hides two opposite currents",
                        "Monthly cases. Thin lines: monthly values; thick lines: 3-month centred mean.",
                        "Hover for the month's values · click a legend item to hide a series · buttons zoom to recent years.", wide=True))
-    body.append(keybox("Why it matters", "A headline saying “recorded crime fell” is technically true and practically misleading. "
-                       "Everything that follows separates reported crime from police-initiated recovery cases."))
     body.append("</section>")
 
     body.append(chapter("rhythm", "Chapter 2 · Is there a normal year?", "The rhythm of an ordinary year",
@@ -429,10 +411,36 @@ def index_html(R, N):
 
     body.append(chapter("pandemic", "Chapter 3 · 2020", "The pandemic pause",
                         "The lockdown showed what happens when policing and public life stop at the same time: almost everything recorded falls."))
-    body.append(f"""<p>During the general holiday that began on 26 March 2020, recorded cases fell to {N['apr20']} in
-    April 2020. Recovery cases fell furthest, to {N['rec_apr20']}, because police were redeployed to enforce the lockdown.
-    By July 2020 the series had recovered (Figure {FIGS['hero']}). 2020 is a useful control: a collapse in recorded crime followed by a
-    quick rebound is what a temporary pause looks like. August 2024 looks different.</p>""")
+    body.append(f"""<p>On 26 March 2020 the government closed offices, markets and transport for a nationwide
+    “general holiday”, Bangladesh's COVID-19 lockdown. It lasted until 30 May. Recorded cases fell from {N['mar20']} in
+    March to {N['apr20']} in April, {N['apr_drop']} fewer than in April 2019. The two families of cases from Chapter 1 fell
+    by very different amounts. Recovery cases, which come from police searches, fell {N['rec_apr_drop']} because officers
+    were redeployed to enforce the lockdown. Reported crime, which depends on victims coming forward, fell
+    {N['rep_apr_drop']}.</p>""")
+    body.append(figure("covid_heads", "What stopped during the lockdown, and what came back",
+                       "Change in cases against the same months of 2019. Filled dot: April–May 2020, the general holiday; "
+                       "open dot: July–September 2020, after reopening. Riot, explosives and speedy-trial cases are left out: "
+                       "too few or too erratic in 2019 to compare.",
+                       "Hover a dot for the counts behind each change."))
+    body.append(f"""<p>Crimes that need people on the move fell furthest. Against April and May 2019, kidnapping fell
+    {N['lock_kid']}, dacoity {N['lock_dac']} and robbery {N['lock_rob']}. With families at home, theft fell {N['lock_thf']}
+    and burglary {N['lock_bur']}. Woman and child repression fell {N['lock_wcr']}, more likely because victims could not
+    reach a police station than because the abuse stopped. Murder hardly moved ({N['lock_mur']}): a killing gets recorded,
+    lockdown or not.</p>""")
+    body.append(f"""<p>The pause was short. Reported crime was back at its 2019 level by {N['rep_back']}, and
+    July–September 2020 was {N['reop_rep']} on the same months of 2019. Recovery cases came back more slowly: from July
+    to December 2020 they ran at {N['rec_h2']} of their 2019 level. The second-wave lockdowns of April and July 2021
+    pushed them down again, to {N['rec_21']}, while reported crime held at {N['rep_a21']} and {N['rep_j21']}.</p>""")
+    body.append(f"""<p>That makes 2020 a useful control: a collapse followed by a quick rebound is what a temporary
+    pause looks like. August 2024 looks different. In their first month the two shocks look alike: recorded cases fell to
+    {N['tot0_2020']} of normal in April 2020 and to {N['tot0_2024']} in August 2024, and recovery cases to {N['rec0_2020']}
+    and {N['rec0_2024']}. Then they part ways. Over the two years after April 2020, dacoity, robbery and kidnapping ran at
+    {N['vio_2020']} of their 2019 level: back to normal. Over the two years after August 2024 they ran at
+    {N['vio_2024']} of their 2023 level.</p>""")
+    body.append(figure("shocks", "Two shocks: a pause in 2020, a break in 2024",
+                       "Monthly cases as a % of the same month in the last normal year: 2019 for the pandemic, 2023 for the "
+                       "2024 break (100% = normal). Month 0 = April 2020 and August 2024. Shaded: the 2020 general holiday.",
+                       "Hover a panel to compare the two shocks month by month.", wide=True))
     body.append("</section>")
 
     body.append(chapter("rupture", "Chapter 4 · What changed, by how much, and for how long?", "Rupture: after the fifth of August",
@@ -478,7 +486,8 @@ def index_html(R, N):
     body.append(f"""<p>Violent property crime moved to a new normal. From 2019 to 2023 the median month saw between
     {N['med_lo']} and {N['med_hi']} dacoity, robbery and kidnapping cases; in 2025 the median was {N['med25']}.</p>""")
     body.append(figure("ridgeline", "Violent property crime shifted right, and stayed there",
-                       "Distribution of monthly national cases by year (density; ticks = individual months). 2026 = Jan–Aug.",
+                       "Distribution of monthly national cases by year (density; ticks = individual months). "
+                       f"{N['ytd_year']} = {N['ytd_short']}.",
                        "Pick a series; hover a tick for its month."))
     body.append(figure("family_share", "The mix shifts: violent property crime claims a larger slice",
                        "Share of the ten named reactive crime heads (excludes “other cases” and recovery cases), 3-month rolling mean.",
@@ -486,9 +495,6 @@ def index_html(R, N):
     body.append(figure("yoy", "Year against year",
                        "Change in national annual cases by crime head. Default: 2025, the first full year after the break, against 2023, the last full year before it.",
                        "Choose the comparison below the chart; hover a bar for both totals."))
-    body.append(keybox("Chapter 4 in one sentence", "After 5 August 2024 Bangladesh recorded fewer cases overall because "
-                       "police searched and seized less, while victims reported far more dacoity, robbery and kidnapping; "
-                       "the apparent murder surge is mostly delayed filings."))
     body.append("</section>")
 
     body.append(chapter("geography", "Chapter 5 · Where did it happen?", "The geography of the break",
@@ -500,8 +506,7 @@ def index_html(R, N):
     body.append('<div class="pair">')
     body.append(figure("map_rates", "Where crime is reported",
                        "Reported crime per 100,000 people per year, by division.",
-                       "Pick a year; hover a division.",
-                       source="Source: PHQ monthly crime statistics; population: BBS Census 2022 (adjusted)."))
+                       "Pick a year; hover a division."))
     body.append(figure("map_change", "Where violence grew",
                        "Change in mean monthly cases, 24 months after vs 24 months before August 2024.",
                        "Pick a crime; hover a division."))
@@ -520,10 +525,12 @@ def index_html(R, N):
     body.append(f"""<p>Ranked by reported crime, the large district ranges lead.{top2} Hover a line to follow one unit;
     the animated race below replays the same ranking year by year.</p>""")
     body.append(figure("bump", "Who reports the most crime?",
-                       "Rank of the 16 territorial units by annual reported crime (total minus recovery cases). Highlighted: DMP and the three biggest movers. *2026 annualised from Jan–Aug.",
+                       "Rank of the 16 territorial units by annual reported crime (total minus recovery cases). Highlighted: DMP and the three biggest movers. "
+                       f"*{N['ytd_year']} annualised from {N['ytd_short']}.",
                        "Hover a line or dot to follow one unit."))
     body.append(figure("race", "Reported crime by police unit, year by year",
-                       "Annual reported crime per unit; 2026 annualised from January–August. Blue: metropolitan police; orange: range police.",
+                       f"Annual reported crime per unit; {N['ytd_year']} annualised from {N['ytd_span']}. "
+                       "Blue: metropolitan police; orange: range police.",
                        "Press Play, or drag the year slider."))
     body.append(f"""<p>Clustering the units by the <em>mix</em> of their caseload, not its size, gives three groups. The
     <strong>metro and port belt</strong> ({N['cl_Metro']}) over-indexes on narcotics, arms, robbery and burglary. The
@@ -540,7 +547,7 @@ def index_html(R, N):
 
     body.append(chapter("future", "Chapter 6 · Where is it heading?", "A slow return?",
                         "Searches and seizures are rising again and violent crime is easing, but not yet back to where it was."))
-    body.append(f"""<p>Comparing January–August 2026 with the same months of 2025, recovery cases are {N['ytdw_rec']},
+    body.append(f"""<p>Comparing {N['ytd_span']} {N['ytd_year']} with the same months of {N['ytd_year'] - 1}, recovery cases are {N['ytdw_rec']},
     driven by narcotics ({N['ytd_narco']}): the strongest sign yet that proactive policing is returning, in the year of the
     12 February 2026 general election. At the same time dacoity is {N['ytdw_dac']}, murder {N['ytdw_mur']} and
     robbery {N['ytdw_rob']}.</p>""")
@@ -560,33 +567,28 @@ def index_html(R, N):
 
 
 
-    src = R["src"]
     body.append(f"""
 <section class="chapter" id="data">
-  <p class="kicker">Data and methods</p>
-  <h2>How this was made</h2>
-  <p>Bangladesh Police Headquarters publishes its monthly crime statistics as scanned PDF tables. All 27 files
-  covering {N['first']} – {N['last']} were downloaded, read with OCR and checked cell by cell against the printed row,
-  column and recovery totals; the monthly tables for 2019–2023 add up exactly to the printed annual summaries. The
-  result is one Excel file with {len(R['m']):,} rows ({N['months']} months × 17 police units), each tagged with the last day of
-  its month (for example 30 Jun 2025). National figures on this site are the sum of the 17 units.</p>
-  <p class="cta"><a class="btn" href="data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx" download>Download the dataset (Excel)</a>
-  <a class="btn ghost" href="{REPO}/tree/main/data/raw_pdf">Source PDFs ({N['n_pdf']} files)</a></p>
-  <ul class="methods">
-    <li><strong>Before and after:</strong> 24 months before (Aug 2022 – Jul 2024) against 24 months after (Sep 2024 – Aug 2026);
-    August 2024 excluded. Mann–Whitney U, Cliff's δ, bootstrap 95% CI of the ratio of means.</li>
-    <li><strong>Interrupted time series:</strong> negative-binomial GLM with trend, post-break level and slope, month effects and COVID / August-2024 dummies.</li>
-    <li><strong>Seasonality:</strong> robust STL (period 12) on log counts.</li>
-    <li><strong>Forecasting:</strong> SARIMAX on log counts, AIC-selected orders for d = 0 and d = 1, kept by walk-forward backtest.</li>
-    <li><strong>Change points and anomalies:</strong> PELT (RBF cost, penalty 4); Isolation Forest (500 trees, contamination 6%).</li>
-    <li><strong>Clustering:</strong> k-means (k = 3) on the centred log-ratio of each unit's crime mix; Railway Range left out as a one-unit outlier.</li>
-    <li><strong>Caveat:</strong> these are cases recorded by police, not all crimes committed. Recording depends on victims coming forward and on police capacity.</li>
-  </ul>
-  <p>Charts are drawn with <strong>Plotly</strong> and <strong>Vega-Altair</strong>; the interactive overview at the top is the web version of the
-  <strong>Dash</strong> dashboard (report Figure 24), rebuilt with Plotly.js so it runs in the browser. Charts that the printed report drew with <strong>matplotlib</strong> and
-  <strong>seaborn</strong> are redrawn here with Plotly, because static images cannot be interactive. Every chart has its
-  data as a CSV link below it.</p>
-  {sources_table(src)}
+  <p class="kicker">Data</p>
+  <h2>About the data</h2>
+  <p>The story uses the monthly crime statistics of Bangladesh Police Headquarters, {N['first']} – {N['last']}. The
+  {N['n_pdf']} published PDF files were digitised and merged into one table of {len(R['m']):,} rows ({N['months']} months
+  × 17 police units), each row tagged with the last day of its month (for example 30 Jun 2025). National figures are the
+  sum of the 17 units. These are cases recorded by police, not all crimes committed.</p>
+  <div class="table-wrap"><table class="datasets">
+  <thead><tr><th>Dataset</th><th>Details</th><th>Link</th></tr></thead>
+  <tbody>
+    <tr><td>Crime statistics</td><td>Bangladesh Police Headquarters: cases by police unit and crime head, published every
+      month as scanned PDF tables</td><td><a href="{PHQ}" rel="noopener">police.gov.bd</a></td></tr>
+    <tr><td>Merged dataset</td><td>All {N['months']} months in one Excel sheet, with the source PDF of each month and the
+      translated table footnotes</td><td><a href="data/{A.XLSX.name}" download>Excel file</a></td></tr>
+    <tr><td>Original PDFs</td><td>The {N['n_pdf']} files as downloaded from police.gov.bd</td>
+      <td><a href="{REPO}/tree/main/data/raw_pdf" rel="noopener">GitHub</a></td></tr>
+    <tr><td>Population</td><td>BBS Population and Housing Census 2022, adjusted figures by division, for the rates per
+      100,000 people</td><td><a href="{POP_SRC}" rel="noopener">The Business Standard</a></td></tr>
+    <tr><td>Division boundaries</td><td>geoBoundaries, Bangladesh ADM1 (CC0), for the maps</td>
+      <td><a href="https://www.geoboundaries.org/" rel="noopener">geoboundaries.org</a></td></tr>
+  </tbody></table></div>
 </section>
 </main>""")
     extra = ('<script defer src="https://cdn.jsdelivr.net/npm/vega@6"></script>\n'
@@ -595,7 +597,7 @@ def index_html(R, N):
              '<script defer src="assets/site.js"></script>\n'
              '<script defer src="assets/explorer.js"></script>')
     return (head("Fewer cases, more crime — Bangladesh 2019–2026",
-                 "An interactive data story on Bangladesh Police crime statistics, January 2019 – August 2026.", extra)
+                 f"An interactive data story on Bangladesh Police crime statistics, {N['first']} – {N['last']}.", extra)
             + '<body id="top">' + nav() + "".join(body) + footer() + "</body></html>")
 
 

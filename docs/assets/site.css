@@ -168,21 +168,10 @@ summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 }
 .chart .vega-embed { width: 100%; }
 .chart .vega-embed summary { opacity: 0.6; }
-.viz-foot {
-  display: flex; flex-wrap: wrap; gap: 4px 18px; border-top: 1px solid var(--grid);
-  margin-top: 10px; padding-top: 10px; font-size: 12.5px; color: var(--muted);
-}
-.viz-foot .lib { color: var(--ink2); }
-.viz-foot a { margin-left: auto; color: var(--ink2); }
+.viz-foot { display: flex; justify-content: flex-end; margin-top: 8px; font-size: 12.5px; }
+.viz-foot a { color: var(--muted); }
 .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 clamp(12px, 1.6vw, 24px); }
 .pair .viz { margin-left: 0; margin-right: 0; min-width: 0; }
-
-.keybox {
-  margin: 28px 0; padding: 16px 20px; background: var(--surface);
-  border: 1px solid var(--border); border-left: 4px solid var(--orange); border-radius: 10px;
-}
-.keybox h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange); margin-bottom: 6px; }
-.keybox p { margin: 0; font-size: inherit; }
 
 /* ---------- tables ---------- */
 .table-wrap { overflow-x: auto; margin: 0 0 24px; }
@@ -194,11 +183,9 @@ th { color: var(--ink2); font-weight: 600; font-size: 13px; border-bottom-color:
 td.up { color: var(--up); font-weight: 600; }
 td.down { color: var(--down); font-weight: 600; }
 .indent { padding-left: 16px; color: var(--ink2); }
-.sources summary { cursor: pointer; color: var(--ink2); font-weight: 600; margin: 16px 0; }
-.sources .table-wrap { max-height: 420px; overflow-y: auto; }
-.sources td, .sources th { text-align: left; }
-.methods { padding-left: 20px; }
-.methods li { margin-bottom: 8px; }
+.datasets td, .datasets th { text-align: left; vertical-align: top; }
+.datasets td:first-child { font-weight: 600; white-space: nowrap; }
+.datasets td:last-child { white-space: nowrap; }
 
 .site-foot {
   border-top: 1px solid var(--border); color: var(--muted); font-size: 13.5px;
@@ -299,7 +286,6 @@ td.down { color: var(--down); font-weight: 600; }
   .brand { display: none; }
   .topbar { gap: 8px; }
   .viz { border-radius: 12px; }
-  .viz-foot a { margin-left: 0; }
 }
 @media print {
   .topbar, .controls, .cta, .theme-toggle { display: none; }

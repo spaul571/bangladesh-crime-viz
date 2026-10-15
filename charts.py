@@ -310,9 +310,10 @@ def correlation(T, R):
     nat = R["nat"]
     full = nat[A.HEADS].astype(float).corr(method="spearman")
     order = [A.HEADS[i] for i in leaves_list(linkage(full.values, method="average"))]
-    periods = {"Whole period (Jan 2019 – Aug 2026)": nat,
-               "Before the break (Jan 2019 – Jul 2024)": nat.loc[:"2024-07-31"],
-               "After the break (Sep 2024 – Aug 2026)": nat.loc["2024-09-30":]}
+    first, last = nat.index[0], nat.index[-1]
+    periods = {f"Whole period ({first:%b %Y} – {last:%b %Y})": nat,
+               f"Before the break ({first:%b %Y} – Jul 2024)": nat.loc[:"2024-07-31"],
+               f"After the break (Sep 2024 – {last:%b %Y})": nat.loc["2024-09-30":]}
     fig = go.Figure()
     rows = []
     for i, (name, d) in enumerate(periods.items()):
@@ -333,6 +334,104 @@ def correlation(T, R):
     ctl = control("Period", list(periods), [[0], [1], [2]], 3)
     data = pd.concat(rows).rename(columns={"level_0": "head_a", "level_1": "head_b"})
     return Chart("plotly", fig, [ctl], data=data, height=660)
+
+
+# ===========================================================================
+# Chapter 3 - the pandemic pause
+# ===========================================================================
+COVID_SKIP = ["Riot", "Explosive Act", "Speedy Trial"]   # too few, or too erratic, cases in 2019
+
+
+def covid_heads(T, R):
+    cw = R["covid"]
+    tot = ["Total Cases", A.REPORTED, "Recovery Total"]
+    order = tot + cw.drop(index=tot + COVID_SKIP).sort_values("lockdown_pct").index.tolist()
+    d = cw.loc[order]
+    labels = [f"<b>{lab(s)}</b>" if s in tot else lab(s) for s in order]
+    blue = role(T, "blue")
+    fig = go.Figure()
+    xs, ys = [], []
+    for y, (_, r) in zip(labels, d.iterrows()):
+        xs += [r.lockdown_pct, r.reopen_pct, None]
+        ys += [y, y, None]
+    fig.add_scatter(x=xs, y=ys, mode="lines", line=dict(color=T.context, width=3),
+                    hoverinfo="skip", showlegend=False)
+    # filled dot: the lockdown, labelled on its outer side; open dot: after reopening
+    left = d.lockdown_pct <= d.reopen_pct
+    for k, name in [("lockdown", "April–May 2020, general holiday"),
+                    ("reopen", "July–September 2020, after reopening")]:
+        filled = k == "lockdown"
+        fig.add_scatter(
+            x=d[f"{k}_pct"], y=labels, mode="markers+text" if filled else "markers", name=name,
+            marker=dict(size=13, color=blue if filled else T.surface,
+                        line=dict(color=T.surface if filled else blue, width=2 if filled else 2.5)),
+            text=[f"{v:+.0f}%".replace("-", "−") for v in d[f"{k}_pct"]] if filled else None,
+            textposition=["middle left" if v else "middle right" for v in left] if filled else None,
+            textfont=dict(size=11, color=T.ink2),
+            customdata=np.stack([d[f"{k}_2020"].map("{:,}".format),
+                                 d[f"{k}_2019"].map("{:,}".format)], axis=1),
+            hovertemplate=f"%{{y}}<br>{name}: <b>%{{x:+.0f}}%</b><br>"
+                          "%{customdata[0]} cases, against %{customdata[1]} in 2019<extra></extra>")
+    fig.add_shape(type="line", xref="paper", x0=0, x1=1, y0=len(tot) - 0.5, y1=len(tot) - 0.5,
+                  line=dict(color=T.grid, width=1))
+    fig.add_vline(x=0, line=dict(color=T.ink2, width=1))
+    vals = d[["lockdown_pct", "reopen_pct"]]
+    fig.update_layout(plotly_layout(
+        T, margin=dict(l=200, r=24, t=40, b=48),
+        legend=dict(orientation="h", x=0, y=1.02, xanchor="left", yanchor="bottom",
+                    font=dict(size=12, color=T.ink2)),
+        xaxis=axis(T, showgrid=True, ticksuffix="%", zeroline=False,
+                   range=[min(-100, vals.min().min() - 12), vals.max().max() + 14],
+                   title=dict(text="change in cases against the same months of 2019",
+                              font=dict(size=12, color=T.ink2))),
+        yaxis=axis(T, showgrid=False, categoryorder="array", categoryarray=labels,
+                   autorange="reversed")))
+    return Chart("plotly", fig, data=d.reset_index(), height=600)
+
+
+SHOCK_PANELS = {"Total Cases": "All recorded cases", "Recovery Total": "Recovery cases (police-initiated)",
+                A.REPORTED: "Reported crime (victim-driven)", A.VIOLENT3: "Dacoity, robbery and kidnapping"}
+
+
+def shocks(T, R):
+    sh = R["shocks"]
+    fig = make_subplots(rows=2, cols=2, shared_xaxes=True, vertical_spacing=0.14, horizontal_spacing=0.07,
+                        subplot_titles=[f"<b>{t}</b>" for t in SHOCK_PANELS.values()])
+    for i, a in enumerate(fig.layout.annotations):
+        a.update(x=fig.layout["xaxis" + (str(i + 1) if i else "")].domain[0], xanchor="left",
+                 font=dict(size=13, color=T.ink))
+    style = {"2020": (role(T, "blue"), "2020: COVID-19 shutdown, against the same month of 2019"),
+             "2024": (role(T, "orange"), "2024: after 5 August, against the same month of 2023")}
+    for i, s in enumerate(SHOCK_PANELS):
+        r, c = i // 2 + 1, i % 2 + 1
+        # 100% = normal, drawn as a trace so it sits above the grid and below the data
+        fig.add_scatter(x=[sh.k.min(), sh.k.max()], y=[100, 100], mode="lines", hoverinfo="skip",
+                        showlegend=False, line=dict(color=T.ink2, width=1), row=r, col=c)
+        for shock, (col, name) in style.items():
+            d = sh[(sh.series == s) & (sh.shock == shock)]
+            fig.add_scatter(x=d.k, y=d.pct_normal, mode="lines", name=name, legendgroup=shock,
+                            showlegend=(i == 0), line=dict(color=col, width=2.2),
+                            customdata=np.stack([d.date.dt.strftime("%b %Y"), d.base_date.dt.strftime("%b %Y"),
+                                                 d.cases.map("{:,}".format), d.base.map("{:,}".format)], axis=1),
+                            hovertemplate="%{customdata[0]}: <b>%{y:.0f}%</b> of %{customdata[1]} "
+                                          "(%{customdata[2]} against %{customdata[3]} cases)<extra></extra>",
+                            row=r, col=c)
+        # shapes go in after the traces: add_vrect skips subplots that are still empty
+        fig.add_vrect(x0=-0.5, x1=1.5, fillcolor=T.shade, line_width=0, layer="below", row=r, col=c)
+        top = sh.loc[sh.series == s, "pct_normal"].max()
+        fig.update_yaxes(axis(T, showgrid=True, showline=False, ticksuffix="%",
+                              range=[0, max(130, top * 1.1)]), row=r, col=c)
+        fig.update_xaxes(axis(T, tickvals=[-3, 0, 6, 12, 18, 24],
+                              unifiedhovertitle=dict(text="Month %{x} from the shock")), row=r, col=c)
+    fig.update_xaxes(title=dict(text="months from the shock", font=dict(size=12, color=T.ink2)), row=2)
+    fig.add_annotation(x=1.7, y=0.04, xref="x", yref="y domain", text="general holiday,<br>Apr–May 2020",
+                       showarrow=False, xanchor="left", yanchor="bottom", align="left",
+                       font=dict(size=11, color=T.ink2))
+    fig.update_layout(plotly_layout(
+        T, hovermode="x unified", margin=dict(l=52, r=16, t=76, b=48),
+        legend=dict(orientation="h", x=0, y=1.1, xanchor="left", yanchor="bottom",
+                    font=dict(size=12, color=T.ink2))))
+    return Chart("plotly", fig, data=sh, height=620)
 
 
 # ===========================================================================
@@ -535,7 +634,7 @@ def murder_backlog(T, R):
     fig.update_layout(plotly_layout(
         T, barmode="stack", bargap=0.18, hovermode="x unified",
         margin=dict(l=52, r=16, t=40, b=40),
-        xaxis=axis(T, range=[pd.Timestamp("2022-12-10"), pd.Timestamp("2026-09-20")],
+        xaxis=axis(T, range=[pd.Timestamp("2022-12-10"), nat.index[-1] + pd.Timedelta(days=20)],
                    hoverformat="%B %Y", rangeslider=dict(visible=True, thickness=0.07,
                                                           bgcolor=T.surface, bordercolor=T.grid)),
         yaxis=axis(T, showgrid=True, range=[0, 720], title="murder cases per month")))
@@ -632,10 +731,12 @@ def yoy(T, R):
         for h in A.HEADS:
             rows.append(dict(pair=f"{a} vs {b}", crime=lab(h), base=int(ann.loc[b, h]),
                              new=int(ann.loc[a, h]), chg=(ann.loc[a, h] / ann.loc[b, h] - 1) * 100))
-    ya = nat.loc["2025-01-31":"2025-08-31", A.HEADS].sum()
-    yb = nat.loc["2026-01-31":"2026-08-31", A.HEADS].sum()
+    cur, prev = A.ytd_months(nat)
+    ya, yb = nat.loc[prev, A.HEADS].sum(), nat.loc[cur, A.HEADS].sum()
+    last = nat.index[-1]
+    span = f"Jan–{last:%b}"
     for h in A.HEADS:
-        rows.append(dict(pair="Jan–Aug 2026 vs Jan–Aug 2025", crime=lab(h), base=int(ya[h]),
+        rows.append(dict(pair=f"{span} {last.year} vs {span} {last.year - 1}", crime=lab(h), base=int(ya[h]),
                          new=int(yb[h]), chg=(yb[h] / ya[h] - 1) * 100))
     d = pd.DataFrame(rows)
     d["chg"] = d.chg.round(1)
@@ -728,10 +829,12 @@ def map_rates(T, R):
                    dict(title=dict(text="per 100k", side="top", font=dict(color=T.ink2, size=11))))
     opts = []
     years = list(piv.index)
+    months = div.groupby("year").months.first()
+    last = R["nat"].index[-1]
     for y in years:
         vals = piv.loc[y]
         txt, tc = _labels(T, vals, "{:.0f}", colors, lo, hi)
-        opts.append({"label": f"{y}" + (" (Jan–Aug, annualised)" if y == 2026 else ""),
+        opts.append({"label": f"{y}" + (f" (Jan–{last:%b}, annualised)" if months[y] < 12 else ""),
                      "restyle": [[{"z": [[vals[d] for d in DIVS]]}, [0]],
                                  [{"text": [txt], "textfont.color": [tc]}, [1]]],
                      "relayout": {}})
@@ -1036,7 +1139,7 @@ def race(T, R):
                           (" (annualised)" if months[y] < 12 else "") + "<extra></extra>")],
             layout=go.Layout(annotations=[dict(
                 x=0.98, y=0.06, xref="paper", yref="paper", text=f"<b>{y}</b>" +
-                ("<br><span style='font-size:13px'>Jan–Aug, annualised</span>" if months[y] < 12 else ""),
+                (f"<br><span style='font-size:13px'>Jan–{m.date.max():%b}, annualised</span>" if months[y] < 12 else ""),
                 showarrow=False, xanchor="right", font=dict(size=44, color=T.context))])))
     fig = go.Figure(data=frames[0].data, frames=frames, layout=frames[0].layout)
     fig.update_layout(plotly_layout(
@@ -1072,8 +1175,10 @@ def brush(T, R):
     d = nat[dom].rename(columns=names).reset_index().melt("date", var_name="series", value_name="cases")
     d["date"] = d.date.dt.strftime("%Y-%m-%d")
     rng = [role(T, "violet"), role(T, "orange"), role(T, "aqua")]
+    last = nat.index[-1]
     sel = alt.selection_interval(encodings=["x"], value={"x": [alt.DateTime(year=2023, month=6, date=1),
-                                                               alt.DateTime(year=2026, month=8, date=31)]})
+                                                               alt.DateTime(year=last.year, month=last.month,
+                                                                            date=last.day)]})
     color = alt.Color("series:N", scale=alt.Scale(domain=list(names.values()), range=rng),
                       legend=alt.Legend(title=None, orient="top"))
     hover = alt.selection_point(fields=["date"], nearest=True, on="pointerover", empty=False,
@@ -1151,7 +1256,8 @@ def forecast(T, R):
 
 BUILDERS = {
     "sunburst": sunburst, "hero": hero, "calendar": calendar, "seasonal": seasonal, "stl": stl,
-    "correlation": correlation, "small_multiples": small_multiples, "forest": forest, "its": its,
+    "correlation": correlation, "covid_heads": covid_heads, "shocks": shocks,
+    "small_multiples": small_multiples, "forest": forest, "its": its,
     "anomalies": anomalies, "murder_backlog": murder_backlog, "ridgeline": ridgeline,
     "family_share": family_share, "yoy": yoy, "map_rates": map_rates, "map_change": map_change,
     "dumbbell": dumbbell, "unit_heatmap": unit_heatmap, "bump": bump, "clusters": clusters,

@@ -1,13 +1,13 @@
 # Fewer cases, more crime: Bangladesh 2019–2026
 
 An interactive data story on the monthly crime statistics published by Bangladesh Police
-Headquarters, January 2019 – August 2026.
+Headquarters, January 2019 – September 2026.
 
 **Live site:** https://spaul571.github.io/bangladesh-crime-viz/
 
 One page. It opens on an overview that fits one screen on a laptop or desktop: filters for period,
 police units and crime heads, eight tiles (totals and what changed) and eight charts, all following the
-filters. Below it, the story with 24 interactive charts.
+filters. Below it, the story with 26 interactive charts.
 
 CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
@@ -15,12 +15,12 @@ CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
 | Path | Contents |
 |---|---|
-| `data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx` | The dataset: all 92 monthly PHQ tables merged into one sheet (1,564 rows = 92 months × 17 police units), each row tagged with the last day of its month (for example `30 Jun 2025`). Also lists the source PDF of every month and the translated table footnotes. |
-| `data/raw_pdf/` | The 27 PDFs published by Bangladesh Police Headquarters (police.gov.bd), as downloaded: yearly bundles for 2019–2024, single months January 2025 – August 2026 and the January–December 2025 summary. Scanned tables; kept for reference, the site reads only the Excel file. |
+| `data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx` | The dataset: all 93 monthly PHQ tables merged into one sheet (1,581 rows = 93 months × 17 police units), each row tagged with the last day of its month (for example `30 Jun 2025`). Also lists the source PDF of every month and the translated table footnotes. |
+| `data/raw_pdf/` | The 28 PDFs published by Bangladesh Police Headquarters (police.gov.bd), as downloaded: yearly bundles for 2019–2024, single months January 2025 – September 2026 and the January–December 2025 summary. Scanned tables; kept for reference, the site reads only the Excel file. |
 | `data/bgd_adm1.geojson` | Boundaries of the eight divisions (geoBoundaries, CC0), for the maps. |
 | `build_site.py` | Builds the website into `docs/`. |
 | `analysis.py` | Loads the Excel file and computes every statistic and model behind the charts. |
-| `charts.py` | The 24 interactive charts (Plotly and Vega-Altair), each in a light and a dark version. |
+| `charts.py` | The 26 interactive charts (Plotly and Vega-Altair), each in a light and a dark version. |
 | `theme.py` | Colours and fonts shared by all charts. |
 | `static/` | Page styles, the chart loader (`site.js`) and the overview (`explorer.js`). |
 | `docs/` | The built website, served by GitHub Pages. |
@@ -46,6 +46,9 @@ from disk blocks the chart files from loading.
   (Sep 2024 – Aug 2026), August 2024 excluded. Mann–Whitney U, Cliff's δ, bootstrap 95% CI.
 - **Interrupted time series:** negative-binomial GLM with trend, post-break level and slope, month
   effects and COVID / August-2024 dummies.
+- **The 2020 pandemic pause:** April–May 2020 (the general holiday) and July–September 2020 against the
+  same months of 2019; each month around the 2020 and 2024 shocks as a % of the same month in the last
+  normal year (2019 and 2023).
 - **Seasonality:** robust STL decomposition (period 12) on log counts.
 - **Forecasting:** SARIMAX on log counts with a regime dummy and Fourier seasonality, chosen by
   walk-forward backtest.

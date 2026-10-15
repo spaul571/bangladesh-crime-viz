@@ -1,7 +1,7 @@
 """Load the merged Excel dataset and recompute every analysis behind the charts.
 
-The only input is data/Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx:
-  * "Merged Data": 92 months x 17 police units (no national Total rows);
+The only input is data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx:
+  * "Merged Data": 93 months x 17 police units (no national Total rows);
     national figures are the sum of the 17 units.
   * "Notes": the translated PHQ footnotes, parsed for the number of delayed
     ("backlog") murder filings in each month.
@@ -21,7 +21,7 @@ import pandas as pd
 
 warnings.filterwarnings("ignore")
 HERE = Path(__file__).resolve().parent
-XLSX = HERE / "data" / "Bangladesh_Crime_Statistics_Jan2019-Aug2026.xlsx"
+XLSX = HERE / "data" / "Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx"
 CACHE = HERE / ".cache"
 
 CRIME = ["Dacoity", "Robbery", "Murder", "Speedy Trial", "Riot",
@@ -213,10 +213,65 @@ def division_rates(m, nat):
     return div
 
 
+def ytd_months(nat):
+    """The months of the latest year so far, and the same months one year earlier."""
+    last = nat.index[-1]
+    cur = nat.index[nat.index.year == last.year]
+    prev = nat.index[(nat.index.year == last.year - 1) & (nat.index.month <= last.month)]
+    return cur, prev
+
+
 def window_means(df, cols, by):
     pre = df[(df.date >= PRE[0]) & (df.date <= PRE[1])].groupby(by)[cols].sum() / 24
     post = df[(df.date >= POST[0]) & (df.date <= POST[1])].groupby(by)[cols].sum() / 24
     return pre, post
+
+
+# ---------------------------------------------------------------------------
+# the pandemic pause
+# ---------------------------------------------------------------------------
+LOCKDOWN = (pd.Timestamp("2020-04-30"), pd.Timestamp("2020-05-31"))   # full months of the general holiday
+REOPEN = (pd.Timestamp("2020-07-31"), pd.Timestamp("2020-09-30"))     # first full quarter after it
+VIOLENT3 = "Dacoity, robbery and kidnapping"
+# month 0 of each shock, and the last normal year it is measured against
+SHOCKS = {"2020": (pd.Timestamp("2020-04-30"), 2019), "2024": (BREAK, 2023)}
+
+
+def same_month(d, year):
+    """Month-end of d's calendar month in another year."""
+    return pd.Timestamp(year=year, month=d.month, day=1) + pd.offsets.MonthEnd(0)
+
+
+def covid_windows(nat):
+    """Cases in the lockdown and reopening months of 2020 against the same months of 2019."""
+    rows = []
+    for s in HEADS + ["Recovery Total", REPORTED, "Total Cases"]:
+        r = dict(series=s)
+        for k, (a, b) in (("lockdown", LOCKDOWN), ("reopen", REOPEN)):
+            now = nat.loc[a:b, s].sum()
+            base = nat.loc[same_month(a, 2019):same_month(b, 2019), s].sum()
+            r.update({f"{k}_2020": int(now), f"{k}_2019": int(base),
+                      f"{k}_pct": 100 * (now / base - 1) if base else np.nan})
+        rows.append(r)
+    return pd.DataFrame(rows).set_index("series")
+
+
+def shock_index(nat, lo=-3, hi=24):
+    """Each month around a shock as % of the same month in the last normal year before it."""
+    d = nat[["Total Cases", "Recovery Total", REPORTED]].copy()
+    d[VIOLENT3] = nat[["Dacoity", "Robbery", "Kidnapping"]].sum(axis=1)
+    rows = []
+    for name, (t0, year) in SHOCKS.items():
+        for k in range(lo, hi + 1):
+            t = t0 + pd.offsets.MonthEnd(k)
+            if t > nat.index[-1]:
+                break
+            b = same_month(t, year)
+            for s in d.columns:
+                rows.append(dict(shock=name, k=k, date=t, base_date=b, series=s,
+                                 cases=int(d.loc[t, s]), base=int(d.loc[b, s]),
+                                 pct_normal=100 * d.loc[t, s] / d.loc[b, s]))
+    return pd.DataFrame(rows)
 
 
 # ---------------------------------------------------------------------------
@@ -359,4 +414,5 @@ def build():
     cl, load_, meta = clusters(m)
     return dict(m=m, nat=nat, src=src, pp=pp, its=itsr, itsfit=itsfit, stl=stl,
                 stl_strength=stl_strength, div=division_rates(m, nat), fc=fc, perf=perf,
-                cp=change_points(nat), an=anomalies(nat), cl=cl, load=load_, meta=meta)
+                cp=change_points(nat), an=anomalies(nat), cl=cl, load=load_, meta=meta,
+                covid=covid_windows(nat), shocks=shock_index(nat))
