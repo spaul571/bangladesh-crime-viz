@@ -24,6 +24,9 @@ CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 | `theme.py` | Colours and fonts shared by all charts. |
 | `static/` | Page styles, the chart loader (`site.js`) and the overview (`explorer.js`). |
 | `docs/` | The built website, served by GitHub Pages. |
+| `pdf/Bangladesh_Crime_Story_2019-2026.pdf` | The website as a PDF (light theme, white background): the dashboard on page 1, then the story with every chart in its default view. |
+| `make_pdf.py` | Prints the website to that PDF. |
+| `powerbi/` | `CrimeVisuals.pbix`, a Power BI report on the same dataset (data to August 2026), and `CrimeVisuals.pdf`, its five pages exported. |
 
 The site uses only the Excel file. National figures are the sum of the 17 police units.
 
@@ -39,6 +42,9 @@ python -m http.server 8000 --directory docs      # then open http://localhost:80
 The SARIMAX forecasts are the slow step; results are cached in `.cache/` and recomputed only when the
 Excel file changes. Open the site through a web server, as above; opening `docs/index.html` straight
 from disk blocks the chart files from loading.
+
+To refresh the PDF after the live site changes: `pip install playwright`, then `python make_pdf.py`
+(uses Microsoft Edge; without it, run `playwright install chromium` once).
 
 ## Methods in brief
 
