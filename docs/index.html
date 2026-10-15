@@ -27,7 +27,9 @@
   <button class="theme-toggle" type="button" aria-label="Switch colour theme" title="Switch light / dark">
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
   </button>
-</header><main>
+</header>
+<main>
+<div class="wrap">
 <section class="dash" id="overview" aria-label="Overview of the dataset">
   <div class="dash-top">
     <div class="dash-title">
@@ -72,16 +74,23 @@
     <figure class="card"><figcaption title="Every crime head (log scale)">Every crime head (log scale)<span class="note">Coloured: the heads you picked</span></figcaption><div id="mix" class="ex-chart"></div></figure>
   </div>
 </section>
-<section class="hero" id="story">
-  <p class="kicker">The story · Bangladesh Police crime statistics, January 2019 – September 2026</p>
-  <p class="dek">Every monthly crime table Bangladesh Police Headquarters published from January 2019 to
-  September 2026, digitised and merged into one dataset: 1,516,124 cases in 93 months across 17 police
-  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. The overview above lets you
-  filter the whole dataset by period, police unit and crime head; the chapters below explain what changed. Every
-  chart is interactive: hover for values, use the menus to switch series, drag to zoom, double-click to reset.</p>
+</div>
+<article class="story" id="story">
+<header class="story-head">
+  <p class="kicker">Data story</p>
+  <h1>Bangladesh's police are recording fewer cases. Victims are reporting more crime.</h1>
+  <p class="dek">In the two years after the government fell on 5 August 2024, the police recorded 6% fewer
+  cases a month than in the two years before. The drop is in police searches and seizures, which fell 24%.
+  Victims, meanwhile, reported more crime: kidnapping rose 112%, dacoity 85% and robbery
+  48%.</p>
+</header>
+<section class="chapter intro">
+  <p>Every month, Bangladesh Police Headquarters publishes a table of the cases its units recorded: one row for each
+  of the 17 police units, one column for each type of case. We digitised all 93 tables from January 2019 to
+  September 2026 and merged them into one dataset of 1,516,124 cases. Read together, they tell two stories at once:
+  what happened to crime, and what happened to policing.</p>
 </section>
 <section class="chapter" id="numbers">
-  <p class="kicker">Chapter 1 · What is counted, and how much?</p>
   <h2>A country in numbers</h2>
   <p class="lede">Most of what the police count is not crime that someone reported. It is crime the police went looking for.</p><p>The 1,516,124 cases fall into two families of almost equal size. <em>Reported crime</em>
     (898,108 cases) is led by the catch-all “other cases” and by woman and child repression, which alone is
@@ -90,7 +99,6 @@
     dominates headlines, is 26,440 cases, 1.7% of the total. Click a ring to zoom into a family.</p>
 <figure class="viz" id="fig-sunburst">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 1</span>
     <h3>What gets counted</h3>
     <p class="sub">Inner ring: crime family; outer ring: crime head. Share of all cases, Jan 2019 – Sep 2026.</p>
   </figcaption>
@@ -105,7 +113,6 @@
     the lowest in the series.</p>
 <figure class="viz wide" id="fig-hero">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 2</span>
     <h3>The national total hides two opposite currents</h3>
     <p class="sub">Monthly cases. Thin lines: monthly values; thick lines: 3-month centred mean.</p>
   </figcaption>
@@ -115,14 +122,12 @@
   <div class="viz-foot"><a href="data/hero.csv" download>Chart data (CSV)</a></div>
 </figure></section>
 <section class="chapter" id="rhythm">
-  <p class="kicker">Chapter 2 · Is there a normal year?</p>
   <h2>The rhythm of an ordinary year</h2>
   <p class="lede">Crime in Bangladesh has a calendar: it climbs from February to a peak in May and June and falls to its lowest point in December.</p><p>Reported crime peaks in May and bottoms out in December, a swing of about
     28% between the strongest and weakest months; its STL seasonal strength is 0.55 on a 0–1 scale.
     Switch the heatmap to recovery cases and the rhythm disappears, while the outlined August 2024 cell turns pale.</p>
 <figure class="viz" id="fig-calendar">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 3</span>
     <h3>Calendar of crime: May peaks, December lulls, and the August 2024 hole</h3>
     <p class="sub">Monthly national cases (thousands for large series). Outlined cell: August 2024. Blank: not yet published.</p>
   </figcaption>
@@ -136,7 +141,6 @@
     years to see how much those shocks move the profile.</p>
 <figure class="viz" id="fig-seasonal">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 4</span>
     <h3>Every crime has a season</h3>
     <p class="sub">Average month-of-year index (each year's monthly mean = 100) with 95% confidence band.</p>
   </figcaption>
@@ -148,7 +152,6 @@
     after August 2024 and the residual shocks of the lockdown months.</p>
 <figure class="viz wide" id="fig-stl">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 5</span>
     <h3>Under the noise: trend, season and shock</h3>
     <p class="sub">Robust STL decomposition (period 12) of log monthly cases; seasonal and residual shown as % effects. Red dots: shocks above 15%.</p>
   </figcaption>
@@ -162,7 +165,6 @@
     the periods before and after the break to see how the blocks changed.</p>
 <figure class="viz" id="fig-correlation">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 6</span>
     <h3>Which crimes move together?</h3>
     <p class="sub">Spearman rank correlation of monthly national counts, ordered by hierarchical clustering of the whole period.</p>
   </figcaption>
@@ -172,17 +174,15 @@
   <div class="viz-foot"><a href="data/correlation.csv" download>Chart data (CSV)</a></div>
 </figure></section>
 <section class="chapter" id="pandemic">
-  <p class="kicker">Chapter 3 · 2020</p>
   <h2>The pandemic pause</h2>
   <p class="lede">The lockdown showed what happens when policing and public life stop at the same time: almost everything recorded falls.</p><p>On 26 March 2020 the government closed offices, markets and transport for a nationwide
     “general holiday”, Bangladesh's COVID-19 lockdown. It lasted until 30 May. Recorded cases fell from 17,150 in
-    March to 9,098 in April, 55% fewer than in April 2019. The two families of cases from Chapter 1 fell
+    March to 9,098 in April, 55% fewer than in April 2019. The two families of cases fell
     by very different amounts. Recovery cases, which come from police searches, fell 83% because officers
     were redeployed to enforce the lockdown. Reported crime, which depends on victims coming forward, fell
     24%.</p>
 <figure class="viz" id="fig-covid_heads">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 7</span>
     <h3>What stopped during the lockdown, and what came back</h3>
     <p class="sub">Change in cases against the same months of 2019. Filled dot: April–May 2020, the general holiday; open dot: July–September 2020, after reopening. Riot, explosives and speedy-trial cases are left out: too few or too erratic in 2019 to compare.</p>
   </figcaption>
@@ -205,7 +205,6 @@
     177% of their 2023 level.</p>
 <figure class="viz wide" id="fig-shocks">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 8</span>
     <h3>Two shocks: a pause in 2020, a break in 2024</h3>
     <p class="sub">Monthly cases as a % of the same month in the last normal year: 2019 for the pandemic, 2023 for the 2024 break (100% = normal). Month 0 = April 2020 and August 2024. Shaded: the 2020 general holiday.</p>
   </figcaption>
@@ -215,7 +214,6 @@
   <div class="viz-foot"><a href="data/shocks.csv" download>Chart data (CSV)</a></div>
 </figure></section>
 <section class="chapter" id="rupture">
-  <p class="kicker">Chapter 4 · What changed, by how much, and for how long?</p>
   <h2>Rupture: after the fifth of August</h2>
   <p class="lede">In July 2024 the protests appeared in the data as riots and assaults on police. In August, the recording system itself broke. When it came back, the country's crime mix had changed.</p><p>July 2024 recorded 52 riot cases and 170 police-assault cases, both the highest
     in the series. Then, after 5 August, recorded cases fell 41.0% in one month, to 8,833. Narcotics recovery
@@ -223,7 +221,6 @@
     figure on record. Each panel below shows one crime head with its 24-month mean before and after the break.</p>
 <figure class="viz wide" id="fig-small_multiples">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 9</span>
     <h3>Sixteen crime heads, one break</h3>
     <p class="sub">Monthly national cases. Bars: mean of the 24 months before (Aug 2022 – Jul 2024) and after (Sep 2024 – Aug 2026). % = change in means; stars = Mann–Whitney p (*** &lt; 0.001). Orange = rose, blue = fell.</p>
   </figcaption>
@@ -237,7 +234,6 @@
     robbery +48.4%. Arms Act cases rose +29.4%; narcotics fell −25.3%.</p>
 <figure class="viz" id="fig-forest">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 10</span>
     <h3>The before-and-after ledger</h3>
     <p class="sub">Point: % change in mean monthly cases; bar: bootstrap 95% CI of the ratio. Grey: CI crosses zero. August 2024 itself excluded.</p>
   </figcaption>
@@ -251,7 +247,6 @@
     for robbery (1.22–1.51). For narcotics the level dropped to ×0.57.</p>
 <figure class="viz" id="fig-its">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 11</span>
     <h3>Counting the gap: what the model expected without the break</h3>
     <p class="sub">log E[cases] = trend + post-break level + post-break slope + month effects + COVID and Aug-2024 dummies. Shaded: modelled excess (orange) or shortfall (blue) against the no-break counterfactual.</p>
   </figcaption>
@@ -264,7 +259,6 @@
     flags Apr 2020, Aug 2024, May 2020, Sep 2024, May 2019, Feb 2019 as the most unusual months.</p>
 <figure class="viz wide" id="fig-anomalies">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 12</span>
     <h3>Machines agree with history</h3>
     <p class="sub">Top: Isolation Forest anomaly score of each month's 15-head crime mix (red = flagged, contamination 6%). Bottom: PELT change points (RBF cost) per series.</p>
   </figcaption>
@@ -279,7 +273,6 @@
     (Mann–Whitney p = 0.18), with a model level change of ×0.99 (95% CI 0.92–1.08).</p>
 <figure class="viz wide" id="fig-murder_backlog">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 13</span>
     <h3>The murder spike is partly a paperwork spike</h3>
     <p class="sub">Monthly murder cases split by the footnotes that count delayed filings for older killings.</p>
   </figcaption>
@@ -291,7 +284,6 @@
     146 and 172 dacoity, robbery and kidnapping cases; in 2025 the median was 314.</p>
 <figure class="viz" id="fig-ridgeline">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 14</span>
     <h3>Violent property crime shifted right, and stayed there</h3>
     <p class="sub">Distribution of monthly national cases by year (density; ticks = individual months). 2026 = Jan–Sep.</p>
   </figcaption>
@@ -302,7 +294,6 @@
 </figure>
 <figure class="viz" id="fig-family_share">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 15</span>
     <h3>The mix shifts: violent property crime claims a larger slice</h3>
     <p class="sub">Share of the ten named reactive crime heads (excludes “other cases” and recovery cases), 3-month rolling mean.</p>
   </figcaption>
@@ -313,7 +304,6 @@
 </figure>
 <figure class="viz" id="fig-yoy">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 16</span>
     <h3>Year against year</h3>
     <p class="sub">Change in national annual cases by crime head. Default: 2025, the first full year after the break, against 2023, the last full year before it.</p>
   </figcaption>
@@ -323,7 +313,6 @@
   <div class="viz-foot"><a href="data/yoy.csv" download>Chart data (CSV)</a></div>
 </figure></section>
 <section class="chapter" id="geography">
-  <p class="kicker">Chapter 5 · Where did it happen?</p>
   <h2>The geography of the break</h2>
   <p class="lede">The rise in violent crime reached every part of the country, but not equally.</p><p>Police units are grouped into the eight census divisions (each metro unit with its range) and
     divided by population. In 2025 reported crime per person was highest in Barishal (109 per 100,000)
@@ -331,7 +320,6 @@
     different map: +68% in Barishal, +59% in Khulna, +51% in Dhaka, against +11% in Mymensingh, +17% in Rangpur.</p><div class="pair">
 <figure class="viz" id="fig-map_rates">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 17</span>
     <h3>Where crime is reported</h3>
     <p class="sub">Reported crime per 100,000 people per year, by division.</p>
   </figcaption>
@@ -342,7 +330,6 @@
 </figure>
 <figure class="viz" id="fig-map_change">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 18</span>
     <h3>Where violence grew</h3>
     <p class="sub">Change in mean monthly cases, 24 months after vs 24 months before August 2024.</p>
   </figcaption>
@@ -355,7 +342,6 @@
     KMP (+138%), BMP (+115%), DMP (+108%).</p>
 <figure class="viz" id="fig-dumbbell">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 19</span>
     <h3>Nearly every unit saw more violent crime after the break</h3>
     <p class="sub">Mean monthly cases, 24 months before vs 24 months after August 2024 (log scale).</p>
   </figcaption>
@@ -366,7 +352,6 @@
 </figure>
 <figure class="viz wide" id="fig-unit_heatmap">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 20</span>
     <h3>Where the break hit: change by police unit and crime head</h3>
     <p class="sub">Mean monthly cases Sep 2024 – Aug 2026 against Aug 2022 – Jul 2024. Red = rise, blue = fall (colour capped at +200%). Lines separate metro, range and railway police.</p>
   </figcaption>
@@ -378,7 +363,6 @@
     the animated race below replays the same ranking year by year.</p>
 <figure class="viz" id="fig-bump">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 21</span>
     <h3>Who reports the most crime?</h3>
     <p class="sub">Rank of the 16 territorial units by annual reported crime (total minus recovery cases). Highlighted: DMP and the three biggest movers. *2026 annualised from Jan–Sep.</p>
   </figcaption>
@@ -389,7 +373,6 @@
 </figure>
 <figure class="viz" id="fig-race">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 22</span>
     <h3>Reported crime by police unit, year by year</h3>
     <p class="sub">Annual reported crime per unit; 2026 annualised from January–September. Blue: metropolitan police; orange: range police.</p>
   </figcaption>
@@ -404,7 +387,6 @@
     71% of the variation; a silhouette of 0.26 says these are tendencies rather than sharp borders.</p>
 <figure class="viz" id="fig-clusters">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 23</span>
     <h3>Three crime signatures</h3>
     <p class="sub">PCA of each unit's 2019–2026 crime mix (centred log-ratio of 15 head shares), coloured by k-means cluster (k = 3). Arrows: the eight heads that load most.</p>
   </figcaption>
@@ -415,7 +397,6 @@
 </figure>
 <figure class="viz" id="fig-radar">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 24</span>
     <h3>Three signatures, side by side</h3>
     <p class="sub">Share of each crime head in the cluster's caseload, indexed to the average unit (= 100).</p>
   </figcaption>
@@ -425,7 +406,6 @@
   <div class="viz-foot"><a href="data/radar.csv" download>Chart data (CSV)</a></div>
 </figure></section>
 <section class="chapter" id="future">
-  <p class="kicker">Chapter 6 · Where is it heading?</p>
   <h2>A slow return?</h2>
   <p class="lede">Searches and seizures are rising again and violent crime is easing, but not yet back to where it was.</p><p>Comparing January–September 2026 with the same months of 2025, recovery cases are up 34.6%,
     driven by narcotics (+36.4%): the strongest sign yet that proactive policing is returning, in the year of the
@@ -437,7 +417,6 @@
   <tbody><tr><td>Total cases</td><td>137,870</td><td>151,596</td><td class="up">+10.0%</td></tr><tr><td>Reported crime (excl. recovery)</td><td>95,616</td><td>94,711</td><td class="down">−0.9%</td></tr><tr><td>Recovery cases</td><td>42,254</td><td>56,885</td><td class="up">+34.6%</td></tr><tr><td><span class="indent">of which narcotics</span></td><td>39,129</td><td>53,372</td><td class="up">+36.4%</td></tr><tr><td>Murder</td><td>2,911</td><td>2,659</td><td class="down">−8.7%</td></tr><tr><td>Dacoity</td><td>538</td><td>387</td><td class="down">−28.1%</td></tr><tr><td>Robbery</td><td>1,483</td><td>1,374</td><td class="down">−7.3%</td></tr><tr><td>Kidnapping</td><td>811</td><td>769</td><td class="down">−5.2%</td></tr></tbody></table></div>
 <figure class="viz" id="fig-brush">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 25</span>
     <h3>Overview and detail</h3>
     <p class="sub">Monthly national cases. Drag across the lower strip to choose the period shown above.</p>
   </figcaption>
@@ -452,7 +431,6 @@
     8.5%.</p>
 <figure class="viz wide" id="fig-forecast">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure 26</span>
     <h3>What the next twelve months may hold</h3>
     <p class="sub">SARIMAX forecast with 80% and 95% intervals; orange: walk-forward one-step forecasts for the last 12 observed months.</p>
   </figcaption>
@@ -461,8 +439,7 @@
        role="img" aria-label="What the next twelve months may hold"><div class="loading">Loading chart…</div></div></div>
   <div class="viz-foot"><a href="data/forecast.csv" download>Chart data (CSV)</a></div>
 </figure></section>
-<section class="chapter" id="data">
-  <p class="kicker">Data</p>
+<section class="chapter methodology" id="data">
   <h2>About the data</h2>
   <p>The story uses the monthly crime statistics of Bangladesh Police Headquarters, January 2019 – September 2026. The
   28 published PDF files were digitised and merged into one table of 1,581 rows (93 months
@@ -483,6 +460,7 @@
       <td><a href="https://www.geoboundaries.org/" rel="noopener">geoboundaries.org</a></td></tr>
   </tbody></table></div>
 </section>
+</article>
 </main>
 <footer class="site-foot">
   <p>CSE628 Data Visualization, Fall 2026 · Class Test 1 (group task) ·

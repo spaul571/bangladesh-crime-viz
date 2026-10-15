@@ -147,6 +147,13 @@ def numbers(R):
     N["irr_MurderAdj"] = f"{its.loc[A.MURDER_ADJ, 'irr_post']:.2f}"
     N["irrci_MurderAdj"] = (f"{its.loc[A.MURDER_ADJ, 'irr_post_lo']:.2f}–"
                             f"{its.loc[A.MURDER_ADJ, 'irr_post_hi']:.2f}")
+    # the standfirst: sizes of the falls and rises, 24 months after vs 24 months before
+    chg = pp["pct_change"]
+    assert chg[["Total Cases", "Recovery Total"]].lt(0).all() and chg[["Kidnapping", "Dacoity", "Robbery"]].gt(0).all(), \
+        "the standfirst says total and recovery cases fell and the three violent crimes rose"
+    for k, s in [("tot", "Total Cases"), ("rec", "Recovery Total"), ("kid", "Kidnapping"),
+                 ("dac", "Dacoity"), ("rob", "Robbery")]:
+        N[f"dek_{k}"] = pct(abs(chg[s]), 0, sign=False)
     st = R["stl_strength"].loc[A.REPORTED]
     N.update(seas_strength=f"{st.seasonal_strength:.2f}",
              seas_peak=f"{pd.Timestamp(2000, int(st.peak_month), 1):%B}",
@@ -257,17 +264,12 @@ MINW = {"small_multiples": 760, "correlation": 680, "forest": 620, "unit_heatmap
         "calendar": 560, "dumbbell": 560, "race": 520, "clusters": 600, "map_rates": 420,
         "map_change": 420, "covid_heads": 560, "shocks": 640}
 HEIGHT = {}
-FIGNO = {"n": 0}
-FIGS = {}
 
 
 def figure(cid, title, sub, hint, wide=False):
-    FIGNO["n"] += 1
-    n = FIGS[cid] = FIGNO["n"]
     return f"""
 <figure class="viz{' wide' if wide else ''}" id="fig-{cid}">
   <figcaption class="viz-head">
-    <span class="fig-no">Figure {n}</span>
     <h3>{title}</h3>
     <p class="sub">{sub}</p>
   </figcaption>
@@ -278,12 +280,24 @@ def figure(cid, title, sub, hint, wide=False):
 </figure>"""
 
 
-def chapter(cid, kicker, title, lede):
+def chapter(cid, title, lede):
     return f"""
 <section class="chapter" id="{cid}">
-  <p class="kicker">{kicker}</p>
   <h2>{title}</h2>
   <p class="lede">{lede}</p>"""
+
+
+def story_head(N):
+    """Headline and standfirst of the article."""
+    return f"""
+<header class="story-head">
+  <p class="kicker">Data story</p>
+  <h1>Bangladesh's police are recording fewer cases. Victims are reporting more crime.</h1>
+  <p class="dek">In the two years after the government fell on 5 August 2024, the police recorded {N['dek_tot']} fewer
+  cases a month than in the two years before. The drop is in police searches and seizures, which fell {N['dek_rec']}.
+  Victims, meanwhile, reported more crime: kidnapping rose {N['dek_kid']}, dacoity {N['dek_dac']} and robbery
+  {N['dek_rob']}.</p>
+</header>"""
 
 
 def ytd_table(N):
@@ -347,20 +361,16 @@ def footer():
 # ---------------------------------------------------------------------------
 def index_html(R, N):
     nat = R["nat"]
-    body = []
-    body.append("<main>")
-    body.append(overview_html(N))
+    body = []   # the article, section by section
     body.append(f"""
-<section class="hero" id="story">
-  <p class="kicker">The story · Bangladesh Police crime statistics, {N['first']} – {N['last']}</p>
-  <p class="dek">Every monthly crime table Bangladesh Police Headquarters published from {N['first']} to
-  {N['last']}, digitised and merged into one dataset: {N['grand']} cases in {N['months']} months across 17 police
-  units. Recorded cases fell after 5 August 2024, yet the crimes victims report rose. The overview above lets you
-  filter the whole dataset by period, police unit and crime head; the chapters below explain what changed. Every
-  chart is interactive: hover for values, use the menus to switch series, drag to zoom, double-click to reset.</p>
+<section class="chapter intro">
+  <p>Every month, Bangladesh Police Headquarters publishes a table of the cases its units recorded: one row for each
+  of the 17 police units, one column for each type of case. We digitised all {N['months']} tables from {N['first']} to
+  {N['last']} and merged them into one dataset of {N['grand']} cases. Read together, they tell two stories at once:
+  what happened to crime, and what happened to policing.</p>
 </section>""")
 
-    body.append(chapter("numbers", "Chapter 1 · What is counted, and how much?", "A country in numbers",
+    body.append(chapter("numbers", "A country in numbers",
                         "Most of what the police count is not crime that someone reported. It is crime the police went looking for."))
     body.append(f"""<p>The {N['grand']} cases fall into two families of almost equal size. <em>Reported crime</em>
     ({N['reported']} cases) is led by the catch-all “other cases” and by woman and child repression, which alone is
@@ -380,7 +390,7 @@ def index_html(R, N):
                        "Hover for the month's values · click a legend item to hide a series · buttons zoom to recent years.", wide=True))
     body.append("</section>")
 
-    body.append(chapter("rhythm", "Chapter 2 · Is there a normal year?", "The rhythm of an ordinary year",
+    body.append(chapter("rhythm", "The rhythm of an ordinary year",
                         "Crime in Bangladesh has a calendar: it climbs from February to a peak in May and June and falls to its lowest point in December."))
     body.append(f"""<p>Reported crime peaks in {N['seas_peak']} and bottoms out in {N['seas_trough']}, a swing of about
     {N['seas_amp']} between the strongest and weakest months; its STL seasonal strength is {N['seas_strength']} on a 0–1 scale.
@@ -409,11 +419,11 @@ def index_html(R, N):
                        "Switch the period; hover a cell for the pair and its ρ."))
     body.append("</section>")
 
-    body.append(chapter("pandemic", "Chapter 3 · 2020", "The pandemic pause",
+    body.append(chapter("pandemic", "The pandemic pause",
                         "The lockdown showed what happens when policing and public life stop at the same time: almost everything recorded falls."))
     body.append(f"""<p>On 26 March 2020 the government closed offices, markets and transport for a nationwide
     “general holiday”, Bangladesh's COVID-19 lockdown. It lasted until 30 May. Recorded cases fell from {N['mar20']} in
-    March to {N['apr20']} in April, {N['apr_drop']} fewer than in April 2019. The two families of cases from Chapter 1 fell
+    March to {N['apr20']} in April, {N['apr_drop']} fewer than in April 2019. The two families of cases fell
     by very different amounts. Recovery cases, which come from police searches, fell {N['rec_apr_drop']} because officers
     were redeployed to enforce the lockdown. Reported crime, which depends on victims coming forward, fell
     {N['rep_apr_drop']}.</p>""")
@@ -443,7 +453,7 @@ def index_html(R, N):
                        "Hover a panel to compare the two shocks month by month.", wide=True))
     body.append("</section>")
 
-    body.append(chapter("rupture", "Chapter 4 · What changed, by how much, and for how long?", "Rupture: after the fifth of August",
+    body.append(chapter("rupture", "Rupture: after the fifth of August",
                         "In July 2024 the protests appeared in the data as riots and assaults on police. In August, the recording system itself broke. When it came back, the country's crime mix had changed."))
     body.append(f"""<p>July 2024 recorded {N['riot_jul24']} riot cases and {N['pa_jul24']} police-assault cases, both the highest
     in the series. Then, after 5 August, recorded cases fell {N['aug_drop']} in one month, to {N['aug24']}. Narcotics recovery
@@ -497,7 +507,7 @@ def index_html(R, N):
                        "Choose the comparison below the chart; hover a bar for both totals."))
     body.append("</section>")
 
-    body.append(chapter("geography", "Chapter 5 · Where did it happen?", "The geography of the break",
+    body.append(chapter("geography", "The geography of the break",
                         "The rise in violent crime reached every part of the country, but not equally."))
     body.append(f"""<p>Police units are grouped into the eight census divisions (each metro unit with its range) and
     divided by population. In 2025 reported crime per person was highest in {N['rate_hi_div']} ({N['rate_hi']} per 100,000)
@@ -545,7 +555,7 @@ def index_html(R, N):
                        "Hover a vertex; click a legend item to hide a cluster."))
     body.append("</section>")
 
-    body.append(chapter("future", "Chapter 6 · Where is it heading?", "A slow return?",
+    body.append(chapter("future", "A slow return?",
                         "Searches and seizures are rising again and violent crime is easing, but not yet back to where it was."))
     body.append(f"""<p>Comparing {N['ytd_span']} {N['ytd_year']} with the same months of {N['ytd_year'] - 1}, recovery cases are {N['ytdw_rec']},
     driven by narcotics ({N['ytd_narco']}): the strongest sign yet that proactive policing is returning, in the year of the
@@ -565,11 +575,8 @@ def index_html(R, N):
                        "Pick a series; zoom out to see the full history.", wide=True))
     body.append("</section>")
 
-
-
     body.append(f"""
-<section class="chapter" id="data">
-  <p class="kicker">Data</p>
+<section class="chapter methodology" id="data">
   <h2>About the data</h2>
   <p>The story uses the monthly crime statistics of Bangladesh Police Headquarters, {N['first']} – {N['last']}. The
   {N['n_pdf']} published PDF files were digitised and merged into one table of {len(R['m']):,} rows ({N['months']} months
@@ -589,8 +596,10 @@ def index_html(R, N):
     <tr><td>Division boundaries</td><td>geoBoundaries, Bangladesh ADM1 (CC0), for the maps</td>
       <td><a href="https://www.geoboundaries.org/" rel="noopener">geoboundaries.org</a></td></tr>
   </tbody></table></div>
-</section>
-</main>""")
+</section>""")
+    # the dashboard keeps its own container; the article runs full width below it
+    page = ('\n<main>\n<div class="wrap">' + overview_html(N) + '\n</div>\n<article class="story" id="story">'
+            + story_head(N) + "".join(body) + "\n</article>\n</main>")
     extra = ('<script defer src="https://cdn.jsdelivr.net/npm/vega@6"></script>\n'
              '<script defer src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>\n'
              '<script defer src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>\n'
@@ -598,7 +607,7 @@ def index_html(R, N):
              '<script defer src="assets/explorer.js"></script>')
     return (head("Fewer cases, more crime — Bangladesh 2019–2026",
                  f"An interactive data story on Bangladesh Police crime statistics, {N['first']} – {N['last']}.", extra)
-            + '<body id="top">' + nav() + "".join(body) + footer() + "</body></html>")
+            + '<body id="top">' + nav() + page + footer() + "</body></html>")
 
 
 def overview_html(N):

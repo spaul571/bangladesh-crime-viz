@@ -15,7 +15,8 @@
   --down: #1c5cab;
   --shadow: 0 1px 2px rgba(11, 11, 11, 0.04), 0 6px 24px rgba(11, 11, 11, 0.05);
   --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
-  /* one fluid container for text, figures and the dashboard */
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  /* one fluid container, shared by the dashboard and the story */
   --wrap: 1600px;
   --gutter: clamp(16px, 4vw, 56px);
   --topbar: 52px;
@@ -96,20 +97,43 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0; }
 .theme-toggle:hover { color: var(--ink); }
 
 /* ---------- layout ---------- */
-main { max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter) 48px; }
-.chapter { padding-top: 56px; }
-.chapter > p { margin-top: 0; margin-bottom: 1.1em; color: var(--ink); }
+.wrap { max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter) 48px; }
 .kicker {
   color: var(--orange); font-weight: 650; font-size: 13px; letter-spacing: 0.04em;
   text-transform: uppercase; margin-bottom: 8px;
 }
-.chapter h2 { font-size: clamp(28px, 1.2rem + 2.2vw, 48px); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 14px; }
-.lede { font-size: clamp(18px, 1rem + 0.5vw, 24px); color: var(--ink2); margin-bottom: 1.4em !important; line-height: 1.5; }
 
-/* ---------- hero ---------- */
-.hero { padding: 56px 0 0; }
-.hero h1 { font-size: clamp(40px, 1.5rem + 5vw, 96px); font-weight: 750; letter-spacing: -0.02em; margin: 6px auto 18px; }
-.dek { font-size: clamp(17px, 0.95rem + 0.45vw, 23px); color: var(--ink2); line-height: 1.55; }
+/* ---------- the story, set as an article ---------- */
+.story {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: clamp(44px, 7vw, 96px) var(--gutter) clamp(40px, 5vw, 72px);
+}
+/* text and charts share one column, as wide as the dashboard above */
+.story > * { max-width: var(--wrap); margin-left: auto; margin-right: auto; }
+.story-head h1 {
+  font-family: var(--serif); font-size: clamp(34px, 1.1rem + 3vw, 58px); font-weight: 700;
+  line-height: 1.08; letter-spacing: -0.015em; margin: 4px 0 20px;
+}
+.story-head .dek {
+  font-family: var(--serif); font-size: clamp(19px, 1rem + 0.55vw, 24px); line-height: 1.5;
+  color: var(--ink2); margin: 0;
+}
+.chapter { padding-top: clamp(28px, 4vw, 48px); }
+.chapter h2 {
+  font-family: var(--serif); font-size: clamp(26px, 1rem + 1.4vw, 36px); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 18px;
+}
+.chapter > p {
+  font-family: var(--serif); font-size: clamp(18px, 0.95rem + 0.3vw, 20.5px); line-height: 1.72;
+  margin-top: 0; margin-bottom: 1.15em; color: var(--ink);
+}
+.intro > p:first-child::first-letter {
+  float: left; font-size: 3.5em; line-height: 0.85; font-weight: 700; padding: 6px 10px 0 0;
+}
+/* the data note at the end, in smaller type */
+.chapter.methodology { margin-top: clamp(40px, 5vw, 72px); padding-top: 24px; border-top: 1px solid var(--grid); }
+.methodology h2 { font-family: var(--font); font-size: 20px; margin-bottom: 10px; }
+.methodology > p { font-family: var(--font); font-size: 15.5px; line-height: 1.6; color: var(--ink2); }
 .tiles {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
   margin: 32px 0 24px;
@@ -131,13 +155,9 @@ main { max-width: calc(var(--wrap) + 2 * var(--gutter)); margin: 0 auto; padding
 .btn:hover { opacity: 0.88; }
 
 /* ---------- figures ---------- */
-.viz {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-  box-shadow: var(--shadow); margin: 28px 0 34px; padding: clamp(14px, 2vw, 26px) clamp(12px, 2vw, 26px) 14px;
-}
+.viz { margin: clamp(32px, 4vw, 52px) 0 clamp(36px, 4.5vw, 60px); }
 .viz-head { margin-bottom: 10px; }
-.fig-no { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-.viz-head h3 { font-size: clamp(18px, 0.9rem + 0.6vw, 25px); font-weight: 650; margin: 4px 0 6px; letter-spacing: -0.005em; }
+.viz-head h3 { font-size: clamp(18px, 0.9rem + 0.45vw, 22px); font-weight: 700; margin: 0 0 6px; letter-spacing: -0.005em; }
 .viz-head .sub { color: var(--ink2); font-size: clamp(14px, 0.8rem + 0.2vw, 16.5px); line-height: 1.5; margin: 0; }
 .controls {
   display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 12px 0 8px;
@@ -170,8 +190,8 @@ summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .chart .vega-embed summary { opacity: 0.6; }
 .viz-foot { display: flex; justify-content: flex-end; margin-top: 8px; font-size: 12.5px; }
 .viz-foot a { color: var(--muted); }
-.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 clamp(12px, 1.6vw, 24px); }
-.pair .viz { margin-left: 0; margin-right: 0; min-width: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 clamp(16px, 2vw, 32px); }
+.pair .viz { min-width: 0; }
 
 /* ---------- tables ---------- */
 .table-wrap { overflow-x: auto; margin: 0 0 24px; }
@@ -285,9 +305,8 @@ td.down { color: var(--down); font-weight: 600; }
 @media (max-width: 620px) {
   .brand { display: none; }
   .topbar { gap: 8px; }
-  .viz { border-radius: 12px; }
 }
 @media print {
   .topbar, .controls, .cta, .theme-toggle { display: none; }
-  .viz { break-inside: avoid; box-shadow: none; }
+  .viz { break-inside: avoid; }
 }
