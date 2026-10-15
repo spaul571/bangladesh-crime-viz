@@ -11,6 +11,16 @@ filters. Below it, the story with 26 interactive charts.
 
 CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
 
+## Team
+
+| Name | ID |
+|---|---|
+| Shrikanta Paul | 261-25-017 |
+| Md. Nurol Amin | 261-25-021 |
+| Animesh Dey | 261-25-019 |
+| Kazi Meherunnesa Eva | 261-25-033 |
+| Fardin Ahmed Alvi | 261-25-034 |
+
 ## What is here
 
 | Path | Contents |

@@ -134,6 +134,8 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0; }
 .chapter.methodology { margin-top: clamp(40px, 5vw, 72px); padding-top: 24px; border-top: 1px solid var(--grid); }
 .methodology h2 { font-family: var(--font); font-size: 20px; margin-bottom: 10px; }
 .methodology > p { font-family: var(--font); font-size: 15.5px; line-height: 1.6; color: var(--ink2); }
+.team table { width: auto; }
+.team th, .team td { text-align: left; padding-right: 56px; }
 .tiles {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
   margin: 32px 0 24px;

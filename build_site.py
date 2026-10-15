@@ -27,6 +27,8 @@ PDFS = HERE / "data" / "raw_pdf"
 REPO = "https://github.com/spaul571/bangladesh-crime-viz"
 PHQ = "https://www.police.gov.bd/en/january_2020"   # "Crime Statistics" list on police.gov.bd
 POP_SRC = "https://www.tbsnews.net/bangladesh/countrys-total-population-stands-1698-crore-613834"
+TEAM = [("Shrikanta Paul", "261-25-017"), ("Md. Nurol Amin", "261-25-021"), ("Animesh Dey", "261-25-019"),
+        ("Kazi Meherunnesa Eva", "261-25-033"), ("Fardin Ahmed Alvi", "261-25-034")]
 
 
 # ---------------------------------------------------------------------------
@@ -338,7 +340,8 @@ def head(title, desc, extra=""):
 
 def nav():
     links = [("#overview", "Overview"), ("#story", "Story"), ("#pandemic", "Pandemic"),
-             ("#rupture", "The break"), ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data")]
+             ("#rupture", "The break"), ("#geography", "Geography"), ("#future", "Outlook"), ("#data", "Data"),
+             ("#team", "Team")]
     items = "".join(f'<a href="{h}">{t}</a>' for h, t in links)
     return f"""
 <header class="topbar">
@@ -596,6 +599,14 @@ def index_html(R, N):
     <tr><td>Division boundaries</td><td>geoBoundaries, Bangladesh ADM1 (CC0), for the maps</td>
       <td><a href="https://www.geoboundaries.org/" rel="noopener">geoboundaries.org</a></td></tr>
   </tbody></table></div>
+</section>""")
+    members = "".join(f"<tr><td>{escape(n)}</td><td>{i}</td></tr>" for n, i in TEAM)
+    body.append(f"""
+<section class="chapter methodology team" id="team">
+  <h2>Team</h2>
+  <div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>ID</th></tr></thead>
+  <tbody>{members}</tbody></table></div>
 </section>""")
     # the dashboard keeps its own container; the article runs full width below it
     page = ('\n<main>\n<div class="wrap">' + overview_html(N) + '\n</div>\n<article class="story" id="story">'
