@@ -27,6 +27,9 @@ html, body, .story {{ background: #ffffff !important; }}
 .chapter h2, .viz-head, .story-head h1 {{ break-after: avoid; }}
 .chapter > p {{ orphans: 3; widows: 3; }}
 .methodology, .table-wrap {{ break-inside: avoid; }}
+/* keep the page footer on the last page of the story */
+.story {{ padding-bottom: 16px !important; }}
+.site-foot {{ padding-top: 12px !important; padding-bottom: 0 !important; break-before: avoid; }}
 """
 # the charts paint their own off-white surface (#fcfcfb); turn it white
 WHITEN = """() => {
