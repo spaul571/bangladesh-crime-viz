@@ -1,83 +1,45 @@
-# Fewer cases, more crime: Bangladesh 2019–2026
+<div align="center">
 
-An interactive data story on the monthly crime statistics published by Bangladesh Police
-Headquarters, January 2019 – September 2026.
+**CSE628 · DATA VISUALIZATION**
 
-**Live site:** https://spaul571.github.io/bangladesh-crime-viz/
+Class Test- 1
 
-One page. It opens on an overview that fits one screen on a laptop or desktop: filters for period,
-police units and crime heads, eight tiles (totals and what changed) and eight charts, all following the
-filters. Below it, the story with 26 interactive charts.
+# Fewer Cases, More Crime
 
-CSE628 Data Visualization, Fall 2026, Class Test 1 (group task).
+Bangladesh Police crime statistics, January 2019 – September 2026
 
-## Team
-
-| Name | ID |
+| Course details | |
 |---|---|
-| Shrikanta Paul | 261-25-017 |
-| Md. Nurol Amin | 261-25-021 |
-| Animesh Dey | 261-25-019 |
-| Kazi Meherunnesa Eva | 261-25-033 |
-| Fardin Ahmed Alvi | 261-25-034 |
+| **Course code** | CSE628 |
+| **Course title** | Data Visualization |
+| **Semester** | Fall 2026 |
+| **Assessment** | Class Test- 1, group task (15 marks) |
+| **Submitted to** | Sadat Hasan |
+| **Submission date** | 15 October 2026 |
 
-## What is here
+| No. | Team member | ID |
+|---|---|---|
+| 1 | Shrikanta Paul | 261-25-017 |
+| 2 | Md. Nurol Amin | 261-25-021 |
+| 3 | Animesh Dey | 261-25-019 |
+| 4 | Kazi Meherunnesa Eva | 261-25-033 |
+| 5 | Fardin Ahmed Alvi | 261-25-034 |
 
-| Path | Contents |
+Website: <https://spaul571.github.io/bangladesh-crime-viz/>
+
+Repository: <https://github.com/spaul571/bangladesh-crime-viz>
+
+</div>
+
+Everything we made for this task is public. The website is the main deliverable; the repository holds the code, the data, the Power BI files and a PDF copy of the website.
+
+| Item | Description and link |
 |---|---|
-| `data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx` | The dataset: all 93 monthly PHQ tables merged into one sheet (1,581 rows = 93 months × 17 police units), each row tagged with the last day of its month (for example `30 Jun 2025`). Also lists the source PDF of every month and the translated table footnotes. |
-| `data/raw_pdf/` | The 28 PDFs published by Bangladesh Police Headquarters (police.gov.bd), as downloaded: yearly bundles for 2019–2024, single months January 2025 – September 2026 and the January–December 2025 summary. Scanned tables; kept for reference, the site reads only the Excel file. |
-| `data/bgd_adm1.geojson` | Boundaries of the eight divisions (geoBoundaries, CC0), for the maps. |
-| `build_site.py` | Builds the website into `docs/`. |
-| `analysis.py` | Loads the Excel file and computes every statistic and model behind the charts. |
-| `charts.py` | The 26 interactive charts (Plotly and Vega-Altair), each in a light and a dark version. |
-| `theme.py` | Colours and fonts shared by all charts. |
-| `static/` | Page styles, the chart loader (`site.js`) and the overview (`explorer.js`). |
-| `docs/` | The built website, served by GitHub Pages. |
-| `pdf/Bangladesh_Crime_Story_2019-2026.pdf` | The website as a PDF (light theme, white background): the dashboard on page 1, then the story with every chart in its default view. |
-| `make_pdf.py` | Prints the website to that PDF. |
-| `powerbi/` | `CrimeVisuals.pbix`, a Power BI report on the same dataset (data to August 2026), and `CrimeVisuals.pdf`, its five pages exported. |
-
-The site uses only the Excel file. National figures are the sum of the 17 police units.
-
-## Rebuild
-
-```bash
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt        # Windows: .venv\Scripts\pip
-.venv/bin/python build_site.py                   # about 2 minutes the first time
-python -m http.server 8000 --directory docs      # then open http://localhost:8000
-```
-
-The SARIMAX forecasts are the slow step; results are cached in `.cache/` and recomputed only when the
-Excel file changes. Open the site through a web server, as above; opening `docs/index.html` straight
-from disk blocks the chart files from loading.
-
-To refresh the PDF after the live site changes: `pip install playwright`, then `python make_pdf.py`
-(uses Microsoft Edge; without it, run `playwright install chromium` once).
-
-## Methods in brief
-
-- **Before and after 5 August 2024:** 24 months before (Aug 2022 – Jul 2024) against 24 months after
-  (Sep 2024 – Aug 2026), August 2024 excluded. Mann–Whitney U, Cliff's δ, bootstrap 95% CI.
-- **Interrupted time series:** negative-binomial GLM with trend, post-break level and slope, month
-  effects and COVID / August-2024 dummies.
-- **The 2020 pandemic pause:** April–May 2020 (the general holiday) and July–September 2020 against the
-  same months of 2019; each month around the 2020 and 2024 shocks as a % of the same month in the last
-  normal year (2019 and 2023).
-- **Seasonality:** robust STL decomposition (period 12) on log counts.
-- **Forecasting:** SARIMAX on log counts with a regime dummy and Fourier seasonality, chosen by
-  walk-forward backtest.
-- **Change points and anomalies:** PELT (ruptures); Isolation Forest (scikit-learn).
-- **Clustering:** k-means (k = 3) on the centred log-ratio of each unit's crime mix, shown with PCA.
-
-## Sources
-
-- Bangladesh Police Headquarters, monthly crime statistics, https://www.police.gov.bd/ (scanned PDFs,
-  digitised with OCR and checked against the printed row, column and annual totals).
-- Population: BBS Population and Housing Census 2022, adjusted figures (The Business Standard,
-  9 April 2023).
-- Division boundaries: geoBoundaries (CC0).
-
-Recorded cases are not the same as crimes committed: recording depends on victims coming forward and
-on police capacity.
+| **Website** | The main deliverable: a dashboard with filters, followed by the full data story with 26 interactive charts.<br>[https://spaul571.github.io/bangladesh-crime-viz/](https://spaul571.github.io/bangladesh-crime-viz/) |
+| **GitHub repository** | Source code (Python), the merged dataset, the source PDFs, the Power BI files and the website PDF.<br>[https://github.com/spaul571/bangladesh-crime-viz](https://github.com/spaul571/bangladesh-crime-viz) |
+| **Website as PDF** | The website printed in the light theme on a white background (32 A4 landscape pages).<br>[https://github.com/spaul571/bangladesh-crime-viz/blob/main/pdf/Bangladesh_Crime_Story_2019-2026.pdf](https://github.com/spaul571/bangladesh-crime-viz/blob/main/pdf/Bangladesh_Crime_Story_2019-2026.pdf) |
+| **Power BI report (.pbix)** | The Power BI Desktop file: five report pages on the same dataset.<br>[https://github.com/spaul571/bangladesh-crime-viz/blob/main/powerbi/CrimeVisuals.pbix](https://github.com/spaul571/bangladesh-crime-viz/blob/main/powerbi/CrimeVisuals.pbix) |
+| **Power BI report (PDF)** | The five Power BI pages exported to PDF.<br>[https://github.com/spaul571/bangladesh-crime-viz/blob/main/powerbi/CrimeVisuals.pdf](https://github.com/spaul571/bangladesh-crime-viz/blob/main/powerbi/CrimeVisuals.pdf) |
+| **Merged dataset (Excel)** | 1,581 rows = 93 months × 17 police units, with a Sources sheet and a Notes sheet.<br>[https://github.com/spaul571/bangladesh-crime-viz/blob/main/data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx](https://github.com/spaul571/bangladesh-crime-viz/blob/main/data/Bangladesh_Crime_Statistics_Jan2019-Sep2026.xlsx) |
+| **Source PDFs** | The 28 PDF files published by Bangladesh Police Headquarters, as downloaded.<br>[https://github.com/spaul571/bangladesh-crime-viz/tree/main/data/raw_pdf](https://github.com/spaul571/bangladesh-crime-viz/tree/main/data/raw_pdf) |
+| **Original data source** | Bangladesh Police Headquarters, Crime Statistics list.<br>[https://www.police.gov.bd/en/january_2020](https://www.police.gov.bd/en/january_2020) |
