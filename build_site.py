@@ -27,6 +27,7 @@ PDFS = HERE / "data" / "raw_pdf"
 REPO = "https://github.com/spaul571/bangladesh-crime-viz"
 PHQ = "https://www.police.gov.bd/en/january_2020"   # "Crime Statistics" list on police.gov.bd
 POP_SRC = "https://www.tbsnews.net/bangladesh/countrys-total-population-stands-1698-crore-613834"
+GROUP = 5
 TEAM = [("Shrikanta Paul", "261-25-017"), ("Md. Nurol Amin", "261-25-021"), ("Animesh Dey", "261-25-019"),
         ("Kazi Meherunnesa Eva", "261-25-033"), ("Fardin Ahmed Alvi", "261-25-034")]
 
@@ -604,6 +605,7 @@ def index_html(R, N):
     body.append(f"""
 <section class="chapter methodology team" id="team">
   <h2>Team</h2>
+  <p>Group {GROUP}</p>
   <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>ID</th></tr></thead>
   <tbody>{members}</tbody></table></div>
